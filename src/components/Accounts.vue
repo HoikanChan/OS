@@ -3,6 +3,7 @@
            <!--账户-->
          <el-row>
            <el-col :span="4"><el-button type="primary">添加按钮</el-button></el-col>
+           <el-col :span="4"><el-button type="primary" @click="getAccounts()">刷新按钮</el-button></el-col>
          </el-row>
 
          <el-table
