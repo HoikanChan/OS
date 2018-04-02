@@ -3,40 +3,49 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+/*权限
+    admin --- 1
+    domainadmin --- 2
+*/
+
 //页面
 import Home from '../pages/index.vue'
 import Login from '../pages/login.vue'
 //组件
 //控制面板
-import Dashboard from '../components/Dashboard.vue'
+import Dashboard from '../views/Dashboard/Dashboard.vue'
+//admin的控制面板
+import AdminDashboard from '../views/Dashboard/AdminDashboard.vue'
+//domainadmin和user显示的首页
+import NormalDashboard from '../views/Dashboard/normalDashboard.vue'
 //实例
-import Instances from '../components/Instances.vue'
+import Instances from '../views/Instances/Instances.vue'
 //存储
-import Vstorage from '../components/Storage.vue'
+import Vstorage from '../views/Storage/Storage.vue'
 //网络
-import Network from '../components/Network.vue'
+import Network from '../views/Network/Network.vue'
 //模板
-import Vtemplate from '../components/Templates.vue'
+import Vtemplate from '../views/Templates/Templates.vue'
 //角色
-import Roles from '../components/Roles.vue'
+import Roles from '../views/Roles/Roles.vue'
 //账户
-import Accounts from '../components/Accounts.vue'
+import Accounts from '../views/Accounts/Accounts.vue'
 //域 
-import Domains from '../components/Domains.vue'
+import Domains from '../views/Domains/Domains.vue'
 //事件
-import Vevents from '../components/Events.vue'
+import Vevents from '../views/Events/Events.vue'
 //基础架构
-import System from '../components/System.vue'
+import System from '../views/System/System.vue'
 //全局设置
-import GlobalSettings from '../components/GlobalSettings.vue'
+import GlobalSettings from '../views/GlobalSettings/GlobalSettings.vue'
 //服务方案
-import Configuration from '../components/Configuration.vue'
+import Configuration from '../views/Configuration/Configuration.vue'
 //项目
-import Projects from '../components/Projects.vue'
+import Projects from '../views/Projects/Projects.vue'
 //地理区域
-import Regions from '../components/Regions.vue'
+import Regions from '../views/Regions/Regions.vue'
 //关联性组
-import AffinityGroups from "../components/AffinityGroups.vue";
+import AffinityGroups from "../views/AffinityGroups/AffinityGroups.vue"; 
 
 import { setCookie,getCookie,delCookie } from '../common/js/cookie'
 //路由实例化
@@ -52,15 +61,45 @@ const router = new Router({
             children: [
                 {
                     path: '',
-                    name:'dashboard',
+                    name: 'dashboard',
                     component: Dashboard,
-                    meta:{cnName:"控制板"}
+                    meta: { cnName: "控制板" },
+                    redirect: { name: 'adminDashboard' },
+                    children: [
+                        {
+                            path: 'adminDashboard',
+                            name: 'adminDashboard',
+                            component: AdminDashboard,
+                            meta: { cnName: "控制板" },
+                            beforeEnter: (to, from, next) => {
+                                // if (getCookie('role')==1) {
+                                    next()
+                                // }
+                            }
+                        },
+                        {
+                            path: 'normalDashboard',
+                            name: 'normalDashboard',
+                            component: NormalDashboard,
+                            meta: { cnName: "控制板" },
+                            // beforeEnter: (to, from, next) => {
+                                // console.log(from)
+                                // if (true) {
+                                //     next({path: 'adminDashboard'})
+                                // } else {
+                                //     next({path: '/normalDashboard'})
+                                // }
+                                // next({ path: '/normalDashboard' })
+                                // console.log(to)
+                            // }
+                        }
+                    ],
                 },
                 {
                     path: 'instances',
                     name:'instances',
                     component: Instances,
-                    meta:{cnName:"实例"}
+                    meta:{cnName:"虚拟机"}
                 },
                 {
                     path: 'storage',
@@ -84,7 +123,7 @@ const router = new Router({
                     path: 'roles',
                     name:'roles',
                     component: Roles,
-                    meta:{cnName:"角色"},
+                    meta:{cnName:"角色管理"},
                     beforeEnter: (to, from, next) => {
                         if (getCookie('role')==1) {
                             next()
@@ -95,7 +134,7 @@ const router = new Router({
                     path: 'accounts',
                     name:'accounts',
                     component:Accounts,
-                    meta:{cnName:"帐户"}
+                    meta:{cnName:"帐户管理"}
                 },
                 {
                     path: 'domains',
@@ -152,11 +191,11 @@ const router = new Router({
                     name:'projects',
                     component:Projects,
                     meta:{cnName:"项目"},
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1||getCookie('role')==2) {
-                            next()
-                        }
-                    }
+                    // beforeEnter: (to, from, next) => {
+                    //     if (getCookie('role')==1||getCookie('role')==2) {
+                    //         next()
+                    //     }
+                    // }
                 },
                 {
                     path: 'regions',

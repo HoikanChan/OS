@@ -1,41 +1,35 @@
 <template>
         <header>
-            <el-row type="flex" class="row-bg" justify="center" >
-                <el-col>
-                        <el-col :xs="8" :sm="6" :md="4" :lg="3" :xl="1">
-                                <div id="logo">
-                                        <router-link to='/'  class="logo-link">logo</router-link>
-                                </div>
-                        </el-col>
-                        <el-col :xs="13" :sm="12" :md="16" :lg="18" :xl="22">
+            <Row class="row-bg">
+                        <Col :xs="8" :sm="8" :md="8" :lg="8">
+                            <!--logo-->
+                                <v-logo></v-logo>
+                        </Col>
+                        <Col  :xs="12" :sm="12" :md="12" :lg="12">
+                            <!--导航-->
                             <v-navigation></v-navigation>
-                        </el-col>
-                        <el-col :xs="3" :sm="6" :md="4" :lg="3" :xl="1">
-                                <div id="user-operation">
-                                        <el-dropdown @command="handleCommand">
-                                            <span class="el-dropdown-link">
-                                                {{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
-                                            </span>
-                                            <el-dropdown-menu slot="dropdown">
-                                                <el-dropdown-item command="logout">登出</el-dropdown-item>
-                                            </el-dropdown-menu>
-                                        </el-dropdown>
-                                </div>
-                        </el-col>
-                </el-col>
-            </el-row>
+                        </Col>
+                        <Col  :xs="4" :sm="4" :md="4" :lg="4">
+                            <!--用户操作-->
+                               <v-userOperation></v-userOperation>
+                        </Col>
+            </Row>
         </header>
 </template>
 
 <script>
 //cookie处理方法
 import { setCookie,getCookie,delCookie } from '../common/js/cookie'
+import logo from '../components/Logo'
 import nav from '../components/Nav'
+import userOperation from '../components/UserOperation'
 export default {
   name: 'v-header',
    //注册组件
   components:{
          'v-navigation':nav,
+         'v-logo':logo,
+         'v-userOperation':userOperation
   },
   data () {
     return {
@@ -45,25 +39,7 @@ export default {
   created(){
   },
   methods:{
-      handleCommand(command){
-          switch(command){
-              case "logout":
-                this.logout()
-                break;
-          }
-      },
-      //登出
-      logout(){
-            delCookie('userId');
-            delCookie('account');
-            delCookie('firstName');
-            delCookie('lastName');
-            delCookie('domainId');
-            delCookie('sessionKey');
-            delCookie('userName');
-            delCookie('role');
-            this.$router.push({path:"/login"})
-      }
+      
   }
 }
 </script>
@@ -71,17 +47,12 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
         header{
+            width: 100%;
+            background-color: #353942;
+            border-bottom: 1px solid #5a647b;
             .row-bg{
-                 #logo{
-                        height: 60px;
-                        line-height: 60px;
-                        text-align: center;
-                        .logo-link{
-                                font-size: 20px; 
-                                text-decoration: none;
-                                color: #409EFF;
-                        }
-                }
+                width: 1200px;
+                margin: 0 auto;
             }
         }
 </style>

@@ -1,13 +1,10 @@
 <template>
-       <div class="dashboard">
-           <!--控制面板-->
-           控制面板
-       </div>
+       
 </template>
 
 <script>
 export default {
-  name: 'v-dashboard',
+  name: '',
   data () {
     return {
     }

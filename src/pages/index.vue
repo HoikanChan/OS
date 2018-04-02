@@ -1,18 +1,18 @@
 <template>
     <div class="index">
-        <el-row class="page-row">
+        <Row class="page-row">
             <v-header></v-header>
-        </el-row>
-        <el-row class="page-row">
-            <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
-                <el-row>
+        </Row>
+        <Row class="page-row">
+            <Col>
+                <Row>
                     <v-breadcrumb></v-breadcrumb>
-                </el-row>
-                <el-row>
+                </Row>
+                <Row>
                     <router-view></router-view>
-                </el-row>
-            </el-col>
-        </el-row>
+                </Row>
+            </Col>
+        </Row>
     </div>
 </template>
 
@@ -37,10 +37,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
-    .index{
-        .page-row{
-            width: 1200px;
-            margin: 0 auto;
-        }
-    }
 </style>

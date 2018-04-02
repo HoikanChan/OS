@@ -1,18 +1,24 @@
 <template>
     <div class="container" @keyup.enter="submitForm('loginForm')">
-        <el-row type="flex" class="row-bg" justify="center" >
-            <el-form :model="loginForm" :rules="rules" ref="loginForm" label-width="100px" class="ruleForm" >
-                <el-form-item label="用户名" prop="username">
-                    <el-input v-model="loginForm.username" placeholder="请输入用户名"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" prop="password" >
-                    <el-input type="password" v-model="loginForm.password" placeholder="请输入密码"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click.prevent="submitForm('loginForm')" >登录</el-button>
-                </el-form-item>
-            </el-form>
-        </el-row>
+        <Row  class="row-bg" type="flex" justify="center" align="middle">
+            <Form :model="loginForm" :rules="rules" ref="loginForm"  class="ruleForm" :label-width="80">
+                <Row>
+                        <FormItem label="用户名" prop="username">
+                            <Input v-model="loginForm.username" placeholder="请输入用户名"></Input>
+                        </FormItem>
+                </Row>
+                <Row>
+                        <FormItem label="密码" prop="password" >
+                            <Input type="password" v-model="loginForm.password" placeholder="请输入密码"></Input>
+                        </FormItem>
+                </Row>
+                <Row>
+                        <FormItem>
+                            <Button type="primary" @click.prevent="submitForm('loginForm')" >登录</Button>
+                        </FormItem>
+                </Row>
+            </Form>
+        </Row>
     </div>
 </template>
 
@@ -44,7 +50,7 @@ export default {
           //表单验证
           this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.$http.post('client/api',this.loginForm).then(function(response){
+            this.$http.post('/client/api',this.loginForm).then(function(response){
                 //保存数据到cookie上，在记录数据有效期内，免去登录
                 setCookie('userId',response.loginresponse.userid,response.loginresponse.timeout);
                 setCookie('account',response.loginresponse.account,response.loginresponse.timeout);
@@ -58,10 +64,9 @@ export default {
                 this.$router.push({path:'/'});
             }.bind(this)).catch(function(error){
                 //报错信息提示
-                 this.$message({
-                    showClose: true,
-                    message: error.response.data.loginresponse.errortext,
-                    type: 'error'
+                 this.$Notice.error({
+                    title: error.response.data.loginresponse.errortext,
+                    desc: error
                 });
             }.bind(this))
           } else {

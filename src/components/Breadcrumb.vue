@@ -1,7 +1,7 @@
 <template>
-       <el-breadcrumb separator-class="el-icon-arrow-right">
+       <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: breadcrumb.path }" v-for="breadcrumb in breadcrumbs" :key="breadcrumb.name">{{breadcrumb.cnName}} </el-breadcrumb-item>
-        </el-breadcrumb>
+        </el-breadcrumb> -->
 </template>
 
 <script>
@@ -26,7 +26,6 @@ export default {
                   name:lastPath.name,
                   cnName:lastPath.meta.cnName
                 });
-                console.log( this.breadcrumbs)
       }
   },
   watch:{
