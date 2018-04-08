@@ -37,7 +37,7 @@ Vue.prototype.$http = axios;
 
 Vue.config.productionTip = false;
 
-//首页系统容量
+//首页系统容量输出对应中文
 Vue.filter('toCapacityCountType', function (value) {
     switch (value) {
         case 0:
@@ -83,15 +83,76 @@ Vue.filter('toCapacityCountType', function (value) {
         case 90:
             return store.getters.getDictionary('label.num.cpu.cores');
     }
+})
+  //首页常规警报输出对应中文
+Vue.filter('toAlertType', (val) => {
+    switch (alertCode) {
+        case 0:
+            return store.getters.getDictionary('label.memory');
+        case 1:
+            return store.getters.getDictionary('label.cpu');
+        case 2:
+            return store.getters.getDictionary('label.storage');
+        case 3:
+            return store.getters.getDictionary('label.primary.storage');
+        case 4:
+            return store.getters.getDictionary('label.public.ips');
+        case 5:
+            return store.getters.getDictionary('label.management.ips');
+        case 6:
+            return store.getters.getDictionary('label.secondary.storage');
+        case 7:
+            return store.getters.getDictionary('label.host');
+        case 9:
+            return store.getters.getDictionary('label.domain.router');
+        case 10:
+            return store.getters.getDictionary('label.console.proxy');
+
+            // These are old values -- can be removed in the future
+        case 8:
+            return store.getters.getDictionary('label.user.vm');
+        case 11:
+            return store.getters.getDictionary('label.routing.host');
+        case 12:
+            return store.getters.getDictionary('label.menu.storage');
+        case 13:
+            return store.getters.getDictionary('label.usage.server');
+        case 14:
+            return store.getters.getDictionary('label.management.server');
+        case 15:
+            return store.getters.getDictionary('label.domain.router');
+        case 16:
+            return store.getters.getDictionary('label.console.proxy');
+        case 17:
+            return store.getters.getDictionary('label.user.vm');
+        case 18:
+            return store.getters.getDictionary('label.vlan');
+        case 19:
+            return store.getters.getDictionary('label.secondary.storage.vm');
+        case 20:
+            return store.getters.getDictionary('label.usage.server');
+        case 21:
+            return store.getters.getDictionary('label.menu.storage');
+        case 22:
+            return store.getters.getDictionary('label.action.update.resource.count');
+        case 23:
+            return store.getters.getDictionary('label.usage.sanity.result');
+        case 24:
+            return store.getters.getDictionary('label.direct.attached.public.ip');
+        case 25:
+            return store.getters.getDictionary('label.local.storage');
+        case 26:
+            return store.getters.getDictionary('label.resource.limit.exceeded');
+    }
   })
 
   //输出数字
-Vue.filter('getNumber', function (value) {
+Vue.filter('getNumber',(value)=> {
     return Number(value)
 })
   
 //查询中文
-Vue.filter('getDictionary', function (value) {
+Vue.filter('getDictionary',  (value)=> {
     return store.getters.getDictionary(value)
   })
 

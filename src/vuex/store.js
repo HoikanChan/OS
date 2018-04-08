@@ -2595,6 +2595,9 @@ const store = new Vuex.Store({
                 return state.dictionary[key.toLocaleLowerCase()]
             }
         },
+        toAlertType: (state) => (key) => {
+            
+        }
     }
 })
       

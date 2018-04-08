@@ -1,25 +1,14 @@
 <template>
        <div id="system-capacity">
            <div class="system-capacity-content">
-               <div class="title">
-                    系统容量
-                </div>
-                <!-- <div class="system-capacity-list">
-                    <iCircle 
-                    class="system-capacity-item"
-                    :percent="item.percentused | getNumber"
-                    :size="128"
-                    :stroke-width="4"
-                    :trail-width="4"
-                    trail-color="#5a647b"
-                    :stroke-color="item.percentused | circleColor"
-                    v-for="item in systemCapacityList"
-                    :key="item.name"
-                    >
-                        <span>{{item.percentused}}%</span>
-                        <span>{{item.type | toCapacityCountType}}</span>
-                    </iCircle>
-                </div> -->
+               <Row>
+                    <div class="system-capacity-title">
+                        系统容量
+                    </div>
+                    <div class="system-capacity-refresh" @click="refreshSystemCapacity">
+                        刷新
+                    </div>
+               </Row>
                 <div class="system-capacity-list">
                     <div  class="system-capacity-item" v-for="item in systemCapacityList"
                         :key="item.name">
@@ -32,7 +21,8 @@
                             trail-color="#5a647b"
                             :stroke-color="item.percentused | circleColor"
                             >
-                                <span>{{item.percentused}}%</span>
+                                <Row class="system-capacity-icon-row"><img class="system-capacity-icon" :src="getIcon(item.name)" alt=""></Row>
+                                <Row class="system-capacity-percent-row"><span class="system-capacity-percent">{{item.percentused}}%</span></Row>
                             </iCircle>
                             <span class="system-capacity-item-name">{{item.type | toCapacityCountType}}</span>
                     </div>
@@ -46,10 +36,53 @@ export default {
   name: 'v-systemCapacity',
   data () {
     return {
-        systemCapacityList:[]
+        systemCapacityList:[],
+        icon:{
+            'MEMORY':require('../../assets/memory_icon.png'),
+            'CPU':require('../../assets/cpu_icon.png'),
+            'STORAGE':require('../../assets/storage_icon.png'),
+            'STORAGE_ALLOCATED':require('../../assets/storage_icon.png'),
+            'PRIVATE_IP':require('../../assets/ip_icon.png'),
+            'SECONDARY_STORAGE':require('../../assets/storage_icon.png'),
+            'DIRECT_ATTACHED_PUBLIC_IP':require('../../assets/network_icon.png'),
+            'GPU':require('../../assets/gpu_icon.png'),
+            'CPU_CORE':require('../../assets/cpu_icon.png')
+        }
     }
   },
   methods:{
+      getIcon(val){
+          let iconPath = this.icon[val];
+          return iconPath
+      },
+      refreshSystemCapacity(){
+          this.requestSystemCapacityData();
+      },
+      //请求系统容量数据
+      requestSystemCapacityData(){
+          this.$http.get('client/api',{
+                params:{
+                    command:"listCapacity",
+                    response:"json",
+                    sortBy:"usage",
+                    fetchLatest:true,
+                }
+            }).then(function(response){
+                this.systemCapacityList=response.listcapacityresponse.capacity;
+            }.bind(this))
+        },
+        //请求常规警报数据
+        requestGeneralAlarmData(){
+             this.$http.get('client/api',{
+                params:{
+                    command:"listCapacity",
+                    response:"json",
+                    sortBy:"usage",
+                    fetchLatest:true,
+                }
+            }).then(function(response){
+            }.bind(this))
+        }
   },
   filters:{
        //显示颜色
@@ -65,16 +98,7 @@ export default {
         },
   },
   created(){
-      this.$http.get('client/api',{
-          params:{
-              command:"listCapacity",
-              response:"json",
-              sortBy:"usage",
-              fetchLatest:true,
-          }
-      }).then(function(response){
-          this.systemCapacityList=response.listcapacityresponse.capacity;
-      }.bind(this))
+      this.requestSystemCapacityData();
   }
 }
 </script>
@@ -90,13 +114,30 @@ export default {
     .system-capacity-content{
         width: 1200px;
         margin: 0 auto;
-        .title{
+        .system-capacity-title{
+            float: left;
             padding-left: 16px;
             font-size: 16px;
             color: #fff;
             border-left: 4px solid #51e299;
             height: 26px;
             line-height: 26px;
+        }
+        .system-capacity-refresh{
+            float: right;
+            margin-top: -4px;
+            width: 89px;
+            height: 34px;
+            line-height: 34px;
+            text-align: center;
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+            border-bottom-left-radius: 14px;
+            border-bottom-right-radius: 14px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #51e299;
+            cursor: pointer;
         }
         .system-capacity-list{
             padding-top: 45px;
@@ -111,11 +152,26 @@ export default {
                 &:nth-child(4n){
                     margin-right: 0;
                 }
+                .system-capacity-icon-row{
+                    // margin-top: -28px;
+                }
+                 .system-capacity-percent-row{
+                    margin-top: 12px;
+                    .system-capacity-percent{
+                        font-size: 18px;
+                        color: #fff;
+                        font-weight: bolder;
+                    }
+                }
                 .system-capacity-item-name{
                     position: absolute;
                     top: 142px;
                     left:50%;
-                    transform: translateX(-50%)
+                    transform: translateX(-50%);
+                    width: 100%;
+                    text-align: center;
+                    font-size: 16px;
+                    color: #fff;
                 }
             }
         }

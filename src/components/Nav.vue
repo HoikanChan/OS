@@ -56,9 +56,10 @@ export default {
         }
          a{
             color: #fff;
+            display: block;
         }
          .nav-menu-item,.nav-submenu{
-                padding:0 38px 0 36px;
+                padding:0;
                 position: relative;
                 height: 75px;
                 line-height: 75px;
@@ -82,6 +83,9 @@ export default {
                 }
                 .ivu-menu-submenu-title{
                     color: #fff;
+                }
+                a,.ivu-menu-submenu-title{
+                    padding:0 38px 0 36px;
                 }
             }
             .ivu-menu-item-active{
@@ -107,13 +111,17 @@ export default {
                 }
                 .ivu-select-dropdown{
                     background-color:#353942; 
-                    a{
-                        color: #fff;
-                    }
-                    .ivu-menu-item:hover{
-                        background-color: transparent;
+                    .ivu-menu-item{
+                        padding: 0;
                         a{
-                            color: #51e299;
+                                padding: 7px 16px 8px;
+                                color: #fff;
+                        }
+                        &:hover{
+                            background-color: transparent;
+                            a{
+                                color: #51e299;
+                            }
                         }
                     }
                 }
@@ -125,7 +133,7 @@ export default {
                 .ivu-menu-item-selected{
                     background-color: transparent;
                     a{
-                         color: #51e299;
+                         color: #51e299!important;
                     }
                 }
             }
