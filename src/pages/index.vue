@@ -6,9 +6,6 @@
         <Row class="page-row">
             <Col>
                 <Row>
-                    <v-breadcrumb></v-breadcrumb>
-                </Row>
-                <Row>
                     <router-view></router-view>
                 </Row>
             </Col>

@@ -21,8 +21,14 @@
                             trail-color="#5a647b"
                             :stroke-color="item.percentused | circleColor"
                             >
+                            <div class="system-capacite-default">
                                 <Row class="system-capacity-icon-row"><img class="system-capacity-icon" :src="getIcon(item.name)" alt=""></Row>
                                 <Row class="system-capacity-percent-row"><span class="system-capacity-percent">{{item.percentused}}%</span></Row>
+                            </div>
+                            <div class="system-capacity-hover" :style="computedBgColor(item.percentused)">
+                                <h6>已分配{{item.percentused}}%</h6>
+                                <p>{{item.type | convertByType(item.capacityused) }}/{{item.type | convertByType(item.capacitytotal) }}</p>
+                            </div>
                             </iCircle>
                             <span class="system-capacity-item-name">{{item.type | toCapacityCountType}}</span>
                     </div>
@@ -82,6 +88,14 @@ export default {
                 }
             }).then(function(response){
             }.bind(this))
+        },
+        showSystemCapacityMsg(){
+            console.log(1)
+        },
+        computedBgColor(value){
+            return {
+                'background-color': this.$options.filters['circleColor'](value)
+            }
         }
   },
   filters:{
@@ -149,18 +163,53 @@ export default {
                 display: inline-block;
                 margin-right: 145px;
                 margin-bottom: 74px;
+                cursor: pointer;
                 &:nth-child(4n){
                     margin-right: 0;
                 }
-                .system-capacity-icon-row{
-                    // margin-top: -28px;
+                &:hover{
+                     .system-capacite-default{
+                         display: none;
+                     }
+                     .system-capacity-hover{
+                         display: block;
+                     }
                 }
-                 .system-capacity-percent-row{
-                    margin-top: 12px;
-                    .system-capacity-percent{
-                        font-size: 18px;
-                        color: #fff;
-                        font-weight: bolder;
+                .system-capacite-default{
+                    .system-capacity-icon-row{
+                        // margin-top: -28px;
+                    }
+                    .system-capacity-percent-row{
+                        margin-top: 12px;
+                        .system-capacity-percent{
+                            font-size: 18px;
+                            color: #fff;
+                            font-weight: bolder;
+                        }
+                    }
+                }
+                .system-capacity-hover{
+                    display: none;
+                    position: relative;
+                    border-radius: 50%;
+                    width: 100%;
+                    height: 128px;
+                    color: #fff;
+                    h6{
+                        width: 100%;
+                        position: absolute;
+                        line-height: 28px;
+                        top: 40px;
+                        text-align: center;
+                        font-size: 14px;
+                    }
+                    p{
+                        width: 100%;
+                        position: absolute;
+                        line-height: 28px;
+                        top: 74px;
+                        text-align: center;
+                        font-size: 12px;
                     }
                 }
                 .system-capacity-item-name{

@@ -1,7 +1,9 @@
 <template>
-       <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: breadcrumb.path }" v-for="breadcrumb in breadcrumbs" :key="breadcrumb.name">{{breadcrumb.cnName}} </el-breadcrumb-item>
-        </el-breadcrumb> -->
+    <div class="breadcrumb">
+        <Breadcrumb>
+            <BreadcrumbItem :to="breadcrumb.path" v-for="breadcrumb in breadcrumbs" :key="breadcrumb.name">{{breadcrumb.cnName}}</BreadcrumbItem>
+        </Breadcrumb>
+    </div>
 </template>
 
 <script>
@@ -40,5 +42,19 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" type="text/css" scoped>
+<style lang="scss" type="text/css">
+.breadcrumb{
+    .ivu-breadcrumb{
+        height: 60px;
+        line-height: 60px;
+        span{
+            a:hover{
+                color: #51e299;
+            }
+            .ivu-breadcrumb-item-link{
+                font-weight: normal;
+            }
+        }
+    }
+}
 </style>
