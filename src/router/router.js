@@ -73,6 +73,7 @@ const router = new Router({
                             meta: { cnName: "控制板" },
                             beforeEnter: (to, from, next) => {
                                 // if (getCookie('role')==1) {
+                                    debugger
                                     next()
                                 // }
                             }
