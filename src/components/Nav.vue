@@ -2,7 +2,7 @@
         <div class="nav">
                 <Menu 
                 class="nav-menu"
-                :active-name="$route.path"
+                :active-name="activeName"
                 mode="horizontal"
                 >
                     <MenuItem v-for="(section,index) in getSections()" v-if="!section.children" :key="section.name" :name="section.path" class="nav-menu-item">
@@ -25,6 +25,7 @@ export default {
   data () {
     return {
         role:getCookie("role"),
+        activeName:'',
     }
   },
   methods:{
@@ -43,6 +44,14 @@ export default {
             }
       }
   },
+   watch:{
+      "$route"(val){
+          this.activeName = val.meta.activeName;
+      }
+  },
+  mounted(){
+      this.activeName = this.$route.meta.activeName;
+  }
 }
 </script>
 

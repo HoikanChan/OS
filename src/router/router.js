@@ -18,6 +18,8 @@ import Dashboard from '../views/Dashboard/Dashboard.vue'
 import AdminDashboard from '../views/Dashboard/AdminDashboard.vue'
 //domainadmin和user显示的首页
 import NormalDashboard from '../views/Dashboard/normalDashboard.vue'
+//警报详情
+import AlertsDetail from '../views/Dashboard/AlertsDetail.vue'
 //实例
 import Instances from '../views/Instances/Instances.vue'
 //存储
@@ -56,46 +58,48 @@ const router = new Router({
         {
             path: '/',
             component: Home,
-            redirect: { name: 'dashboard' },
+            redirect: { name: 'adminDashboard' },
             meta:{cnName:"首页"},
             children: [
                 {
-                    path: '',
-                    name: 'dashboard',
-                    component: Dashboard,
-                    meta: { cnName: "控制板" },
-                    redirect: { name: 'adminDashboard' },
+                    path: 'adminDashboard',
+                    name: 'adminDashboard',
+                    component: AdminDashboard,
+                    //cnName是显示的文字，activeName是默认显示导航高亮
+                    meta: { cnName: "控制板",activeName:"/" },
                     children: [
-                        {
-                            path: 'adminDashboard',
-                            name: 'adminDashboard',
-                            component: AdminDashboard,
-                            meta: { cnName: "控制板" },
-                            beforeEnter: (to, from, next) => {
-                                // if (getCookie('role')==1) {
-                                    debugger
-                                    next()
-                                // }
-                            }
-                        },
-                        {
-                            path: 'normalDashboard',
-                            name: 'normalDashboard',
-                            component: NormalDashboard,
-                            meta: { cnName: "控制板" },
-                            // beforeEnter: (to, from, next) => {
-                                // console.log(from)
-                                // if (true) {
-                                //     next({path: 'adminDashboard'})
-                                // } else {
-                                //     next({path: '/normalDashboard'})
-                                // }
-                                // next({ path: '/normalDashboard' })
-                                // console.log(to)
-                            // }
-                        }
+
                     ],
+                    beforeEnter: (to, from, next) => {
+                        if (getCookie('role')==1) {
+                            next()
+                        } else {
+                            next({path: 'normalDashboard'})
+                        }
+                    }
                 },
+                {
+                    path: 'normalDashboard',
+                    name: 'normalDashboard',
+                    component: NormalDashboard,
+                    meta: { cnName: "控制板",activeName:"/" },
+                    beforeEnter: (to, from, next) => {
+                        if (getCookie('role')==1) {
+                            next({path: 'adminDashboard'})
+                        } else {
+                            next()
+                        }
+                    }
+                },
+                {
+                    path: 'alertsDetail',
+                    name: 'alertsDetail',
+                    component: AlertsDetail,
+                    meta: { cnName: "警报详情",activeName:"/" },
+                    beforeEnter: (to, from, next) => {
+                        next();
+                    }
+                },  
                 {
                     path: 'instances',
                     name:'instances',
@@ -220,23 +224,32 @@ const router = new Router({
             meta:{cnName:"登录"}
         } 
     ],
+    //路由滚动行为
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+          return savedPosition
+        } else {
+          return { x: 0, y: 0 }
+        }
+      }
 }) 
  //路由独享守卫
 router.beforeEach((to, from, next) => {
-   //判断用户是否登录，没有就跳转到登录页面
-   if (to.path.indexOf("login") != -1) {
+    //判断用户是否登录，没有就跳转到登录页面
+    if (to.path.indexOf("login") != -1) {
         if (!getCookie('userId')) {
             next()
         } else {
             next({ path: '/' })
         }
     } else {
-       if (!getCookie('userId')) {
+        if (!getCookie('userId')) {
             confirm('会话超时')
             next({ path: '/login' })
-       } else {
+        } else {
             next()
         }
-    } 
- })
+    }
+});
+
 export default router

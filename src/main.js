@@ -86,7 +86,7 @@ Vue.filter('toCapacityCountType', function (value) {
 })
   //首页常规警报输出对应中文
 Vue.filter('toAlertType', (val) => {
-    switch (alertCode) {
+    switch (val) {
         case 0:
             return store.getters.getDictionary('label.memory');
         case 1:
@@ -150,17 +150,86 @@ Vue.filter('toAlertType', (val) => {
 Vue.filter('getNumber',(value)=> {
     return Number(value)
 })
-  
+  //将容量输出
+Vue.filter('convertByType', (alertCode,value) => {
+    switch (alertCode) {
+        case 0:
+            return converters.convertBytes(value);
+        case 1:
+            return converters.convertHz(value);
+        case 2:
+            return converters.convertBytes(value);
+        case 3:
+            return converters.convertBytes(value);
+        case 6:
+            return converters.convertBytes(value);
+        case 9:
+            return converters.convertBytes(value);
+        case 11:
+            return converters.convertBytes(value);
+    }
+    return value
+})
 //查询中文
 Vue.filter('getDictionary',  (value)=> {
     return store.getters.getDictionary(value)
   })
 
+let converters = {
+    convertBytes: (bytes)=> {
+        if (bytes == undefined)
+            return '';
+        if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(2) + " KB";
+        } else if (bytes < 1024 * 1024 * 1024) {
+            return (bytes / 1024 / 1024).toFixed(2) + " MB";
+        } else if (bytes < 1024 * 1024 * 1024 * 1024) {
+            return (bytes / 1024 / 1024 / 1024).toFixed(2) + " GB";
+        } else {
+            return (bytes / 1024 / 1024 / 1024 / 1024).toFixed(2) + " TB";
+        }
+    },
+    toBytes: (str)=> {
+        if (str === undefined) {
+            return "0";
+        }
+        var res = str.split(" ");
+        if (res.length === 1) {
+            // assume a number in GB
+            return parseInt(str, 10) * 1024 * 1024 * 1024;
+        }
+        // assume first string is a number and second string is a unit of size
+        if (res[1] === "KB") {
+            return parseInt(res[0], 10) * 1024;
+        }
+        if (res[1] === "MB") {
+            return parseInt(res[0], 10) * 1024 * 1024;
+        }
+        if (res[1] === "GB") {
+            return parseInt(res[0], 10) * 1024 * 1024 * 1024;
+        }
+        if (res[1] === "TB") {
+            return parseInt(res[0], 10) * 1024 * 1024 * 1024 * 1024;
+        }
+        // assume GB
+        return parseInt(res[0], 10) * 1024 * 1024 * 1024;
+    },
+    convertHz: function(hz) {
+        if (hz == null)
+            return "";
+
+        if (hz < 1000) {
+            return hz + " MHz";
+        } else {
+            return (hz / 1000).toFixed(2) + " GHz";
+        }
+    },
+  }
 /* eslint-disable no-new */
 var vm =new Vue({
         el: '#app',
         router,     
         store,
         components: { App },
-        template: '<App/>'
+        template: '<App/>',
 })
