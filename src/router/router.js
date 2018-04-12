@@ -58,22 +58,23 @@ const router = new Router({
         {
             path: '/',
             component: Home,
+            name:'index',
             redirect: { name: 'adminDashboard' },
-            meta:{cnName:"首页"},
+            meta: { cnName: "首页" },
             children: [
                 {
                     path: 'adminDashboard',
                     name: 'adminDashboard',
                     component: AdminDashboard,
                     //cnName是显示的文字，activeName是默认显示导航高亮
-                    meta: { cnName: "控制板",activeName:"/" },
+                    meta: { cnName: "控制板", activeName: "index" },
                     children: [
                     ],
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1) {
+                        if (getCookie('role') == 1) {
                             next()
                         } else {
-                            next({path: 'normalDashboard'})
+                            next({ path: 'normalDashboard' })
                         }
                     }
                 },
@@ -81,10 +82,10 @@ const router = new Router({
                     path: 'normalDashboard',
                     name: 'normalDashboard',
                     component: NormalDashboard,
-                    meta: { cnName: "控制板",activeName:"/" },
+                    meta: { cnName: "控制板", activeName: "index" },
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1) {
-                            next({path: 'adminDashboard'})
+                        if (getCookie('role') == 1) {
+                            next({ path: 'adminDashboard' })
                         } else {
                             next()
                         }
@@ -94,107 +95,107 @@ const router = new Router({
                     path: 'alertsDetail',
                     name: 'alertsDetail',
                     component: AlertsDetail,
-                    meta: { cnName: "警报详情",activeName:"/" },
+                    meta: { cnName: "警报详情", activeName: "index" },
                     beforeEnter: (to, from, next) => {
                         next();
                     }
-                },  
+                },
                 {
                     path: 'instances',
-                    name:'instances',
+                    name: 'instances',
                     component: Instances,
-                    meta:{cnName:"虚拟机"}
+                    meta: { cnName: "虚拟机", activeName: "instances" }
                 },
                 {
                     path: 'storage',
-                    name:'storage',
-                    component:Vstorage,
-                    meta:{cnName:"存储"}
+                    name: 'storage',
+                    component: Vstorage,
+                    meta: { cnName: "存储", activeName: "storage" }
                 },
                 {
                     path: 'network',
-                    name:'network',
-                    component:Network,
-                    meta:{cnName:"网络"}
+                    name: 'network',
+                    component: Network,
+                    meta: { cnName: "网络", activeName: "network" }
                 },
                 {
                     path: 'templates',
-                    name:'templates',
-                    component:Vtemplate,
-                    meta:{cnName:"模板"}
+                    name: 'templates',
+                    component: Vtemplate,
+                    meta: { cnName: "模板", activeName: "templates" }
                 },
                 {
                     path: 'roles',
-                    name:'roles',
+                    name: 'roles',
                     component: Roles,
-                    meta:{cnName:"角色管理"},
+                    meta: { cnName: "角色管理", activeName: "roles" },
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1) {
+                        if (getCookie('role') == 1) {
                             next()
                         }
                     }
                 },
                 {
                     path: 'accounts',
-                    name:'accounts',
-                    component:Accounts,
-                    meta:{cnName:"帐户管理"}
+                    name: 'accounts',
+                    component: Accounts,
+                    meta: { cnName: "帐户管理", activeName: "accounts" }
                 },
                 {
                     path: 'domains',
-                    name:'domains',
+                    name: 'domains',
                     component: Domains,
-                    meta:{cnName:"域"},
+                    meta: { cnName: "域", activeName: "domains" },
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1||getCookie('role')==2) {
+                        if (getCookie('role') == 1 || getCookie('role') == 2) {
                             next()
                         }
                     }
                 },
                 {
                     path: 'events',
-                    name:'events',
+                    name: 'events',
                     component: Vevents,
-                    meta:{cnName:"事件"}
+                    meta: { cnName: "事件", activeName: "events" }
                 },
                 {
                     path: 'system',
-                    name:'system',
-                    component:System,
-                    meta:{cnName:"基础架构"},
+                    name: 'system',
+                    component: System,
+                    meta: { cnName: "基础架构", activeName: "system" },
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1) {
+                        if (getCookie('role') == 1) {
                             next()
                         }
                     }
                 },
                 {
                     path: 'globalSettings',
-                    name:'globalSettings',
+                    name: 'globalSettings',
                     component: GlobalSettings,
-                    meta:{cnName:"全局设置"},
+                    meta: { cnName: "全局设置", activeName: "globalSettings" },
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1) {
+                        if (getCookie('role') == 1) {
                             next()
                         }
                     }
                 },
                 {
                     path: 'configuration',
-                    name:'configuration',
-                    component:Configuration,
-                    meta:{cnName:"服务方案"},
+                    name: 'configuration',
+                    component: Configuration,
+                    meta: { cnName: "服务方案", activeName: "configuration" },
                     beforeEnter: (to, from, next) => {
-                        if (getCookie('role')==1||getCookie('role')==2) {
+                        if (getCookie('role') == 1 || getCookie('role') == 2) {
                             next()
                         }
                     }
                 },
                 {
                     path: 'projects',
-                    name:'projects',
-                    component:Projects,
-                    meta:{cnName:"项目"},
+                    name: 'projects',
+                    component: Projects,
+                    meta: { cnName: "项目", activeName: "projects" },
                     // beforeEnter: (to, from, next) => {
                     //     if (getCookie('role')==1||getCookie('role')==2) {
                     //         next()
@@ -203,35 +204,36 @@ const router = new Router({
                 },
                 {
                     path: 'regions',
-                    name:'regions',
-                    component:Regions,
-                    meta:{cnName:"地理区域"}
+                    name: 'regions',
+                    component: Regions,
+                    meta: { cnName: "地理区域" , activeName: "regions"}
                 },
                 {
                     path: 'affinityGroups',
-                    name:'affinityGroups',
-                    component:AffinityGroups,
-                    meta:{cnName:"关联性组"}
+                    name: 'affinityGroups',
+                    component: AffinityGroups,
+                    meta: { cnName: "关联性组" , activeName: "affinityGroups"}
                 }
             ],
            
         },
         {
             path: '/login',
-            name:'login',
+            name: 'login',
             component: Login,
-            meta:{cnName:"登录"}
-        } 
+            meta: { cnName: "登录" }
+        }
     ],
     //路由滚动行为
-    scrollBehavior (to, from, savedPosition) {
+    scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
-          return savedPosition
+            return savedPosition
         } else {
-          return { x: 0, y: 0 }
+            return { x: 0, y: 0 }
         }
-      }
-}) 
+    }
+});
+
  //路由独享守卫
 router.beforeEach((to, from, next) => {
     //判断用户是否登录，没有就跳转到登录页面

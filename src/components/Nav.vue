@@ -5,12 +5,12 @@
                 :active-name="activeName"
                 mode="horizontal"
                 >
-                    <MenuItem v-for="(section,index) in getSections()" v-if="!section.children" :key="section.name" :name="section.path" class="nav-menu-item">
+                    <MenuItem v-for="(section,index) in getSections()" v-if="!section.children" :key="section.name" :name="section.name" class="nav-menu-item">
                         <router-link :to="section.path"> {{section.tag}}</router-link>
                     </MenuItem>
-                     <Submenu  v-else :key="section.name"  :name="section.path" class="nav-submenu">
+                     <Submenu  v-else :key="section.name"  :name="section.name" class="nav-submenu">
                         <template slot="title">{{section.tag}}</template>
-                        <MenuItem v-for="subSection in section.children" :key="subSection.name" :name="subSection.path" class="nav-menu-item">
+                        <MenuItem v-for="subSection in section.children" :key="subSection.name" :name="subSection.name" class="nav-menu-item">
                             <router-link :to="subSection.path"> {{subSection.tag}}</router-link>
                         </MenuItem>
                     </Submenu>

@@ -94,7 +94,7 @@ export default {
         },
         computedBgColor(value){
             return {
-                'background-color': this.$options.filters['circleColor'](value)
+                'background-color': this.$options.filters['circleColor'](value) //过滤器
             }
         }
   },

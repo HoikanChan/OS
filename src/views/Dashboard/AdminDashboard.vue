@@ -8,28 +8,35 @@
                 </Row>
                 <Row class="alerts-row">
                     <div class="alerts-row-center">
-                            <Col>
+                            <Col span='12'>
                                     <!--常规警报-->
-                                    <v-generalAlerts></v-generalAlerts> 
+                                    <v-Alerts  
+                                    title="常规警报"
+                                    :requestparams="{command:'listAlerts',response:'json',page:1,pageSize:100,listAll:true}" 
+                                    response="listalertsresponse"
+                                    responsekey="alert"
+                                    ></v-Alerts> 
                             </Col>
-                            <Col>
+                            <Col span='12'>
                                     <!--Hosts in Alert State-->
-                                    <v-hostAlerts></v-hostAlerts>
+                                    <v-Alerts 
+                                     title="主机警报"
+                                     :requestparams="{command: 'listHosts',response: 'json',state: 'Alert',page: 1,pageSize: 100,listAll:true}"
+                                     response="listhostsresponse"
+                                     responsekey="host"
+                                    ></v-Alerts>
                             </Col>
                     </div>
                 </Row>
            </Row>
-         
        </div>
 </template>
 
 <script>
 //系统容量
 import systemCapacity from './SystemCapacity'
-//常规警报
-import generalAlerts from './GeneralAlerts'
-//主机警报
-import hostAlerts from './HostAlerts';
+//警报
+import alerts from './Alerts'
 export default {
   name: 'v-adminDashboard',
   data () {
@@ -38,8 +45,7 @@ export default {
   },
   components:{
       'v-systemCapacity':systemCapacity,
-      'v-generalAlerts':generalAlerts,
-      'v-hostAlerts':hostAlerts,
+      'v-Alerts':alerts,
   },
   methods:{
   },

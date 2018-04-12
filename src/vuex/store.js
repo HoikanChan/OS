@@ -12,7 +12,7 @@ const store = new Vuex.Store({
         adminSections:[
             { 
                 tag: "首页",
-                name:"dashboard",
+                name:"index",
                 path:"/",
                 children:"",
             },
@@ -126,7 +126,7 @@ const store = new Vuex.Store({
         domainAdminSections:[
             { 
                 tag: "首页",
-                name:"dashboard",
+                name:"index",
                 path:"/",
                 children:"",
             },
@@ -221,7 +221,7 @@ const store = new Vuex.Store({
         normalUserSections:[
             { 
                 tag: "首页",
-                name:"dashboard",
+                name:"index",
                 path:"/",
                 children:"",
             },
