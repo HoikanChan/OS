@@ -110,7 +110,10 @@ export default {
             let newParams = {};
             if(param){
                 newParams = Object.assign(params,param)
+            }else{
+                newParams=params
             }
+            debugger
              this.$http.get("/client/api",{
                 params:newParams
             }).then(function(response){
