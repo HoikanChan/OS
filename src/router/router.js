@@ -79,6 +79,7 @@ const router = new Router({
                     //cnName是显示的文字，activeName是默认显示导航高亮
                     meta: { cnName: "首页", activeName: "index" },
                     children: [
+
                         {
                             path: '',
                             name: 'dashboard',
