@@ -113,7 +113,6 @@ export default {
             }else{
                 newParams=params
             }
-            debugger
              this.$http.get("/client/api",{
                 params:newParams
             }).then(function(response){
