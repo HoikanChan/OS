@@ -12,7 +12,9 @@ Vue.use(Router)
 import Home from '../pages/index.vue'
 import Login from '../pages/login.vue'
 //组件
-//控制面板
+/*
+    控制面板(首页)
+*/
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 //admin的控制面板
 import AdminDashboard from '../views/Dashboard/AdminDashboard.vue'
@@ -20,9 +22,16 @@ import AdminDashboard from '../views/Dashboard/AdminDashboard.vue'
 import NormalDashboard from '../views/Dashboard/normalDashboard.vue'
 //警报详情
 import AlertsDetail from '../views/Dashboard/AlertsDetail.vue'
-//实例
+/*
+    实例
+*/
+import InstancesIndex from '../views/Instances/Index.vue'
 import Instances from '../views/Instances/Instances.vue'
-//存储
+//运行指数
+import OperationalIndicators from '../views/Instances/OperationalIndicators.vue'
+/*
+    存储
+*/
 import Vstorage from '../views/Storage/Storage.vue'
 //网络
 import Network from '../views/Network/Network.vue'
@@ -60,51 +69,69 @@ const router = new Router({
             component: Home,
             name:'index',
             redirect: { name: 'adminDashboard' },
-            meta: { cnName: "首页" },
+            meta: { cnName: "" },
             children: [
                 {
-                    path: 'adminDashboard',
+                    path: '/',
                     name: 'adminDashboard',
-                    component: AdminDashboard,
+                    redirect: { name: 'dashboard' },
+                    component: Dashboard,
                     //cnName是显示的文字，activeName是默认显示导航高亮
-                    meta: { cnName: "控制板", activeName: "index" },
+                    meta: { cnName: "首页", activeName: "index" },
                     children: [
+                        {
+                            path: '',
+                            name: 'dashboard',
+                            component: AdminDashboard,
+                            meta: { cnName: "", activeName: "index" },
+                            beforeEnter: (to, from, next) => {
+                                if (getCookie('role') == 1) {
+                                    next()
+                                } else {
+                                    next({ name: 'normalDashboard' })
+                                }
+                            }
+                        },
+                        {
+                            path: 'alertsDetail',
+                            name: 'alertsDetail',
+                            component: AlertsDetail,
+                            meta: { cnName: "警报详情", activeName: "index" },
+                        },
                     ],
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1) {
-                            next()
-                        } else {
-                            next({ path: 'normalDashboard' })
-                        }
-                    }
                 },
                 {
                     path: 'normalDashboard',
                     name: 'normalDashboard',
                     component: NormalDashboard,
-                    meta: { cnName: "控制板", activeName: "index" },
+                    meta: { cnName: "首页", activeName: "index" },
                     beforeEnter: (to, from, next) => {
                         if (getCookie('role') == 1) {
-                            next({ path: 'adminDashboard' })
+                            next({ name: 'adminDashboard' })
                         } else {
                             next()
                         }
                     }
                 },
                 {
-                    path: 'alertsDetail',
-                    name: 'alertsDetail',
-                    component: AlertsDetail,
-                    meta: { cnName: "警报详情", activeName: "index" },
-                    beforeEnter: (to, from, next) => {
-                        next();
-                    }
-                },
-                {
                     path: 'instances',
-                    name: 'instances',
-                    component: Instances,
-                    meta: { cnName: "虚拟机", activeName: "instances" }
+                    redirect: { name: 'dashboard' },
+                    component: InstancesIndex,
+                    meta: { cnName: "虚拟机", activeName: "instances" },
+                    children: [
+                        {
+                            path: '',
+                            name: 'instances',
+                            component: Instances,
+                            meta: { cnName: "", activeName: "instances" },
+                        },
+                        {
+                            path: 'operationalIndicators',
+                            name: 'operationalIndicators',
+                            component: OperationalIndicators,
+                            meta: { cnName: "运行指数", activeName: "instances" },
+                        }
+                    ]
                 },
                 {
                     path: 'storage',

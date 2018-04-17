@@ -10,7 +10,6 @@ import 'iview/dist/styles/iview.css';
 
 
 Vue.use(iView)
-console.log(iView)
 // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
 // 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
 // axios.defaults.baseURL = store.state.host;
@@ -28,7 +27,20 @@ axios.interceptors.response.use(function (response) {
  return response.data
 }, function (error) {
   // 对响应错误做点什么
-  debugger  
+    if (error.response.status == 500) {
+        router.push({path:"login"})
+        // console.log(iView)
+        // console.log(error)
+        // debugger
+        // iView.Notice.error({
+        //     desc: '响应超时'
+        // });
+    } else if (error.response.status == 401) {
+        iView.Notice.error({
+            desc: '响应超时'
+        });
+
+  }
   return Promise.reject(error)
 });
 //将 axios 改写为 Vue 的原型属性
@@ -152,8 +164,8 @@ Vue.filter('getNumber',(value)=> {
     return Number(value)
 })
   //将容量输出
-Vue.filter('convertByType', (alertCode,value) => {
-    switch (alertCode) {
+Vue.filter('convertByType', (alertCode, value) => {
+    switch (alertCode) { 
         case 0:
             return converters.convertBytes(value);
         case 1:

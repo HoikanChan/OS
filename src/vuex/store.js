@@ -7,7 +7,7 @@ const store = new Vuex.Store({
     // 定义状态
     state: {
         host: 'http://10.0.96.20:8080/',
-        // host:'http://192.168.15.158:8080',
+        // host:'http://192.168.15.62:9080/',
         localhost: 'localhost:8080/',
         adminSections:[
             { 
@@ -2595,8 +2595,12 @@ const store = new Vuex.Store({
                 return state.dictionary[key.toLocaleLowerCase()]
             }
         },
-        toAlertType: (state) => (key) => {
-            
+        fetchDataFromStorage: (state) => (key) => {
+            if (state[key]) {
+                return state[key]
+            } else {
+                return localStorage.getItem(key)
+            }
         }
     }
 })

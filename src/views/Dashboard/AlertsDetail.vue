@@ -6,8 +6,14 @@
             </Row>
             <Row>
                 <div class="operation-row">
-                    <span @click="deleteAlert">删除</span>
-                    <span @click="archiveAlert">存档</span>
+                    <div class="operation-btn deleted-btn" @click="deleteAlert">
+                        <span></span>
+                        <p>删除</p>
+                    </div>
+                    <div class="operation-btn archive-btn" @click="archiveAlert">
+                        <span></span>
+                        <p>存档</p>
+                    </div>
                 </div>
             </Row>
             <Row>
@@ -126,6 +132,42 @@ export default {
 .alerts-detail{
     width:1200px;
     margin:0 auto;
+    .operation-row{
+        padding-top: 15px;
+        padding-bottom: 36px;
+        .operation-btn{
+            margin-right: 60px;
+            display: inline-block;
+            cursor: pointer;
+            height: 85px;
+            position: relative;
+            span{
+                display: block;
+                width: 54px;
+                height: 54px;
+            }
+            p{
+                position: absolute;
+                left:50%;
+                bottom: 0;
+                transform: translateX(-50%);
+                font-size: 14px;
+                color:#333;
+                text-align: center;
+                word-break: keep-all;
+            }
+        }
+        .deleted-btn{
+            span{
+                background: url('../../assets/deleted_icon.png') no-repeat center center;
+            }
+        }
+        .archive-btn{
+             span{
+                background: url('../../assets/archive_icon.png') no-repeat center center;
+            }
+        }
+    }
     .basic-info{
         .basic-title{
             height:37px;
