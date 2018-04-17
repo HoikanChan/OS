@@ -16,7 +16,6 @@
 <script>
 //引入该页面需要的组件
 import header from '../components/Header'
-import breadcrumb from '../components/Breadcrumb'
 export default {
   name: '',
   data () {
@@ -27,7 +26,6 @@ export default {
   //注册组件
   components:{
          'v-header':header,
-         'v-breadcrumb':breadcrumb,
   }
 }
 </script>

@@ -1,66 +1,69 @@
 <template>
-       <div id="general-alerts">
+       <div class="alerts-template">
            <Row>
-               <div class="general-alerts-title">
-                   常规警报
+               <div class="alerts-title">
+                   {{title}}
                </div>
            </Row>
-           <Row class="general-alerts-list">
+           <Row class="alerts-list">
                <ul>
-                   <li v-for="item in generalAlertsData" :key="item.id" @click.prevent="toAlertsDetail(item.id)">
-                       <div class="general-alerts-icon"></div>
-                       <div class="general-alerts-content">
+                   <li v-for="item in alertsData" :key="item.id" @click.prevent="toAlertsDetail(item.id)" :class="requestparams.state?'no-pointer':''">
+                       <div class="alerts-icon"></div>
+                       <!--常规警报-->
+                       <div class="alerts-content" v-if="!requestparams.state">
                            <h6>{{item.type | toAlertType}}</h6> 
                            <p :title="item.description">{{item.description}}</p>
+                       </div>
+                       <!--主机警报-->
+                       <div class="alerts-content" v-else>
+                           <h6>{{item.name}}</h6> 
+                           <p>检测到警报状态</p>
                        </div>
                    </li>
                </ul>
            </Row>
-           <router-view></router-view>
        </div>
 </template>
 
 <script>
 export default {
-  name: 'v-generalAlerts',
+  name: 'v-alerts',
   data () {
     return {
-        generalAlertsData:[],
+        alertsData:[],
     }
   },
+  props:['title','response','requestparams','responsekey'],
   methods:{
-       requestGeneralAlertsData(){
+       requestAlertsData(){
            this.$http.get('client/api',{
-                params:{
-                    command:"listAlerts",
-                    response:"json",
-                    page:1,
-                    pageSize:20,
-                    listAll:true,
-                }
+                params:this.requestparams
             }).then(function(response){
-                this.generalAlertsData=response.listalertsresponse.alert;
+                this.alertsData=response[this.response][this.responsekey];
             }.bind(this))
       },
       toAlertsDetail(id){
-        //   this.$emit('showdetail')
+          //主机警报的时候不能进入警报详情页面
+          if(this.requestparams.state){
+              return false
+          }
           this.$router.push({
               name:'alertsDetail',
-              params: { id: id }
+              query: { id: id }
           })
       }
   },
   created(){
-      this.requestGeneralAlertsData();
+      this.requestAlertsData();
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css">
-#general-alerts{
+.alerts-template{
     width: 532px;
-    .general-alerts-title{
+    .alerts-title{
         padding-left: 16px;
         font-size: 16px;
         color: #333333;
@@ -69,7 +72,7 @@ export default {
         line-height: 37px;
         background-color: #fff;
     }
-    .general-alerts-list{
+    .alerts-list{
         padding-top: 34px;
         padding-bottom: 18px;
         ul{
@@ -78,13 +81,13 @@ export default {
                 height: 70px;
                 margin-bottom: 16px;
                 cursor: pointer;
-                .general-alerts-icon{ 
+                .alerts-icon{ 
                     width: 78px;
                     height: 70px;
                     float: left;
                     background: #fe6275 url('../../assets/general_alerts_icon.png') no-repeat center center;
                 }
-                .general-alerts-content{
+                .alerts-content{
                     background-color: #fff;
                     padding:15px 26px 3px;
                     width: 453px;
@@ -105,6 +108,9 @@ export default {
                         white-space: nowrap;
                     }
                 }
+            }
+            .no-pointer{
+                cursor: default;
             }
         }
     }

@@ -10,7 +10,6 @@ import 'iview/dist/styles/iview.css';
 
 
 Vue.use(iView)
-console.log(iView)
 // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
 // 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
 // axios.defaults.baseURL = store.state.host;
@@ -28,6 +27,20 @@ axios.interceptors.response.use(function (response) {
  return response.data
 }, function (error) {
   // 对响应错误做点什么
+    if (error.response.status == 500) {
+        router.push({path:"login"})
+        // console.log(iView)
+        // console.log(error)
+        // debugger
+        // iView.Notice.error({
+        //     desc: '响应超时'
+        // });
+    } else if (error.response.status == 401) {
+        iView.Notice.error({
+            desc: '响应超时'
+        });
+
+  }
   return Promise.reject(error)
 });
 //将 axios 改写为 Vue 的原型属性
@@ -38,7 +51,7 @@ Vue.prototype.$http = axios;
 Vue.config.productionTip = false;
 
 //首页系统容量输出对应中文
-Vue.filter('toCapacityCountType', function (value) {
+Vue.filter('toCapacityCountType', (value)=>{
     switch (value) {
         case 0:
             return store.getters.getDictionary('label.memory');
@@ -71,7 +84,7 @@ Vue.filter('toCapacityCountType', function (value) {
         case 14:
             return store.getters.getDictionary('label.domain.router');
         case 15:
-            return store.getters.getDictionary('label.console.proxy');
+            return store.getters.getDictionary('label.console.proxy'); 
         case 16:
             return store.getters.getDictionary('label.user.vm');
         case 17:
@@ -151,8 +164,8 @@ Vue.filter('getNumber',(value)=> {
     return Number(value)
 })
   //将容量输出
-Vue.filter('convertByType', (alertCode,value) => {
-    switch (alertCode) {
+Vue.filter('convertByType', (alertCode, value) => {
+    switch (alertCode) { 
         case 0:
             return converters.convertBytes(value);
         case 1:
@@ -171,9 +184,74 @@ Vue.filter('convertByType', (alertCode,value) => {
     return value
 })
 //查询中文
-Vue.filter('getDictionary',  (value)=> {
+Vue.filter('getDictionary', (value) => {
+    if (value.indexOf("label.") == -1) {
+        value ="label."+ value
+    }
     return store.getters.getDictionary(value)
   })
+
+//将时间转成时间戳再输出
+Vue.filter('getTime', (value,dateFormat) => {
+    let date = new Date(value);
+    let year = date.getFullYear();
+    let month = ((date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1);
+    let day = (date.getDate() < 10 ? "0" + date.getDate() : date.getDate());
+    let hours = (date.getHours() < 10 ? "0" + date.getHours() : date.getHours());
+    let minutes = (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+    let seconds = date.getSeconds();
+    let n = '';
+    switch (dateFormat) {
+        case 'yyyy':
+            n = year;
+            break;
+        case 'MM':
+            n = month;
+            break;
+        case 'dd':
+            n = day;
+            break;
+        case 'yyyy-MM-dd hh:mm':
+            n = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+            break;
+        case 'yyyy-MM-dd':
+            n = year + '-' + month + '-' + day;
+            break;
+        case 'yyyy-MM':
+            n = year + '-' + month;
+            break;
+        case 'yyyy/MM/dd hh:mm':
+            n = year + '/' + month + '/' + day + ' ' + hours + ':' + minutes;
+            break;
+        case 'yyyy/MM':
+            n = year + '/' + month;
+            break;
+        case 'yyyy/MM/dd':
+            n = year + '/' + month + '/' + day;
+            break;
+        case 'yyyy.MM':
+            n = year + '.' + month;
+            break;
+        case 'yyyy.MM.dd hh:mm':
+            n = year + '.' + month + '.' + day + ' ' + hours + ':' + minutes;
+            break;
+        case 'yyyy.MM.dd':
+            n = year + '.' + month + '.' + day;
+            break;
+        case 'yyyy年MM月dd日 hh:mm':
+            n = year + '年' + month + '月' + day + '日 ' + hours + ':' + minutes;
+            break;
+        case 'yyyy年MM月dd日':
+            n = year + '年' + month + '月' + day+'日';
+            break;
+        default:
+            n = year + '-' + month + '-' + day + ' ' + hours + ':' + minutes;
+            break
+    }
+    return n
+  })
+
+
 
 let converters = {
     convertBytes: (bytes)=> {

@@ -60,6 +60,14 @@ export default {
                 setCookie('sessionKey',response.loginresponse.sessionkey,response.loginresponse.timeout);
                 setCookie('userName',response.loginresponse.username,response.loginresponse.timeout);
                 setCookie('role',response.loginresponse.type,response.loginresponse.timeout);
+                //保存到localstorage中
+                localStorage.setItem('userId', response.loginresponse.userid);
+                localStorage.setItem('account',response.loginresponse.account);
+                localStorage.setItem('firstName',response.loginresponse.firstname);
+                localStorage.setItem('lastName',response.loginresponse.lastname);
+                localStorage.setItem('domainId',response.loginresponse.domainid);
+                localStorage.setItem('userName',response.loginresponse.username);
+                localStorage.setItem('role',response.loginresponse.type);
                  //路由跳转到首页
                 this.$router.push({path:'/'});
             }.bind(this)).catch(function(error){
