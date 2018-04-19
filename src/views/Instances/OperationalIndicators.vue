@@ -5,12 +5,12 @@
            </Row>
            <Row>
                <Col class="search-operation"  offset="15" span="9">
-                    <input type="text" placeholder="请输入名称关键字" >
-                    <button class="search-btn" >搜索</button>
+                    <input type="text" placeholder="请输入名称关键字" v-model="searchValue" @keydown.enter="searchData">
+                    <button class="search-btn" @click.prevent="searchData">搜索</button>
                </Col>
            </Row>
            <Row class="operational-indicators-table">
-               <Table :columns="columns" :data="dataList" border height="500"></Table>
+               <Table :columns="columns" :data="dataList" border width="1200"></Table>
            </Row>
        </div>
 </template>
@@ -27,15 +27,22 @@ export default {
                     title: '名称',
                     key: 'displayname',
                     align: 'center',
-                    filterMultiple: false,
-                    filterMethod (value, row) {
-                        // console.log(value)
-                    }
                 },
                  {
                     title: '状态',
                     key: 'state',
                     align: 'center',
+                    render (h, o) {
+                        if(o.row.state=='Stopped'){
+                            // debugger
+                        }
+                        return h('div', {
+                                'class': {
+                                    foo: true,
+                                    bar: false
+                                },
+                            }, '1232');
+                    }
                 },
                  {
                     title: 'IP地址',
@@ -92,7 +99,8 @@ export default {
                     key: 'diskiopstotal',
                     align: 'center',
                 },
-            ]
+            ],
+            searchValue:''
         }
     },
     components:{
@@ -118,6 +126,9 @@ export default {
             }).then(function(response){
                 this.dataList=response.listvirtualmachinesmetricsresponse.virtualmachine;
             }.bind(this))
+        },
+        searchData(){
+            this.fetchData({keyword:this.searchValue})
         }
     },
     created(){
