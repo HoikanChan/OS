@@ -54,7 +54,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
 #user-operation{
-    heigh:75px;
+    height:75px;
     line-height:75px;
     .userName{
         color: #fff;
