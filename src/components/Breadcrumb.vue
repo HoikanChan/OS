@@ -1,7 +1,10 @@
 <template>
     <div class="breadcrumb">
         <Breadcrumb>
-            <BreadcrumbItem :to="breadcrumb.path" v-for="breadcrumb in breadcrumbs" :key="breadcrumb.name">{{breadcrumb.cnName}}</BreadcrumbItem>
+            <BreadcrumbItem :to="breadcrumb.path" v-for="breadcrumb in breadcrumbs" :key="breadcrumb.name" >
+                <span v-if="breadcrumb.displayName">{{breadcrumb.displayName}}</span>
+                <span v-else>{{breadcrumb.cnName}}</span>
+            </BreadcrumbItem>
         </Breadcrumb>
     </div>
 </template>
@@ -26,7 +29,8 @@ export default {
            this.breadcrumbs.push({
                   path:lastPath.path,
                   name:lastPath.name,
-                  cnName:lastPath.meta.cnName
+                  cnName:lastPath.meta.cnName,
+                  displayName:this.$route.params.displayName,
                 });
       }
   },

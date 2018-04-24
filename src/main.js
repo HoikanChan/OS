@@ -40,7 +40,7 @@ axios.interceptors.response.use(function (response) {
         iView.Notice.error({
             desc: '响应超时'
         });
-
+        router.push({path:'login'})
   }
   return Promise.reject(error)
 });
@@ -164,6 +164,51 @@ Vue.filter('toAlertType', (val) => {
 Vue.filter('getNumber',(value)=> {
     return Number(value)
 })
+//虚拟机状态
+Vue.filter('vMState',(state)=>{
+    let s = state.toLowerCase();
+    switch(s){
+        case 'running':
+            return '运行中'
+            break;
+        case 'stopping':
+            return '停止中'
+            break;
+        case 'stopped':
+            return '停止'
+            break;
+        case 'destroyed':
+            return '已销毁'
+            break;
+        case 'expunging':
+            return '正在删除'
+            break;
+        case 'expunged':
+            return '已删除'
+            break;
+        case 'migrating':
+            return '已迁移'
+            break;
+        case 'stoping':
+            return '停止中'
+            break;
+        case 'error':
+            return '错误'
+            break;
+         case 'unknown':
+            return '未知'
+            break;
+         case 'shutdowned':
+            return '关闭'
+            break;
+        case 'Present':
+            return '正常'
+            break;
+         default :
+            return ''
+            break;
+    }
+})
   //将容量输出
 Vue.filter('convertByType', (alertCode, value) => {
     switch (alertCode) { 
@@ -193,7 +238,10 @@ Vue.filter('getDictionary', (value) => {
   })
 
 //将时间转成时间戳再输出
-Vue.filter('getTime', (value,dateFormat) => {
+Vue.filter('getTime', (value, dateFormat) => {
+    if (!value) {
+        return ''
+    }
     let date = new Date(value);
     let year = date.getFullYear();
     let month = ((date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1);
@@ -255,7 +303,7 @@ Vue.filter('getTime', (value,dateFormat) => {
 
 
 let converters = {
-    convertBytes: (bytes)=> {
+    convertBytes: (bytes) => {
         if (bytes == undefined)
             return '';
         if (bytes < 1024 * 1024) {

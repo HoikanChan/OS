@@ -20,6 +20,18 @@ ul{
         list-style: none;
     }
 }
+
+//清除浮动的
+.clear{
+    &::before,&::after{
+        content: " ";
+        display: table;
+    };
+    &::after{
+        clear: both;
+    }
+}
+
 //iview modal组件
 .ivu-modal{
     .ivu-modal-body{
