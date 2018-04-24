@@ -35,12 +35,12 @@
            </Row>
            <div class="data-list-row">
                <ul>
-                   <li v-for="item in listData" @mouseenter="showHoverInfo" @mouseleave="hideHoverInfo">
+                   <li v-for="item in listData" @mouseenter="showHoverInfo" @mouseleave="hideHoverInfo" @click="detailsInfo(item.id,item.zoneid,item.name)">
                        <div class="default-show">
                             <div class="item-icon"></div>
                             <div class="item-info">
                                 <p>名称：{{item.name}}</p>
-                                <p>状态：{{item.state | getState}}</p>
+                                <p>状态：{{item.state | vMState}}</p>
                                 <p>内存：{{item.memory}}</p>
                                 <p>CPU：{{item.cpunumber}}核（{{ 1 | convertByType(item.cpuspeed)}})</p>
                                 <p>IP地址：{{item.nic[0].ipaddress}}</p>
@@ -58,6 +58,7 @@
                    </li>
                </ul>
            </div>
+           <!--新增虚拟机模态框-->
            <div class="modal" v-show="modalShow">
                <div class="modal-mask"></div>
                <div class="modal-warp">
@@ -211,7 +212,7 @@ export default {
     },
     methods:{
         //请求操作系统列表
-        requestOsTypes(){
+        fetchOsTypes(){
             this.$http.get("/client/api",{
                     params:{
                             command:"listOsTypes",
@@ -219,11 +220,11 @@ export default {
                     }
                 }).then(function(response){
                     this.osTypesLIst=response.listostypesresponse.ostype;
-                    this. requestListData();
+                    this. fetchListData();
                 }.bind(this))
         },
         //请求虚拟机数据
-        requestListData(param){
+        fetchListData(param){
             let params = {
                 command:"listVirtualMachines",
                 response:"json",
@@ -248,6 +249,12 @@ export default {
                 }
             })
             return osName
+        },
+        //详情信息
+        detailsInfo(id,zoneid,name){ 
+            this.$router.push({name:'instancesdetails',query:{id:id,zoneid:zoneid},params:{displayName:name}})
+            //  this.$router.push({path:'instances/instancesdetails',query:{id:id},params:{displayName:name}})
+            //  this.$router.push({path:'/',query:{id:id},params:{displayName:name}})
         },
         //鼠标移进显示隐藏的信息
         showHoverInfo(event){
@@ -305,7 +312,7 @@ export default {
             if(this.searchValue){
                 params.keyword=this.searchValue;
             }
-             this.requestListData(params);
+             this.fetchListData(params);
         },
         //运行指数
         operationalIndicators(){
@@ -353,48 +360,8 @@ export default {
             this.fetchData()
         }
     },
-    filters:{
-        getState(state){
-            let s = state.toLowerCase();
-            switch(s){
-                case 'running':
-                    return '运行中'
-                    break;
-                case 'stopping':
-                    return '停止中'
-                    break;
-                case 'stopped':
-                    return '停止'
-                    break;
-                case 'destroyed':
-                    return '已销毁'
-                    break;
-                case 'expunging':
-                    return '已删除'
-                    break;
-                case 'migrating':
-                    return '已迁移'
-                    break;
-                case 'stoping':
-                    return '停止中'
-                    break;
-                case 'error':
-                    return '错误'
-                    break;
-                 case 'unknown':
-                    return '未知'
-                    break;
-                 case 'shutdowned':
-                    return '关闭'
-                    break;
-                 default :
-                    return ''
-                    break;
-            }
-        }
-    },
     created(){
-        this.requestOsTypes();
+        this.fetchOsTypes();
     },
 }
 </script>

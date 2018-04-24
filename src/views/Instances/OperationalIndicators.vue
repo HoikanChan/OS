@@ -32,17 +32,9 @@ export default {
                     title: '状态',
                     key: 'state',
                     align: 'center',
-                    render (h, o) {
-                        if(o.row.state=='Stopped'){
-                            // debugger
-                        }
-                        return h('div', {
-                                'class': {
-                                    foo: true,
-                                    bar: false
-                                },
-                            }, '1232');
-                    }
+                    render:function (h, o) {
+                        return h('div', this.$options.filters['storageState'](o.row.state));
+                    }.bind(this)
                 },
                  {
                     title: 'IP地址',
