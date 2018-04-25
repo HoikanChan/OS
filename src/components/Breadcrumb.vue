@@ -17,17 +17,25 @@ export default {
   methods:{
       getBreadcrumbs(){
           this.breadcrumbs=[];
-          let lastPath =this.$route.matched[this.$route.matched.length-1];
-            this.breadcrumbs.push({
-                path: !lastPath.parent.path?"/":lastPath.parent.path,
-                name: lastPath.parent.name,
-                cnName: lastPath.parent.meta.cnName
-                })
-           this.breadcrumbs.push({
-                  path:lastPath.path,
-                  name:lastPath.name,
-                  cnName:lastPath.meta.cnName
+          let allMatched = this.$route.matched;
+          for(let i =0; i < allMatched.length; i++){
+              this.breadcrumbs.push({
+                  path: allMatched[i].name == "index" && allMatched[i].path == "" ? "/" : allMatched[i].path,
+                  name: allMatched[i].name,
+                  cnName: allMatched[i].name == "index" && allMatched[i].path == "" ? "首页" : allMatched[i].meta.cnName
                 });
+          }
+            // let lastPath =this.$route.matched[this.$route.matched.length-1];
+            // this.breadcrumbs.push({
+            //     path: !lastPath.parent.path?"/":lastPath.parent.path,
+            //     name: lastPath.parent.name,
+            //     cnName: lastPath.parent.meta.cnName
+            //     })
+            // this.breadcrumbs.push({
+            //       path:lastPath.path,
+            //       name:lastPath.name,
+            //       cnName:lastPath.meta.cnName
+            //     });
       }
   },
   watch:{

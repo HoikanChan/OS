@@ -85,7 +85,6 @@ export default {
   name: 'v-globalSettings',
   data () {
     return {
-        // isShow: false,
         isShow: false,
         ibutton: [{text: '保存', value: 'ok'}, {text: '取消', value: 'cancel'}],
         isGS: true,

@@ -7,7 +7,7 @@
                     <p class="dialog-close" @click="closeMyself">x</p>
                     <slot name="body">empty</slot>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" v-on:click="clickHandler(btn.value)" v-for="btn in ibutton" >{{btn.text}}</button>
+                        <div class="btn" v-on:click="clickHandler(btn.value)" v-for="btn in ibutton" >{{btn.text}}</div>
                     </div>
                 </div>
             </transition>
@@ -91,11 +91,29 @@
     color: #4fc08d;
  }
  .modal-footer{
-     text-align: right;
+     text-align: left;
      bottom: 8px;
 
-     button{
-         width: 80px;
-     }
+    div{ 
+            float:right;
+            margin: 0 10px;
+        }
+     .btn{                
+        width: 90px;
+        height: 30px;
+        background-color: #FFFFFF;
+        text-align: center;
+        line-height: 30px;
+        font-size: 16px;
+        border: 1px solid;
+        border-radius: 5px;
+    }
+    .btn:hover
+    { 
+        background-color: #50E399;
+        color: #FFFFFF; 
+        border: 1px solid #50E399;
+        cursor: pointer;
+    }
  }
 </style>
