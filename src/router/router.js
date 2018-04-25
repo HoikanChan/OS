@@ -52,7 +52,9 @@ import System from '../views/System/System.vue'
 //全局设置
 import GlobalSettings from '../views/GlobalSettings/GlobalSettings.vue'
 //服务方案
+import ConfigurationIndex from '../views/Configuration/Index.vue'
 import Configuration from '../views/Configuration/Configuration.vue'
+import OpenDetail from '../views/Configuration/OpenDetail.vue'
 //项目
 import Projects from '../views/Projects/Projects.vue'
 //地理区域
@@ -219,13 +221,28 @@ const router = new Router({
                 {
                     path: 'configuration',
                     name: 'configuration',
-                    component: Configuration,
+                    component: ConfigurationIndex,
                     meta: { cnName: "服务方案", activeName: "configuration" },
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1 || getCookie('role') == 2) {
-                            next()
+                    children: [
+                        {
+                            path: '',
+                            name: 'configuration',
+                            component: Configuration,
+                            meta: { cnName: "", activeName: "configuration" },
+                            beforeEnter: (to, from, next) => {
+                                if (getCookie('role') == 1 || getCookie('role') == 2) {
+                                    next()
+                                }
+                            }
+                        },
+                        {
+                            path: 'openDetail',
+                            name: 'openDetail',
+                            component: OpenDetail,
+                            meta: { cnName: "详细信息", activeName: "configuration" },
                         }
-                    }
+                    ],
+                    
                 },
                 {
                     path: 'projects',

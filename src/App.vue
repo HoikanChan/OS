@@ -14,13 +14,13 @@ export default {
 <style lang="scss" type="text/css">
 *{
     font-size: 14px;
-    // color: #333;
 }
 ul{
     li{
         list-style: none;
     }
 }
+
 //清除浮动的
 .clear{
     &::before,&::after{
@@ -31,6 +31,7 @@ ul{
         clear: both;
     }
 }
+
 //iview modal组件
 .ivu-modal{
     .ivu-modal-body{

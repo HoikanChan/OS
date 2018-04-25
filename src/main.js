@@ -7,6 +7,7 @@ import iView from 'iview'
 import axios from 'axios'
 import store from './vuex/store'
 import 'iview/dist/styles/iview.css';
+import 'iview/dist/iview.js';
 
 
 Vue.use(iView)
