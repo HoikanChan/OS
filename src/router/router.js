@@ -29,6 +29,8 @@ import InstancesIndex from '../views/Instances/Index.vue'
 import Instances from '../views/Instances/Instances.vue'
 //运行指数
 import OperationalIndicators from '../views/Instances/OperationalIndicators.vue'
+//实例详情
+import InstancesDetails from '../views/Instances/InstancesDetails.vue'
 /*
     存储
 */
@@ -133,7 +135,13 @@ const router = new Router({
                             name: 'operationalIndicators',
                             component: OperationalIndicators,
                             meta: { cnName: "运行指数", activeName: "instances" },
-                        }
+                        }, 
+                        {
+                            path: 'instancesdetails/',
+                            name: 'instancesdetails', 
+                            component: InstancesDetails,
+                            meta: { cnName: "详情信息", activeName: "instances" },
+                        },
                     ]
                 },
                 {

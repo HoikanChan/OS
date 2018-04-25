@@ -12,6 +12,26 @@ export default {
 </script>
 
 <style lang="scss" type="text/css">
+*{
+    font-size: 14px;
+}
+ul{
+    li{
+        list-style: none;
+    }
+}
+
+//清除浮动的
+.clear{
+    &::before,&::after{
+        content: " ";
+        display: table;
+    };
+    &::after{
+        clear: both;
+    }
+}
+
 //iview modal组件
 .ivu-modal{
     .ivu-modal-body{
@@ -34,6 +54,12 @@ export default {
     border-color: #bdbdbd;
     .ivu-select-placeholder{
         color: #999999;
+    }
+    .ivu-icon-arrow-down-b:before{
+        content: '\F3D8';
+        // width: 12px;
+        // height: 7px;
+        // background: url('./assets/select_arrow_down.png') no-repeat center center;
     }
 }
 //input placeholder color
