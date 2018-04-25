@@ -7,10 +7,10 @@
            </Row>
            <Row class="alerts-list">
                <ul>
-                   <li v-for="item in alertsData" :key="item.id" @click.prevent="toAlertsDetail(item.id)" :class="requestparams.state?'no-pointer':''">
+                   <li v-for="item in alertsData" :key="item.id" @click.prevent="toAlertsDetail(item.id)" :class="requestparams.command=='listHosts'?'no-pointer':''">
                        <div class="alerts-icon"></div>
                        <!--常规警报-->
-                       <div class="alerts-content" v-if="!requestparams.state">
+                       <div class="alerts-content" v-if="requestparams.command=='listAlerts'">
                            <h6>{{item.type | toAlertType}}</h6> 
                            <p :title="item.description">{{item.description}}</p>
                        </div>
@@ -44,7 +44,7 @@ export default {
       },
       toAlertsDetail(id){
           //主机警报的时候不能进入警报详情页面
-          if(this.requestparams.state){
+          if(this.requestparams.command=='listHosts'){
               return false
           }
           this.$router.push({

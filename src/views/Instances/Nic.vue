@@ -48,7 +48,7 @@
                         </li>
                         <li class="nic-item-ipaddress">
                             <span>IP 地址</span>{{item.ipaddress}}
-                            <i>改变IP地址</i>
+                            <i @click="showIpSelectModal(item.networkid)">改变IP地址</i>
                         </li>
                         <li class="nic-item-secondary-ips">
                             <span>二级 IPs</span>{{item.secondaryips}}
@@ -73,6 +73,19 @@
                 </div>
             </div>
         </div>
+        <Modal
+            v-model="ipSelectModal"
+            title="Change IP address for NIC"
+            @on-ok="updateVmNicIp"
+            >
+            <p>Please confirm that you would like to change the IP address for this NIC on VM.</p>
+            <div>
+                    IP地址：
+                <Select v-model="networkSelected" style="width:200px">
+                    <Option v-for="item in ipAddressData" :value="item.ipaddress" :key="item.id">{{ item.ipaddress }}</Option>
+                </Select>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
@@ -83,6 +96,8 @@ export default {
           addNicModal:false,
           networkData:[],
           networkSelected:'',
+          ipSelectModal:false,
+          ipAddressData:[],
       }
   },
   methods:{
@@ -167,12 +182,61 @@ export default {
           this.networkData=response.listnetworksresponse.network
         }.bind(this))
       },
+      fetchIpAddress(fetchNetworkData){
+          this.$http.get('/client/api',{
+                params:{
+                    command:'listPublicIpAddresses',
+                    allocatedonly: false,
+                    networkid: fetchNetworkData,
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.listpublicipaddressesresponse.publicipaddress){
+                     this.ipAddressData=response.listpublicipaddressesresponse.publicipaddress
+                }
+            }.bind(this))
+      },
+      showIpSelectModal(networkid){
+          this.ipSelectModal=true;
+          this.fetchIpAddress(networkid)
+      },
       addNic(){
           this.$http.get('/client/api',{
                 params:{
                     command:'addNicToVirtualMachine',
                     virtualmachineid: this.$route.query.id,
                     networkid: this.networkSelected,
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.addnictovirtualmachineresponse.jobid){
+                    this.$queryJobResult(response.addnictovirtualmachineresponse.jobid,'添加成功',this.fetchNicData())
+                }
+            }.bind(this))
+      },
+      updateVmNicIp(){
+           this.$http.get('/client/api',{
+                params:{
+                    command:'addNicToVirtualMachine',
+                    nicId: '',
+                    ipaddress: '',
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.addnictovirtualmachineresponse.jobid){
+                     this.$Notice.open({
+                        desc: '添加成功'
+                    });
+                    this.fetchNicData();
+                }
+            }.bind(this))
+      },
+      deletedNic(){
+           this.$http.get('/client/api',{
+                params:{
+                    command:'removeNicFromVirtualMachine',
+                    virtualmachineid: this.$route.query.id,
+                    nicid: '',
                     response: 'json'
                 }
             }).then(function(response){
