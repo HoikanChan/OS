@@ -21,7 +21,7 @@
                                     <!--Hosts in Alert State-->
                                     <v-Alerts 
                                      title="主机警报"
-                                     :requestparams="{command: 'listHosts',response: 'json',state: 'Alert',page: 1,pageSize: 100,listAll:true}"
+                                     :requestparams="{command: 'listHosts',response: 'json',page: 1,pageSize: 100}"
                                      response="listhostsresponse"
                                      responsekey="host"
                                     ></v-Alerts>

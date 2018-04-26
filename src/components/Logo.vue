@@ -37,10 +37,12 @@ export default {
                 id:-1,
                 projectaccountname:"默认"
             }
-            response.listprojectsresponse.project.unshift(defaultProject);
+            if(response.listprojectsresponse.project){
+                 response.listprojectsresponse.project.unshift(defaultProject);
+                 this.listprojects=response.listprojectsresponse.project;
+            }
             this.placeholder=defaultProject.projectaccountname;
             this.projectId=defaultProject.id;
-            this.listprojects=response.listprojectsresponse.project;
       }.bind(this))
   },
   mounted(){

@@ -3,7 +3,8 @@
         <div class="details-info-content">
             <!--详情信息操作栏-->
             <div class="operation-row">
-                <ul class="clear">
+                <!---------------------------------运行中的时候-------------------------------------------------->
+                <ul class="clear" v-if="basicInfo.state=='Running'">
                     <li @click="stopVM">
                         <div class="icon">
                             <img src="../../assets/details_info_icon_1.png" alt="">
@@ -48,6 +49,74 @@
                     </li>
                     <li>
                         <div class="icon">
+                            <img src="" alt="">
+                        </div>
+                        <p>查看控制台</p>
+                    </li>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_11.png" alt="">
+                        </div>
+                        <p>添加关联性组</p>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_11.png" alt="">
+                        </div>
+                        <p>添加主机</p>
+                    </li>
+                </ul>
+                <!---------------------------------停止的时候-------------------------------------------------->
+                <ul class="clear" v-if="basicInfo.state=='Stopped'">
+                     <li>
+                        <div class="icon" @click="restartVM">
+                            <img src="" alt="">
+                        </div>
+                        <p>重启虚拟机</p>
+                    </li>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_3.png" alt="">
+                        </div>
+                        <p>销毁虚拟机</p>
+                    </li>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_4.png" alt="">
+                        </div>
+                        <p>重装VM</p>
+                    </li>
+                     <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_5.png" alt="">
+                        </div>
+                        <p>附加ISO</p>
+                    </li>
+                     <li>
+                        <div class="icon">
+                            <img src="" alt="">
+                        </div>
+                        <p>编辑</p>
+                    </li>
+                    <li>
+                        <div class="icon">
+                            <img src="" alt="">
+                        </div>
+                        <p>更改关联性</p>
+                    </li>
+                     <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_6.png" alt="">
+                        </div>
+                        <p>重置密码</p>
+                    </li>
+                     <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_7.png" alt="">
+                        </div>
+                        <p>迁移到其他主存储</p>
+                    </li>
+                    <li>
+                        <div class="icon">
                             <img src="../../assets/details_info_icon_8.png" alt="">
                         </div>
                         <p>更改服务方案</p>
@@ -58,17 +127,22 @@
                         </div>
                         <p>重置SSH密钥对</p>
                     </li>
-                    <li>
+                     <li>
                         <div class="icon">
                             <img src="../../assets/details_info_icon_10.png" alt="">
                         </div>
                         <p>分配给其他账户</p>
                     </li>
-                    <li>
+                     <li>
                         <div class="icon">
                             <img src="../../assets/details_info_icon_11.png" alt="">
                         </div>
                         <p>添加关联性组</p>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_11.png" alt="">
+                        </div>
+                        <p>添加主机</p>
                     </li>
                 </ul>
             </div>
@@ -198,6 +272,21 @@
                 <h4>关联性组</h4>
                 <Table :columns="affinityGroupColumns" :data="affinityGroupData" border width="1200"></Table>
             </div>
+            <!---------------------------------模态框-------------------------------------------------->
+            <!---重启虚拟机-->
+            <Modal
+                v-model="restartVMModal"
+                title="启动实例"
+                @on-ok=""
+                >
+                <p>请确认您确实要启动此实例。</p>
+                <div>
+                     主机：
+                    <Select v-model="restartVMHostSelected" style="width:200px">
+                        <Option v-for="item in restartVMHostData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </div>
+            </Modal>
         </div>
 </template>
 
@@ -402,6 +491,12 @@ export default {
             osTypesLIst:[],
             //是否强制停止虚拟机
             forced:'',
+            //重启实例
+            restartVMModal:false,
+            //重启所需要的主机
+            restartVMHostData:[],
+            //重启实例所选择的主机
+            restartVMHostSelected:''
         }
     },
     components:{
@@ -471,6 +566,7 @@ export default {
                 }
             }).then(function(response){
                 this.hostData=response.listhostsresponse.host;
+                console.log(this.hostData)
             }.bind(this))
         },
          /**
@@ -558,7 +654,7 @@ export default {
                         ])
                     },
                     onOk: () => {
-                        this.$http.get('client/api',{
+                        this.$http.get('/client/api',{
                             params:{
                                 command:"stopVirtualMachine",
                                 response:"json",
@@ -567,17 +663,38 @@ export default {
                             }
                         }).then(function(response){
                             if(response.stopvirtualmachineresponse.jobid){
-                                this.$Notice.success({
-                                    desc: '此实例已停止'
-                                });
-                                this.fetchDetailsInfoData()
-                            }else{
+                                this.$queryJobResult(response.stopvirtualmachineresponse.jobid,'此实例已停止',this.fetchDetailsInfoData())
                             }
                         }.bind(this))
                     },
                     onCancel: () => {
                     }
                 });
+        },
+        //重启虚拟机
+        restartVM(){
+            this.$http.get('/client/api',{
+                params:{
+                    command:'listHosts',
+                    state:'Up',
+                    type: 'Routing',
+                    zoneid: this.detailsInfo.zoneid,
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.listhostsresponse.host){
+                    this.restartVMHostData.push({id:'-1',name:'默认'});
+                    this.restartVMHostData=response.listhostsresponse.host;
+                    this.restartVMHostSelected='-1';
+                    restartVMModal=true;
+                }else{
+                    this.$Notice.error({
+                        desc: '没有可用的主机'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+
+            })
         }
     },
     filters:{
@@ -733,7 +850,7 @@ export default {
                 margin-right: 36px;
                 text-align: center;
                 cursor: pointer;
-                &:last-child{
+                &:last-child,&:nth-child(11n){
                     margin-right: 0;
                 }
                 .icon{

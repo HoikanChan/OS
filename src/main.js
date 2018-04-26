@@ -23,11 +23,16 @@ axios.defaults.transformRequest = [function (data) {
     return ret
   }];
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.interceptors.request.use(function (config) {
+    return config;
+}, function (error) {
+    console.error(error)
+});
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
- return response.data
+    return response.data
 }, function (error) {
-  // 对响应错误做点什么
+    // 对响应错误做点什么
     if (error.response.status == 500) {
         router.push({path:"login"})
         // console.log(iView)
@@ -47,7 +52,46 @@ axios.interceptors.response.use(function (response) {
 //将 axios 改写为 Vue 的原型属性
 Vue.prototype.$http = axios;
 
-
+var queryJobResult = (jobid, message, callback) => {
+    iView.Spin.show({
+        render: (h) => {
+            return h('div', [
+                h('Icon', {
+                    'class': 'spin-icon-load',
+                    props: {
+                        type: 'load-c',
+                        size: 18
+                    }
+                }),
+                h('div', 'Loading')
+            ])
+        }
+    });
+    axios.get('/client/api', {
+        params: {
+            command:'queryAsyncJobResult',
+            jobid: jobid,
+            response: 'json'
+        }
+    }).then(function (result) {
+        if (result.queryasyncjobresultresponse.jobstatus == 1) {    //Job has successfully completed
+            iView.Spin.hide();
+            iView.Notice.success({
+                desc: message
+            });
+            callback()
+        } else if (result.queryasyncjobresultresponse.jobstatus == 2) {  //Job has failed to complete
+            iView.Spin.hide();
+            iView.Notice.error({
+                desc: result.queryasyncjobresultresponse.jobresult.errortext
+            });
+        } else if (result.queryasyncjobresultresponse.jobstatus == 0) { //Job is still in progress
+            queryJobResult(jobid,message, callback)
+        }
+    })
+}
+//请求之后需要查询jobid是否可以
+Vue.prototype.$queryJobResult = queryJobResult
 
 Vue.config.productionTip = false;
 

@@ -20,6 +20,7 @@ export default {
   methods:{
       getBreadcrumbs(){
           this.breadcrumbs=[];
+
           let lastPath =this.$route.matched[this.$route.matched.length-1];
             this.breadcrumbs.push({
                 path: !lastPath.parent.path?"/":lastPath.parent.path,
@@ -32,6 +33,17 @@ export default {
                   cnName:lastPath.meta.cnName,
                   displayName:this.$route.params.displayName,
                 });
+            // let lastPath =this.$route.matched[this.$route.matched.length-1];
+            // this.breadcrumbs.push({
+            //     path: !lastPath.parent.path?"/":lastPath.parent.path,
+            //     name: lastPath.parent.name,
+            //     cnName: lastPath.parent.meta.cnName
+            //     })
+            // this.breadcrumbs.push({
+            //       path:lastPath.path,
+            //       name:lastPath.name,
+            //       cnName:lastPath.meta.cnName
+            //     });
       }
   },
   watch:{
