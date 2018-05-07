@@ -33,7 +33,7 @@ export default {
                     key: 'state',
                     align: 'center',
                     render:function (h, o) {
-                        return h('div', this.$options.filters['storageState'](o.row.state));
+                        return h('div', this.$options.filters['vMState'](o.row.state));
                     }.bind(this)
                 },
                  {

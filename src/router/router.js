@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Store from '../vuex/store'
 
 Vue.use(Router)
 
@@ -290,15 +291,23 @@ const router = new Router({
  //路由独享守卫
 router.beforeEach((to, from, next) => {
     //判断用户是否登录，没有就跳转到登录页面
+    //判断登陆的时间跟现在的时间相差有没有十分钟，超过的话重新登陆
+    if (localStorage.getItem('loginTime')) {
+        if (new Date().getTime() - Number(localStorage.getItem('loginTime'))>600000) {
+            Store.commit('changeLoginStatus',0)
+        } else {
+            Store.commit('changeLoginStatus',1)
+        }
+    }
     if (to.path.indexOf("login") != -1) {
-        if (!getCookie('userId')) {
+        if (Store.state.isLogin!=1) {
             next()
         } else {
             next({ path: '/' })
         }
     } else {
-        if (!getCookie('userId')) {
-            confirm('会话超时')
+        if (Store.state.isLogin!=1) {
+            // confirm('会话超时')
             next({ path: '/login' })
         } else {
             next()

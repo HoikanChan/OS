@@ -1,6 +1,6 @@
 <template>
      <div id="user-operation">
-                <Dropdown trigger="click" @on-click="handleCommand()">
+                <Dropdown trigger="click" @on-click="handleCommand">
                     <span class="userName">
                         {{fullName()}}
                     </span>
@@ -26,26 +26,37 @@ export default {
       fullName(){
           return this.firstName+' '+this.lastName
       },
-      handleCommand:(key)=>{
-          debugger
-          console.log(key)
+      handleCommand:function(key){
+          let _this = this;
           switch(key){
               case "logout":
-                this.logout()
+                _this.logout()
                 break;
           }
       },
       //登出
       logout(){
-            delCookie('userId');
-            delCookie('account');
-            delCookie('firstName');
-            delCookie('lastName');
-            delCookie('domainId');
-            delCookie('sessionKey');
-            delCookie('userName');
-            delCookie('role');
-            this.$router.push({path:"/login"})
+          this.$http.get('/client/api',{
+              params:{
+                  command: 'logout',
+                    response: 'json'
+              }
+          }).then(function(response){
+              if(response.logoutresponse.description=='success'){
+                  delCookie('userId');
+                    delCookie('account');
+                    delCookie('firstName');
+                    delCookie('lastName');
+                    delCookie('domainId');
+                    delCookie('sessionKey');
+                    delCookie('userName');
+                    delCookie('role');
+                    localStorage.removeItem('loginTime');
+                     this.$store.commit('changeLoginStatus',0);
+                    this.$router.push({path:"/login"})
+              }
+          }.bind(this))
+           
       }
   },
 }

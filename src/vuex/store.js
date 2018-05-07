@@ -8,6 +8,7 @@ const store = new Vuex.Store({
     state: {
         // host: 'http://10.0.96.20:8080/',
         // host:'http://192.168.15.62:9080/',
+        isLogin:0,  //表示用户未登陆
         localhost: 'localhost:8080/',
         adminSections:[
             { 
@@ -2601,6 +2602,11 @@ const store = new Vuex.Store({
             } else {
                 return localStorage.getItem(key)
             }
+        }
+    },
+    mutations: {
+        changeLoginStatus(state, status) {
+            state.isLogin = status;
         }
     }
 })

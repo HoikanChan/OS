@@ -5,6 +5,7 @@ import App from './App'
 import router from './router/router'
 import iView from 'iview'
 import axios from 'axios'
+import Qs from 'qs'
 import store from './vuex/store'
 import 'iview/dist/styles/iview.css';
 import 'iview/dist/iview.js';
@@ -21,7 +22,11 @@ axios.defaults.transformRequest = [function (data) {
       ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
     }
     return ret
-  }];
+}];
+// axios.defaults.paramsSerializer = function (params) {
+    // console.log( unescape(Qs.stringify(params, {arrayFormat: 'repeat'})))
+    // return unescape(Qs.stringify(params, {arrayFormat: 'repeat'}))
+//   }
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.interceptors.request.use(function (config) {
     return config;
@@ -34,18 +39,13 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
     // 对响应错误做点什么
     if (error.response.status == 500) {
-        router.push({path:"login"})
-        // console.log(iView)
-        // console.log(error)
-        // debugger
-        // iView.Notice.error({
-        //     desc: '响应超时'
-        // });
+        
     } else if (error.response.status == 401) {
         iView.Notice.error({
             desc: '响应超时'
         });
-        router.push({path:'login'})
+        store.commit('changeLoginStatus',0);
+        router.replace({path:'login'})
   }
   return Promise.reject(error)
 });
@@ -273,6 +273,8 @@ Vue.filter('convertByType', (alertCode, value) => {
     }
     return value
 })
+
+
 //查询中文
 Vue.filter('getDictionary', (value) => {
     if (value.indexOf("label.") == -1) {
