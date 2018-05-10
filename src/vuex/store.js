@@ -8,7 +8,7 @@ const store = new Vuex.Store({
     state: {
 
          host: 'http://10.0.96.20:8080/',
-       // host:'http://192.168.15.62:9080/',
+     //   host:'http://192.168.15.62:9080/',
 
         localhost: 'localhost:8080/',
         adminSections:[

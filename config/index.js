@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
         '/client': {
 
-         //    target: 'http://192.168.15.62:9080', // 接口的域名
+       //    target: 'http://192.168.15.62:9080', // 接口的域名
            target: 'http://10.0.96.20:8080',
 
 
