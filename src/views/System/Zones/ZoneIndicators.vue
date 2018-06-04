@@ -16,16 +16,16 @@
 </template>
 
 <script>
-import breadcrumb from '../../components/Breadcrumb';
+import breadcrumb from '../../../components/Breadcrumb';
 export default {
-    name: '',
+    name: 'v-ZoneIndicators',
     data () {
         return{
             dataList:[],
             columns:[
                 {
                     title: '名称',
-                    key: 'displayname',
+                    key: 'name',
                     align: 'center',
                 },
                  {
@@ -37,60 +37,51 @@ export default {
                     }.bind(this)
                 },
                  {
-                    title: 'IP地址',
-                    key: 'ipaddress',
+                    title: '群集',
+                    key: 'clusters',
                     align: 'center',
                 },
                  {
-                    title: '资源域',
-                    key: 'zonename',
-                    align: 'center',
-                },
-                 {
-                    title: '核数',
-                    key: 'cpunumber',
-                    align: 'center',
-                },
-                 {
-                    title: '计算能力',
-                    key: 'cputotal',
-                    align: 'center',
-                },
-                 {
-                    title: '已使用',
+                    title: 'CUP已使用',
                     key: 'cpuused',
                     align: 'center',
                 },
                  {
-                    title: '已分配',
+                    title: 'CUP误差',
+                    key: 'cpumaxdeviation',
+                    align: 'center',
+                },
+                 {
+                    title: 'CPU已分配',
+                    key: 'cpuallocated',
+                    align: 'center',
+                },
+                 {
+                    title: 'CPU总数',
+                    key: 'cputotal',
+                    align: 'center',
+                },
+                 {
+                    title: 'Mem已使用',
+                    key: 'memoryused',
+                    align: 'center',
+                },
+                 {
+                    title: 'Mem误差',
+                    key: 'memorymaxdeviation',
+                    align: 'center',
+                },
+                 {
+                    title: 'Mem已分配',
+                    key: 'memoryallocated',
+                    align: 'center',
+                },
+                 {
+                    title: 'Mem总数',
                     key: 'memorytotal',
                     align: 'center',
                 },
-                 {
-                    title: '输出',
-                    key: 'networkread',
-                    align: 'center',
-                },
-                 {
-                    title: '输入',
-                    key: 'networkwrite',
-                    align: 'center',
-                },
-                 {
-                    title: '读取量',
-                    key: 'diskioread',
-                    align: 'center',
-                },
-                 {
-                    title: '写入量',
-                    key: 'diskiowrite',
-                    align: 'center',
-                },
-                 {
-                    title: 'IOPS',
-                    key: 'diskiopstotal',
-                    align: 'center',
-                },
+                
             ],
             searchValue:''
         }
@@ -101,7 +92,7 @@ export default {
     methods:{
         fetchData(param){
             let params = {
-                 command:"listVirtualMachinesMetrics",
+                command:"listZonesMetrics",
                 response:"json",
                 listAll: true,
                 page: 1,
@@ -116,12 +107,13 @@ export default {
              this.$http.get("/client/api",{
                 params:newParams
             }).then(function(response){
-                this.dataList=response.listvirtualmachinesmetricsresponse.virtualmachine;
+                this.dataList=response.listzonesmetricsresponse.zone;
             }.bind(this))
         },
         searchData(){
             this.fetchData({keyword:this.searchValue})
-        }
+        },
+        
     },
     created(){
         this.fetchData();
@@ -159,6 +151,10 @@ export default {
     }
     .operational-indicators-table{
         padding: 27px 0 38px;
+    }
+    .ivu-table-cell{
+        padding-left:17px;
+        padding-right: 17px;
     }
 }
 </style>

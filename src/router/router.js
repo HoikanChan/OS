@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Store from '../vuex/store'
 
 Vue.use(Router)
-
 /*权限
     admin --- 1
     domainadmin --- 2
 */
-
 //页面
 import Home from '../pages/index.vue'
 import Login from '../pages/login.vue'
@@ -47,8 +46,35 @@ import Accounts from '../views/Accounts/Accounts.vue'
 import Domains from '../views/Domains/Domains.vue'
 //事件
 import Vevents from '../views/Events/Events.vue'
+
+//基础架构
+import SystemIndex from '../views/System/Index.vue'
 //基础架构
 import System from '../views/System/System.vue'
+//基础架构-资源域
+import ZonesIndex from '../views/System/Zones/index.vue'
+import Zones from '../views/System/Zones/Zones.vue'
+//基础架构-资源域-运行指标
+import ZoneIndicators from '../views/System/Zones/ZoneIndicators.vue'
+//基础架构-资源域-详情
+import ZoneDetail from '../views/System/Zones/zoneDetail.vue'
+//基础架构-机柜
+import Pods from '../views/System/Pods.vue'
+//基础架构-群集
+import Clusters from '../views/System/Clusters.vue'
+//基础架构-主机
+import Hosts from '../views/System/Hosts.vue'
+//基础架构-主存储
+import PrimaryStorage from '../views/System/PrimaryStorage.vue'
+//基础架构-二级存储
+import SecondaryStorage from '../views/System/SecondaryStorage.vue'
+//基础架构-虚拟路由器
+import VirtualRouters from '../views/System/VirtualRouters.vue'
+//基础架构-系统VM
+import SystemVMs from '../views/System/SystemVMs.vue'
+//基础架构-CPU后插槽
+import CPUSockets from '../views/System/CPUSockets.vue'
+
 //全局设置
 import GlobalSettings from '../views/GlobalSettings/GlobalSettings.vue'
 //服务方案
@@ -198,14 +224,97 @@ const router = new Router({
                 },
                 {
                     path: 'system',
-                    name: 'system',
-                    component: System,
+                    name: '',
+                    component: SystemIndex,
                     meta: { cnName: "基础架构", activeName: "system" },
                     beforeEnter: (to, from, next) => {
                         if (getCookie('role') == 1) {
                             next()
                         }
-                    }
+                    },
+                    children: [
+                        {
+                            path: '',
+                            name: 'system',
+                            component: System,
+                            meta: { cnName: "基础架构", activeName: "system" },
+                        },
+                        {
+                            path: 'zones',
+                            name: '',
+                            component: ZonesIndex,
+                            meta: { cnName: "资源域", activeName: "system" },
+                            children: [
+                                {
+                                    path: '',
+                                    name: 'zones',
+                                    component: Zones,
+                                    meta: { cnName: "", activeName: "system" },
+                                },
+                                {
+                                path: 'zoneindicators',
+                                name: 'zoneindicators',
+                                component: ZoneIndicators,
+                                meta: { cnName: "运行指标", activeName: "system" },
+                            },
+                            {
+                                path: 'zonedetail/',
+                                name: 'ZoneDetail',
+                                component: ZoneDetail,
+                                meta: { cnName: "运行指标", activeName: "system" },
+                            },
+                            ]    
+                        }, 
+                        {
+                            path: 'Pods',
+                            name: 'Pods', 
+                            component: Pods,
+                            meta: { cnName: "机柜", activeName: "system" },
+                        },
+                        {
+                            path: 'Clusters',
+                            name: 'Clusters', 
+                            component: Clusters,
+                            meta: { cnName: "群集", activeName: "system" },
+                        },
+                        {
+                            path: 'Hosts',
+                            name: 'Hosts', 
+                            component: Hosts,
+                            meta: { cnName: "主机", activeName: "system" },
+                        },
+                        {
+                            path: 'PrimaryStorage',
+                            name: 'PrimaryStorage', 
+                            component: PrimaryStorage,
+                            meta: { cnName: "主存储", activeName: "system" },
+                        },
+                        {
+                            path: 'SecondaryStorage',
+                            name: 'SecondaryStorage', 
+                            component: SecondaryStorage,
+                            meta: { cnName: "二级存储", activeName: "system" },
+                        },
+                        {
+                            path: 'SystemVMs',
+                            name: 'SystemVMs', 
+                            component: SystemVMs,
+                            meta: { cnName: "系统VM", activeName: "system" },
+                        },
+                        {
+                            path: 'VirtualRouters',
+                            name: 'VirtualRouters', 
+                            component: VirtualRouters,
+                            meta: { cnName: "虚拟路由器", activeName: "system" },
+                        },
+                        {
+                            path: 'CPUSockets',
+                            name: 'CPUSockets', 
+                            component: CPUSockets,
+                            meta: { cnName: "CPU后插槽", activeName: "system" },
+                        },
+                    ]
+
                 },
                 {
                     path: 'globalSettings',
@@ -270,6 +379,7 @@ const router = new Router({
             ],
            
         },
+        
         {
             path: '/login',
             name: 'login',
@@ -290,15 +400,23 @@ const router = new Router({
  //路由独享守卫
 router.beforeEach((to, from, next) => {
     //判断用户是否登录，没有就跳转到登录页面
+    //判断登陆的时间跟现在的时间相差有没有十分钟，超过的话重新登陆
+    if (localStorage.getItem('loginTime')) {
+        if (new Date().getTime() - Number(localStorage.getItem('loginTime'))>600000) {
+            Store.commit('changeLoginStatus',0)
+        } else {
+            Store.commit('changeLoginStatus',1)
+        }
+    }
     if (to.path.indexOf("login") != -1) {
-        if (!getCookie('userId')) {
+        if (Store.state.isLogin!=1) {
             next()
         } else {
             next({ path: '/' })
         }
     } else {
-        if (!getCookie('userId')) {
-            confirm('会话超时')
+        if (Store.state.isLogin!=1) {
+            // confirm('会话超时')
             next({ path: '/login' })
         } else {
             next()
