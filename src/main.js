@@ -5,6 +5,7 @@ import App from './App'
 import router from './router/router'
 import iView from 'iview'
 import axios from 'axios'
+import Qs from 'qs'
 import store from './vuex/store'
 import 'iview/dist/styles/iview.css';
 import 'iview/dist/iview.js';
@@ -21,33 +22,76 @@ axios.defaults.transformRequest = [function (data) {
       ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
     }
     return ret
-  }];
+}];
+// axios.defaults.paramsSerializer = function (params) {
+    // console.log( unescape(Qs.stringify(params, {arrayFormat: 'repeat'})))
+    // return unescape(Qs.stringify(params, {arrayFormat: 'repeat'}))
+//   }
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.interceptors.request.use(function (config) {
+    return config;
+}, function (error) {
+    console.error(error)
+});
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
- return response.data
+    return response.data
 }, function (error) {
-  // 对响应错误做点什么
+    // 对响应错误做点什么
     if (error.response.status == 500) {
-        router.push({path:"login"})
-        // console.log(iView)
-        // console.log(error)
-        // debugger
-        // iView.Notice.error({
-        //     desc: '响应超时'
-        // });
+        
     } else if (error.response.status == 401) {
         iView.Notice.error({
             desc: '响应超时'
         });
-        router.push({path:'login'})
+        store.commit('changeLoginStatus',0);
+        router.replace({path:'login'})
   }
   return Promise.reject(error)
 });
 //将 axios 改写为 Vue 的原型属性
 Vue.prototype.$http = axios;
 
-
+var queryJobResult = (jobid, message, callback) => {
+    iView.Spin.show({
+        render: (h) => {
+            return h('div', [
+                h('Icon', {
+                    'class': 'spin-icon-load',
+                    props: {
+                        type: 'load-c',
+                        size: 18
+                    }
+                }),
+                h('div', 'Loading')
+            ])
+        }
+    });
+    axios.get('/client/api', {
+        params: {
+            command:'queryAsyncJobResult',
+            jobid: jobid,
+            response: 'json'
+        }
+    }).then(function (result) {
+        if (result.queryasyncjobresultresponse.jobstatus == 1) {    //Job has successfully completed
+            iView.Spin.hide();
+            iView.Notice.success({
+                desc: message
+            });
+            callback()
+        } else if (result.queryasyncjobresultresponse.jobstatus == 2) {  //Job has failed to complete
+            iView.Spin.hide();
+            iView.Notice.error({
+                desc: result.queryasyncjobresultresponse.jobresult.errortext
+            });
+        } else if (result.queryasyncjobresultresponse.jobstatus == 0) { //Job is still in progress
+            queryJobResult(jobid,message, callback)
+        }
+    })
+}
+//请求之后需要查询jobid是否可以
+Vue.prototype.$queryJobResult = queryJobResult
 
 Vue.config.productionTip = false;
 
@@ -92,6 +136,35 @@ Vue.filter('toCapacityCountType', (value)=>{
             return store.getters.getDictionary('label.vlan');
         case 18:
             return store.getters.getDictionary('label.secondary.storage.vm');
+        case 19:
+            return store.getters.getDictionary('label.gpu');
+        case 90:
+            return store.getters.getDictionary('label.num.cpu.cores');
+    }
+})
+//基础架构（资源域）详情中资源模块输出对应中文
+Vue.filter('zonecapacityType', (value)=>{
+    switch (value) {
+        case 0:
+            return store.getters.getDictionary('label.memory.allocated');
+        case 1:
+            return store.getters.getDictionary('label.cpu.allocated');
+        case 2:
+            return store.getters.getDictionary('label.primary.used');
+        case 3:
+            return store.getters.getDictionary('label.primary.allocated');
+        case 4:
+            return store.getters.getDictionary('label.public.ip');
+        case 5:
+            return store.getters.getDictionary('label.management.ips');
+        case 6:
+            return store.getters.getDictionary('label.secondary.storage');
+        case 7:
+            return store.getters.getDictionary('label.vlan');
+        case 8:
+            return store.getters.getDictionary('label.direct.ips');
+        case 9:
+            return store.getters.getDictionary('label.local.storage');
         case 19:
             return store.getters.getDictionary('label.gpu');
         case 90:
@@ -171,6 +244,9 @@ Vue.filter('vMState',(state)=>{
         case 'running':
             return '运行中'
             break;
+        case 'enabled':
+            return '运行中'
+            break;
         case 'stopping':
             return '停止中'
             break;
@@ -229,6 +305,8 @@ Vue.filter('convertByType', (alertCode, value) => {
     }
     return value
 })
+
+
 //查询中文
 Vue.filter('getDictionary', (value) => {
     if (value.indexOf("label.") == -1) {

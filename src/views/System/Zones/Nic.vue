@@ -4,7 +4,7 @@
             <ul class="clear">
                     <li>
                         <div class="icon" @click="addNicModal=!addNicModal">
-                            <img src="../../assets/details_info_icon_12.png" alt="" style="margin-left:6px;">
+                            <img src="../../../assets/details_info_icon_12.png" alt="" style="margin-left:6px;">
                         </div>
                         <p>添加网络</p>
                     </li>
@@ -305,7 +305,7 @@ export default {
                 line-height: 56px;
                 font-weight: bold;
                 font-size: 16px;
-                background:url('../../assets/instances_nic_icon_1.png') no-repeat 0 center;
+                background:url('../../../assets/instances_nic_icon_1.png') no-repeat 0 center;
                 color: #333;
                 .nic-operation{
                     float: right;
@@ -345,7 +345,7 @@ export default {
         .default-nic-item{
             background-color: #51e299;
             .nic-item-title{
-                background-image: url('../../assets/instances_nic_icon.png');
+                background-image: url('../../../assets/instances_nic_icon.png');
                  color: #fff;
             }
             .nic-item-inner{

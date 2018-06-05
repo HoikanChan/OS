@@ -3,18 +3,81 @@
         <div class="details-info-content">
             <!--详情信息操作栏-->
             <div class="operation-row">
-                <ul class="clear">
+                <!---------------------------------运行中的时候-------------------------------------------------->
+                <ul class="clear" v-if="basicInfo.state=='Running'">
                     <li @click="stopVM">
                         <div class="icon">
                             <img src="../../assets/details_info_icon_1.png" alt="">
                         </div>
                         <p>停止虚拟机</p>
                     </li>
-                    <li>
+                    <li @click="rebootVM">
                         <div class="icon">
                             <img src="../../assets/details_info_icon_2.png" alt="">
                         </div>
                         <p>重启虚拟机</p>
+                    </li>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_3.png" alt="">
+                        </div>
+                        <p>销毁虚拟机</p>
+                    </li>
+                    <li @click="reinstallVM">
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_4.png" alt="">
+                        </div>
+                        <p>重装VM</p>
+                    </li>
+                    <li v-show="!basicInfo.isoname" @click="attachIso">
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_5.png" alt="">
+                        </div>
+                        <p>附加ISO</p>
+                    </li>
+                    <li v-show="basicInfo.isoname" @click="detachIsoModal=true">
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_5.png" alt="">
+                        </div>
+                        <p>取消附加ISO</p>
+                    </li>
+                    <li  @click="resetPassword">
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_6.png" alt="">
+                        </div>
+                        <p>重置密码</p>
+                    </li>
+                    <li @click="findHosts">
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_7.png" alt="">
+                        </div>
+                        <p>迁移到其他主机</p>
+                    </li>
+                    <li @click="checkConsole">
+                        <div class="icon">
+                            <img src="" alt="">
+                        </div>
+                        <p>查看控制台</p>
+                    </li>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_11.png" alt="">
+                        </div>
+                        <p>添加关联性组</p>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_11.png" alt="">
+                        </div>
+                        <p>添加主机</p>
+                    </li>
+                </ul>
+                <!---------------------------------停止的时候-------------------------------------------------->
+                <ul class="clear" v-if="basicInfo.state=='Stopped'">
+                     <li>
+                        <div class="icon" @click="startVM">
+                            <img src="" alt="">
+                        </div>
+                        <p>启动虚拟机</p>
                     </li>
                     <li>
                         <div class="icon">
@@ -28,23 +91,41 @@
                         </div>
                         <p>重装VM</p>
                     </li>
-                    <li>
+                     <li v-show="!basicInfo.isoname" @click="attachIso">
                         <div class="icon">
                             <img src="../../assets/details_info_icon_5.png" alt="">
                         </div>
                         <p>附加ISO</p>
                     </li>
+                    <li v-show="basicInfo.isoname"  @click="detachIsoModal=true">
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_5.png" alt="">
+                        </div>
+                        <p>取消附加ISO</p>
+                    </li>
+                     <li>
+                        <div class="icon">
+                            <img src="" alt="">
+                        </div>
+                        <p>编辑</p>
+                    </li>
                     <li>
+                        <div class="icon">
+                            <img src="" alt="">
+                        </div>
+                        <p>更改关联性</p>
+                    </li>
+                     <li  @click="resetPassword">
                         <div class="icon">
                             <img src="../../assets/details_info_icon_6.png" alt="">
                         </div>
                         <p>重置密码</p>
                     </li>
-                    <li>
+                     <li @click="findHosts">
                         <div class="icon">
                             <img src="../../assets/details_info_icon_7.png" alt="">
                         </div>
-                        <p>迁移到其他主机</p>
+                        <p>迁移到其他主存储</p>
                     </li>
                     <li>
                         <div class="icon">
@@ -58,17 +139,22 @@
                         </div>
                         <p>重置SSH密钥对</p>
                     </li>
-                    <li>
+                     <li>
                         <div class="icon">
                             <img src="../../assets/details_info_icon_10.png" alt="">
                         </div>
                         <p>分配给其他账户</p>
                     </li>
-                    <li>
+                     <li>
                         <div class="icon">
                             <img src="../../assets/details_info_icon_11.png" alt="">
                         </div>
                         <p>添加关联性组</p>
+                    <li>
+                        <div class="icon">
+                            <img src="../../assets/details_info_icon_11.png" alt="">
+                        </div>
+                        <p>添加主机</p>
                     </li>
                 </ul>
             </div>
@@ -198,6 +284,90 @@
                 <h4>关联性组</h4>
                 <Table :columns="affinityGroupColumns" :data="affinityGroupData" border width="1200"></Table>
             </div>
+            <!---------------------------------模态框-------------------------------------------------->
+            <!---启动虚拟机-->
+            <Modal
+                v-model="startVMModal"
+                title="启动实例"
+                @on-ok="startVMRequest"
+                >
+                <p>请确认您确实要启动此实例。</p>
+                <div>
+                     主机：
+                    <Select v-model="startVMHostSelected" style="width:200px">
+                        <Option v-for="item in startVMHostData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </div>
+            </Modal>
+            <!---创建VM快照-->
+            <!-- <Modal
+                v-model="snapShotVMModal"
+                title="启动实例"
+                @on-ok="snapShotVMRequest"
+                >
+                <p>请确认您确实要启动此实例。</p>
+                <div>
+                     主机：
+                    <Select v-model="startVMHostSelected" style="width:200px">
+                        <Option v-for="item in startVMHostData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </div>
+            </Modal> -->
+            <!---重新安装VM-->
+             <Modal
+                v-model="reinstallVMModal"
+                title="重新安装VM"
+                @on-ok="reinstallVMRequest"
+                >
+                <p>注意: 请谨慎操作。这将导致从模板重新安装 VM，并且引导磁盘上存储的数据将丢失。额外的数据卷(如果存在)将无法访问。</p>
+                <div>
+                     选择一个模板：
+                    <Select v-model="reinstallVMTemplateSelected" style="width:200px">
+                        <Option v-for="item in reinstallVMTemplateData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </div>
+            </Modal>
+            <!---附加ISO-->
+             <Modal
+                v-model="attachIsoModal"
+                title="附加ISO"
+                @on-ok="attachIsoRequest"
+                >
+                <div>
+                     ISO：
+                    <Select v-model="attachIsoSelected" style="width:200px">
+                        <Option v-for="item in attachIsoData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                    </Select>
+                </div>
+            </Modal>
+            <!---取消附加ISO-->
+             <Modal
+                v-model="detachIsoModal"
+                title="确认"
+                @on-ok="detachIsoRequest"
+                >
+                <div>
+                     请确认您确实要从此虚拟机中取消附加此 ISO。
+                </div>
+            </Modal>
+            <!---迁移到其他主机-->
+             <Modal
+                width="800"
+                v-model="findHostsModal"
+                title="将实例迁移到其他主机"
+                class="findHosts-Modal"
+                @on-ok="findHostsRequest"
+                >
+                <div>
+                    <div class="clear">
+                        <div class="findHosts-Modal-search-row">
+                            <input type="text" v-model="findHostsFilters" class="findHosts-Modal-search-input">
+                            <button class="findHosts-Modal-search-button" @click.prevent="findHosts">搜索</button>
+                        </div>
+                    </div>  
+                     <Table border  :columns="findHostsColumns" :data="findHostsData"></Table>
+                </div>
+            </Modal>
         </div>
 </template>
 
@@ -402,6 +572,97 @@ export default {
             osTypesLIst:[],
             //是否强制停止虚拟机
             forced:'',
+            //启动实例模态框显示
+            startVMModal:false,
+            //启动所需要的主机
+            startVMHostData:[],
+            //启动实例所选择的主机
+            startVMHostSelected:'',
+            //重新安装VM模态框显示
+            reinstallVMModal:false,
+            //重新安装VM选择的模板数据
+            reinstallVMTemplateData:[],
+            //重新安装VM选择的模板
+            reinstallVMTemplateSelected:'',
+            //附加iSO模态框显示
+            attachIsoModal:false,
+            //附加iso的iso列表
+            attachIsoData:[],
+            //选择的iso
+            attachIsoSelected:'',
+            //取消附加iso的模态框显示
+            detachIsoModal:false,
+            //将实例迁移到其他主机模态框显示
+            findHostsModal:false,
+            //将实例迁移到其他主机模态框table的数据
+            findHostsData:[],
+            //将实例迁移到其他主机模态框table的配置参数
+            findHostsColumns:[
+                {
+                    title:'选择',
+                    width: 80,
+                    align: 'center',
+                    render :function(creatElement, o) {
+                        let self = this;
+                        o.index==0?self.findHostsChoice=o.row.id:'';
+                       return creatElement('input',{
+                           attrs:{
+                               type:'radio',
+                               value:o.row.id,
+                               checked:o.index==0?true:false                           
+                            },
+                            on: {
+                                click:function(){
+                                    self.findHostsChoice=event.target.value
+                                }
+                            }
+                       });
+                    }.bind(this)
+                },
+                {
+                    title: '名称',
+                    key: 'name',
+                    align: 'center'
+                },
+                {
+                    title: '适应性',
+                    key: '',
+                    align: 'center',
+                     render :function(creatElement, o) {
+                         let inner = '';
+                         if(o.row.suitableformigration){
+                             inner = '合适'
+                         }else{
+                             inner = '不合适'
+                         }
+                         if(o.row.requiresStorageMotion==true){
+                             inner +=' - 需要存储迁移'
+                         }
+                       return creatElement('span',{
+                           style:{
+                               color:!o.row.suitableformigration?'#B90606':''
+                           }
+                       },inner);
+                    }.bind(this)
+                },
+                {
+                    title: 'CPU 利用率',
+                    key: 'cpuused',
+                    align: 'center'
+                },
+                {
+                    title: '已使用的内存',
+                    key: 'memoryused',
+                    align: 'center',
+                    render:function(creatElement,o){
+                        return creatElement('span',this.$options.filters['convertByType'](0,o.row.memoryused))
+                    }.bind(this)
+                },
+            ],
+            //将实例迁移到其他主机模态框查询
+            findHostsFilters:'',
+            //将实例迁移到其他主机选择的主机
+            findHostsChoice:'',
         }
     },
     components:{
@@ -419,13 +680,17 @@ export default {
                 this.detailsInfo=response.listvirtualmachinesresponse.virtualmachine;
                 //获取主机信息
                 this.fetchHostData(response.listvirtualmachinesresponse.virtualmachine[0].hostid);
-                //获取快照与备份信息
+                // //获取快照与备份信息
                 this.fetchSnapShotData(response.listvirtualmachinesresponse.virtualmachine[0].id);
-                //获取关联性组信息
+                // //获取关联性组信息
                 this.fetchaffinityGroupData(response.listvirtualmachinesresponse.virtualmachine[0].id);
                 for(let key in this.basicInfo){
                     this.basicInfo[key]=response.listvirtualmachinesresponse.virtualmachine[0][key]
                 }
+                }.bind(this)).catch(function(error){
+                    this.$Notice.error({
+                        desc: error
+                    });
                 }.bind(this))
         },
          //请求操作系统列表
@@ -437,6 +702,10 @@ export default {
                     }
                 }).then(function(response){
                     this.osTypesLIst=response.listostypesresponse.ostype;
+                }.bind(this)).catch(function(error){
+                    this.$Notice.error({
+                        desc: error
+                    });
                 }.bind(this))
         },
         //请求存储的数据
@@ -452,6 +721,10 @@ export default {
                 }
             }).then(function(response){
                 this.storageData=response.listvolumesresponse.volume;
+            }.bind(this)).catch(function(error){
+                this.$Notice.error({
+                        desc: error
+                    });
             }.bind(this))
         },
         /**
@@ -470,7 +743,13 @@ export default {
                     type:'Routing'
                 }
             }).then(function(response){
-                this.hostData=response.listhostsresponse.host;
+                if(response.listhostsresponse.host){
+                     this.hostData=response.listhostsresponse.host;
+                }
+            }.bind(this)).catch(function(error){
+                this.$Notice.error({
+                        desc: error
+                    });
             }.bind(this))
         },
          /**
@@ -488,7 +767,13 @@ export default {
                     response:'json',
                 }
             }).then(function(response){
-                this.snapShotData=response.listvmsnapshotresponse.vmSnapshot;
+                if(response.listvmsnapshotresponse.vmSnapshot){
+                     this.snapShotData=response.listvmsnapshotresponse.vmSnapshot
+                }
+            }.bind(this)).catch(function(error){
+                this.$Notice.error({
+                        desc: error
+                    });
             }.bind(this))
         },
          /**
@@ -506,7 +791,13 @@ export default {
                     response:'json',
                 }
             }).then(function(response){
-                this.affinityGroupData=response.listaffinitygroupsresponse.affinitygroup;
+                if(response.listaffinitygroupsresponse.affinityGroupData){
+                     this.affinityGroupData=response.listaffinitygroupsresponse.affinitygroup
+                }
+            }.bind(this)).catch(function(error){
+                this.$Notice.error({
+                        desc: error
+                    });
             }.bind(this))
         },
          //根据虚拟机的guestosid获取对应的操作系统名字
@@ -558,7 +849,7 @@ export default {
                         ])
                     },
                     onOk: () => {
-                        this.$http.get('client/api',{
+                        this.$http.get('/client/api',{
                             params:{
                                 command:"stopVirtualMachine",
                                 response:"json",
@@ -567,17 +858,302 @@ export default {
                             }
                         }).then(function(response){
                             if(response.stopvirtualmachineresponse.jobid){
-                                this.$Notice.success({
-                                    desc: '此实例已停止'
-                                });
-                                this.fetchDetailsInfoData()
-                            }else{
+                                this.$queryJobResult(response.stopvirtualmachineresponse.jobid,'此实例已停止',this.fetchDetailsInfoData)
                             }
+                        }.bind(this)).catch(function(error){
+                             this.$Notice.error({
+                                    desc: error
+                                });
                         }.bind(this))
                     },
                     onCancel: () => {
                     }
                 });
+        },
+        //重启虚拟机
+        rebootVM(){
+            this.$Modal.confirm({ 
+                    title: '确认',
+                    content: '',
+                    render:(creatElement)=>{
+                        let self = this;
+                        return creatElement('div',{
+                            style:{
+                                'line-height':'30px'
+                            }
+                        },'请确认您确实要停止此实例')
+                    },
+                    onOk: () => {
+                        this.$http.get('/client/api',{
+                            params:{
+                                command:"rebootVirtualMachine",
+                                response:"json",
+                                id:this.basicInfo.id,
+                            }
+                        }).then(function(response){
+                            if(response.rebootvirtualmachineresponse.jobid){
+                                this.$queryJobResult(response.rebootvirtualmachineresponse.jobid,'此实例已重启',this.fetchDetailsInfoData)
+                            }
+                        }.bind(this)).catch(function(response){
+                             this.$Notice.error({
+                                desc: error
+                            });
+                        }.bind(this))
+                    },
+                    onCancel: () => {
+                    }
+                });
+        },
+        //启动虚拟机
+        startVM(){
+            //先请求支持启动的主机
+            this.$http.get('/client/api',{
+                params:{
+                    command:'listHosts',
+                    state:'Up',
+                    type: 'Routing',
+                    zoneid: this.detailsInfo.zoneid,
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.listhostsresponse.host){
+                    this.startVMHostData=[];
+                    this.startVMHostData.push({id:'-1',name:'默认'});
+                    response.listhostsresponse.host.map((host)=>{
+                        console.log(host)
+                        this.startVMHostData.push(host)
+                    })
+                    this.startVMHostSelected='-1';
+                    this.startVMModal=true;
+                }else{
+                    this.$Notice.error({
+                        desc: '没有可用的主机'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                 this.$Notice.error({
+                        desc: error
+                    });
+            }.bind(this))
+        },
+        //启动虚拟机模态框确认
+        startVMRequest(){
+            let params = {
+                 command:"startVirtualMachine",
+                response:"json",
+                id:this.basicInfo.id,
+            }
+            if(this.startVMHostSelected!=-1){
+                params.hostid-this.startVMHostSelected;
+            }
+             this.$http.get('/client/api',{
+                params:{
+                    command:"startVirtualMachine",
+                    response:"json",
+                    id:this.basicInfo.id,
+                }
+            }).then(function(response){
+                if(response.startvirtualmachineresponse.jobid){
+                    this.$queryJobResult(response.startvirtualmachineresponse.jobid,'此实例已启动',this.fetchDetailsInfoData)
+                }
+            }.bind(this)).catch(function(error){
+                 this.$Notice.error({
+                        desc: error
+                    });
+            }.bind(this))
+        },
+        //重新安装VM
+        reinstallVM(){
+             //先请求支持的模板
+            this.$http.get('/client/api',{
+                params:{
+                    command:'listTemplates',
+                    templatefilter: 'featured',
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.listtemplatesresponse.template){
+                    this.reinstallVMTemplateData=response.listtemplatesresponse.template;
+                    this.reinstallVMModal=true;
+                }else{
+                    this.$Notice.error({
+                        desc: '没有可用的模板'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                 this.$Notice.error({
+                        desc: error
+                    });
+            })
+        },
+        //重新安装VM模态框确认
+        reinstallVMRequest(){
+            let params = {
+                    command:'restoreVirtualMachine',
+                    virtualMachineId:this.$route.query.id,
+                    response: 'json'
+            }
+            if(this.reinstallVMTemplateSelected){
+                params.templateid=this.reinstallVMTemplateSelected
+            }
+            this.$http.get('/client/api',{
+                params:params
+            }).then(function(response){
+                if(response.restorevmresponse.jobid){
+                     this.$queryJobResult(response.restorevmresponse.jobid,'此实例已启动',this.fetchDetailsInfoData)
+                }else{
+                    this.$Notice.error({
+                        desc: '请求不成功，请稍后再试'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                    this.$Notice.error({
+                        desc: error
+                    });
+            }.bind(this))
+        },
+        //附加iso
+        attachIso(){
+             //先请求支持的iso
+            this.$http.get('/client/api',{
+                params:{
+                    command: 'listIsos',
+                    response: 'json',
+                    isofilter: 'featured',
+                    isReady: true,
+                    zoneid: this.detailsInfo.zoneid,
+                }
+            }).then(function(response){
+                if(response.listisosresponse.iso){
+                    this.attachIsoData=response.listisosresponse.iso;
+                    this.attachIsoSelected = response.listisosresponse.iso[0].id;
+                    this.attachIsoModal=true;
+                }else{
+                    this.$Notice.error({
+                        desc: '没有可用的ISO'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                 this.$Notice.error({
+                        desc: error
+                    });
+            })
+        },
+        //附加iso模态框确认
+        attachIsoRequest(){
+             this.$http.get('/client/api',{
+                params:{
+                    command: 'attachIso',
+                    virtualmachineid: this.$route.query.id,
+                    id: this.attachIsoSelected,
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.attachisoresponse.jobid){
+                     this.$queryJobResult(response.attachisoresponse.jobid,'成功附件ISO',this.fetchDetailsInfoData)
+                }else{
+                    this.$Notice.error({
+                        desc: '请求不成功，请稍后再试'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                    this.$Notice.error({
+                        desc: error
+                    });
+            }.bind(this))
+        },
+        //取消附加iso模态框确认
+        detachIsoRequest(){
+             this.$http.get('/client/api',{
+                params:{
+                    command: 'detachIso',
+                    virtualmachineid: this.$route.query.id,
+                    response: 'json'
+                }
+            }).then(function(response){
+                if(response.detachisoresponse.jobid){
+                     this.$queryJobResult(response.detachisoresponse.jobid,'取消附件ISO',this.fetchDetailsInfoData)
+                }else{
+                    this.$Notice.error({
+                        desc: '请求不成功，请稍后再试'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                    this.$Notice.error({
+                        desc: error
+                    });
+            }.bind(this))
+        },
+        //重置密码
+        resetPassword(){
+            if(this.detailsInfo.passwordenabled==false){
+                this.$Notice.warning({
+                    desc: '创建此实例的模板时未启用密码'
+                })
+            }else if(this.detailsInfo.state != 'Stopped'){
+                this.$Notice.warning({
+                    desc:'必须先停止您的实例，才能尝试更改其当前密码'
+                })
+            }
+        },
+         //将实例迁移到其他主机
+        findHosts(){
+            let params = {
+                 command: 'findHostsForMigration',
+                response: 'json',
+                VirtualMachineId: this.$route.query.id,
+                page: 1,
+                pagesize: 20,
+                listAll:true,
+            }
+            if(this.findHostsFilters){
+                params.keyword=this.findHostsFilters;
+            }
+            this.$http.get('/client/api',{
+                params:params
+            }).then(function(response){
+                if(response.findhostsformigrationresponse.host){
+                    this.findHostsModal=true;
+                    this.findHostsData=response.findhostsformigrationresponse.host;
+                }else{
+                    this.$Notice.error({
+                        desc: '暂无数据'
+                    });
+                    this.findHostsData=[];
+                }
+            }.bind(this)).catch(function(error){
+                 this.$Notice.error({
+                        desc: error
+                    });
+            })
+        },
+        //将实例迁移到其他主机模态框确认
+        findHostsRequest(){
+            this.$http.get('/client/api',{
+                params:{
+                    command: 'migrateVirtualMachine',
+                    response: 'json',
+                    virtualmachineid: this.$route.query.id,
+                    hostid: this.findHostsChoice,
+                }
+            }).then(function(response){
+                if(response.migratevirtualmachineresponse.jobid){
+                    this.$queryJobResult(response.migratevirtualmachineresponse.jobid,'迁移成功',this.fetchDetailsInfoData)
+                }else{
+                    this.$Notice.error({
+                        desc: '请求不成功，请稍后再试'
+                    });
+                }
+            }.bind(this)).catch(function(error){
+                 this.$Notice.error({
+                        desc: error
+                    });
+            })
+        },
+        //查看控制台
+        checkConsole(){
+            debugger
+            window.open(window.location.origin+'?cmd=access&vm='+ this.$route.query.id)
         }
     },
     filters:{
@@ -733,7 +1309,7 @@ export default {
                 margin-right: 36px;
                 text-align: center;
                 cursor: pointer;
-                &:last-child{
+                &:last-child,&:nth-child(11n){
                     margin-right: 0;
                 }
                 .icon{
@@ -825,6 +1401,33 @@ export default {
     }
     .content-table{
         padding-bottom: 28px;
+    }
+}
+//将虚拟机迁移到其他主机模态框样式
+.findHosts-Modal{
+    .findHosts-Modal-search-row{
+        margin-bottom: 10px;
+        float: right;
+        .findHosts-Modal-search-input{
+            padding-left: 15px;
+            width: 200px;
+            height: 30px;
+            line-height: 28px;
+            border: 1px solid #bdbdbd;
+            border-radius: 3px;
+        }
+        .findHosts-Modal-search-button{
+            width: 80px;
+            height: 30px;
+            line-height: 28px;
+            margin-left: 5px;
+            text-align: center;
+            color: #fff;
+            background-color: #51e299;
+            border: 1px solid #51e299;
+            border-radius: 3px;
+            cursor: pointer
+        }
     }
 }
 </style>

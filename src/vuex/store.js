@@ -6,8 +6,11 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     // 定义状态
     state: {
-        host: 'http://10.0.96.20:8080/',
-        // host:'http://192.168.15.62:9080/',
+
+     // host: 'http://10.0.96.20:8080/', //东莞IDC
+      host:'http://124.200.40.0:18080/', //外网
+ //    host:'http://192.168.15.62:9080/',
+        isLogin:0,  //表示用户未登陆
         localhost: 'localhost:8080/',
         adminSections:[
             { 
@@ -2601,6 +2604,11 @@ const store = new Vuex.Store({
             } else {
                 return localStorage.getItem(key)
             }
+        }
+    },
+    mutations: {
+        changeLoginStatus(state, status) {
+            state.isLogin = status;
         }
     }
 })

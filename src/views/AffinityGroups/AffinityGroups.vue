@@ -1,15 +1,15 @@
 <template>
 <!-- 关联性组 -->
-       <div id="affinityGroups">
+     <div id="affinityGroups">
          <div class="affinityGroups-heander">
             <div class="system-capacity-content">
               <Row>
                   <Col span="6">
                     <div class="relavance-box">
-                      <div class="relevance_add" @click="openModal">
+                      <div class="relevance_add" @click="openDialog">
                         <i class="relevance_add_icon"></i>
                       </div>
-                      <p class="addP" @click="openModal">新增关联性组</p>
+                      <p class="addP" @click="openDialog">新增关联性组</p>
                     </div>
                   </Col>
                   <Col span="18">
@@ -44,12 +44,41 @@
                    </li>
                </ul>
            </div>
+            <Page :total="100" :page-size="20" show-elevator show-total></Page>
+      <v-iDialog  :isShow="isShow" :ibutton="ibutton" @getDialogVisible="setDialogVisible" >
+                  <div class="dialog-body" slot="body">
+                      <div class="bodyDiv">
+                          <div class="bodyDivA">
+                              <div class="bodyRow">
+                                  <div class="nameCla">* 名称:</div>
+                                  <div class="valueCls"><input name="name" class="inputCla claValue" v-model="value1"></input></div>
+                              </div>
+                              <div class="bodyRow">
+                                  <div class="nameCla">说明:</div>
+                                  <div class="valueCls"><input name="description" class="inputCla claValue" v-model="value2"></input></div>
+                              </div>
+                              <div class="bodyRow">
+                                  <div class="nameCla">类型:</div>
+                                  <div class="valueCls">
+                                     <i-select class="projectSelect" v-model="valueSelect">
+                                        <i-option v-for="(item,index) in listAffinityGroupTypes" :value="item.type" :key="item.type" v-bind:index="index" >{{ item.type }}</i-option>
+                                    </i-select>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>                        
+                  </div>
+              </v-iDialog>    
     </div>  
 
 </template>
 
 <script>
- import addrelvance from '../../components/addrelvance'
+
+
+import iDialog from '../../components/dialog'     
+
+let paramsNew2 = {};
 export default {
   name: 'v-affinityGroups',
     data () {
@@ -58,16 +87,22 @@ export default {
         relCapacityList:[],
         filterrelCapacityList:[],
         listAffinityGroupTypes:[],
+        createdAffinityGroup:[],
+        addId:'',
+        joinId:'',
         searchVal:"",
-        value: '',
-        value1:'',
+        valueSelect:'',
+        value1: '',
         value2:'',
-        infoArr:[],
-       
+        total:'',
+        isShow: false,
+        pageIndex:1,
+        pageSize:20,
+        ibutton: [{text: '保存', value: 'ok'}, {text: '取消', value: 'cancel'}],
     }
   },
    components:{
-         addrelvance
+         'v-iDialog': iDialog
    },
   methods:{
       /* 获取关联性组数据 */
@@ -102,6 +137,7 @@ export default {
             }
            this.requestRelCapacityData(params);
         },
+        
         //鼠标移进显示隐藏的信息
         showHoverInfo(event){
             let currentTarget = event.currentTarget;
@@ -122,64 +158,87 @@ export default {
             defaultShowDiv.style.cssText="display:block;";
         },
 
-        questRelTypeList(){
-            this.$http.get('client/aip',{
-                  params:{
+        openDialog: function () {
+           this.isShow = true;
+            this.$http.get("client/api",{
+                params:{
                     command:"listAffinityGroupTypes",
                     response:"json",
-                  }
-                  }).then(function(response){
-                      this.listAffinityGroupTypes = response.listaffinitygrouptypesresponse.affinityGroupType;
-                  }.bind(this))
-      /* 写到这里，获取关联性组类型列表 ，下一步是插入数据到 弹框 */
-
-        },
-        openModal: function() {
-                    this.$Modal.confirm({
-                        scrollable:true,
-                        okText:'保存',
-                        render: (h) => {
-                            return h(addrelvance, {
-                                props: {
-                                    
-                                },
-                               
-                            })
-                        },
-                        onOk: () => {
-                         /*   if (this.value1 == '' || this.value2 == '') {
-                                this.$Message.error('信息填写不完整!')
-                                
-                            }*/
-                            var obj = {};
-                            obj.name=this.value1;
-                            obj.description=this.value2;
-                            obj.type=this.valueSelect;
-                            let paramsNew={
-                                    command:createAffinityGroup,
-                                    response:json,
-                                    name:obj.name,
-                                    type:obj.type,
-                                    description:obj.description,
-
-                            }
-                            this.$http.get('client/api',{
-                                params:paramsNew,
-                            }).then(function(response){
-                                this.relCapacityList.push(obj);
-                               
-                           /* const msg = this.$Message.loading({
-                                content: '正在保存..',
-                                duration: 0
-                            })*/
-                            }.bind(this))
-                        
-                        }                        
-                    })
                 }
-            
-            
+            }).then(function(response){
+                var itemsType = response.listaffinitygrouptypesresponse.affinityGroupType;
+                
+                if(itemsType){
+                    this.listAffinityGroupTypes=itemsType;
+                    this.valueSelect=this.listAffinityGroupTypes[0].type;
+                }
+                
+            }.bind(this));
+          
+          
+        },
        
+
+
+        setDialogVisible(val1,val2,val3){
+            this.isShow = false;
+             val1 = this.value1;
+             val2 = this.value2;
+             val3 = this.valueSelect;
+             
+            if(val1){
+                let paramsNew = {
+                    command:"createAffinityGroup",
+                    response:"json",
+                    name:val1,
+                    description:val2,
+                    type:val3
+                }
+               this.$http.get("client/api",{
+                    params:paramsNew
+               }).then(function(response){
+                   this.getNewData(response.createaffinitygroupresponse.id); 
+                   this.success({});  
+                 
+                }.bind(this))
+              
+            }else{
+                this.error({});
+            }
+            
+        },
+         getNewData(id){
+              paramsNew2 = {
+                    command:"listAffinityGroups",
+                    response:"json",
+                    id:id
+                }
+                this.$http.get("client/api",{
+                    params:paramsNew2
+               }).then(function(response){
+                    this.createdAffinityGroup = response.listaffinitygroupsresponse.affinitygroup;
+                    console.log(response.queryasyncjobresultresponse)
+                    this.relCapacityList.push(this.createdAffinityGroup); 
+                    this.requestRelCapacityData();         
+            }.bind(this)) 
+        },
+        //成功提示框
+        success (nodesc) {
+            this.$Notice.success({
+
+                title: nodesc != undefined && nodesc.title ? nodesc.title : '提示',
+                desc: nodesc != undefined && nodesc.desc ? nodesc.desc : '操作成功'
+            });
+            
+        },
+        error (nodesc) {
+                this.$Notice.error({
+                    title: nodesc != undefined && nodesc.title ? nodesc.title : '提示',
+                    desc:nodesc != undefined && nodesc.title ? nodesc.desc :  '请输入关联性组的名称'
+                });
+            }
+        
+        
   },
   created(){
      this.requestRelCapacityData();

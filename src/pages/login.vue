@@ -52,14 +52,15 @@ export default {
           if (valid) {
             this.$http.post('/client/api',this.loginForm).then(function(response){
                 //保存数据到cookie上，在记录数据有效期内，免去登录
-                setCookie('userId',response.loginresponse.userid,response.loginresponse.timeout);
-                setCookie('account',response.loginresponse.account,response.loginresponse.timeout);
-                setCookie('firstName',response.loginresponse.firstname,response.loginresponse.timeout);
-                setCookie('lastName',response.loginresponse.lastname,response.loginresponse.timeout);
-                setCookie('domainId',response.loginresponse.domainid,response.loginresponse.timeout);
-                setCookie('sessionKey',response.loginresponse.sessionkey,response.loginresponse.timeout);
-                setCookie('userName',response.loginresponse.username,response.loginresponse.timeout);
-                setCookie('role',response.loginresponse.type,response.loginresponse.timeout);
+                setCookie('userId',response.loginresponse.userid);
+                setCookie('account',response.loginresponse.account);
+                setCookie('firstName',response.loginresponse.firstname);
+                setCookie('lastName',response.loginresponse.lastname);
+                setCookie('domainId',response.loginresponse.domainid);
+                setCookie('sessionKey',response.loginresponse.sessionkey);
+                setCookie('userName',response.loginresponse.username);
+                setCookie('role',response.loginresponse.type);
+                this.$store.commit('changeLoginStatus',1)
                 //保存到localstorage中
                 localStorage.setItem('userId', response.loginresponse.userid);
                 localStorage.setItem('account',response.loginresponse.account);
@@ -68,6 +69,7 @@ export default {
                 localStorage.setItem('domainId',response.loginresponse.domainid);
                 localStorage.setItem('userName',response.loginresponse.username);
                 localStorage.setItem('role',response.loginresponse.type);
+                localStorage.setItem('loginTime',new Date().getTime());
                  //路由跳转到首页
                 this.$router.push({path:'/'});
             }.bind(this)).catch(function(error){
