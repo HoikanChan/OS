@@ -53,6 +53,9 @@ import System from '../views/System/System.vue'
 import GlobalSettings from '../views/GlobalSettings/GlobalSettings.vue'
 //服务方案
 import ConfigurationIndex from '../views/Configuration/Index.vue'
+//domainadmin显示的首页
+import DomainConfiguration from '../views/Configuration/DomainConfiguration.vue'
+//Root Adminr显示的首页
 import Configuration from '../views/Configuration/Configuration.vue'
 import OpenDetail from '../views/Configuration/OpenDetail.vue'
 //项目
@@ -230,9 +233,12 @@ const router = new Router({
                             component: Configuration,
                             meta: { cnName: "", activeName: "configuration" },
                             beforeEnter: (to, from, next) => {
-                                if (getCookie('role') == 1 || getCookie('role') == 2) {
+                                if (getCookie('role') == 1) {
                                     next()
                                 }
+                                else if(getCookie('role') == 2){
+                                    next({ name: 'domainConfiguration' })
+                                }                                
                             }
                         },
                         {
@@ -241,7 +247,35 @@ const router = new Router({
                             component: OpenDetail,
                             meta: { cnName: "详细信息", activeName: "configuration" },
                         }
-                    ],
+                    ],                    
+                },
+                {
+                    path: 'domainConfiguration',
+                    name: 'domainConfiguration',
+                    component: ConfigurationIndex,
+                    meta: { cnName: "服务方案", activeName: "domainConfiguration" },
+                    children: [
+                        {
+                            path: '',
+                            name: 'domainConfiguration',
+                            component: DomainConfiguration,
+                            meta: { cnName: "", activeName: "domainConfiguration" },
+                            beforeEnter: (to, from, next) => {
+                                if (getCookie('role') == 1) {
+                                    next({ name: 'configuration' })
+                                }
+                                else if(getCookie('role') == 2){
+                                    next()
+                                }                                       
+                            }
+                        },
+                        {
+                            path: 'openDetail',
+                            name: 'openDetail',
+                            component: OpenDetail,
+                            meta: { cnName: "详细信息", activeName: "domainConfiguration" },
+                        }
+                    ],      
                     
                 },
                 {

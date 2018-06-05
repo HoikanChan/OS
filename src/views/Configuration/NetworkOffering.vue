@@ -32,156 +32,171 @@
                           <div class="bodyDivA">
                               <div class="bodyRow">
                                   <div class="nameCla">* 名称:</div>
-                                  <div class="valueCls"><input id="claName" name="name" class="inputCla"></input></div>
+                                  <div class="valueCls"><input name="name" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">* 说明:</div>
-                                  <div class="valueCls"><input id="claDisplaytext" name="description" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">存储类型:</div>
-                                  <div class="valueCls"><select id="claStorageType" name="storageType" class="selectCls">
-                                      <option value="shared">shared</option>
-                                      <option value="local">local</option>
-                                  </select></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">置备类型:</div>
-                                  <div class="valueCls"><select id="claProvisioningType" name="provisioningType" class="selectCls">
-                                      <option value="thin">thin</option>
-                                      <option value="sparse">sparse</option>
-                                      <option value="fat">fat</option>
-                                  </select></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">自定义:</div>
-                                  <div class="valueCls"><input id="claCustomized" name="isCustomized" type="checkbox"></input></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">* CPU 内核数:</div>
-                                  <div class="valueCls"><input id="claCpuNumber" name="cpuNumber" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">* CPU (MHz):</div>
-                                  <div class="valueCls"><input id="claCpuSpeed" name="cpuSpeed" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">* 内存(MB):</div>
-                              <div class="valueCls"><input id="claMemory" name="memory" class="inputCla"></input></input></div>
+                                  <div class="valueCls"><input name="displayText" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">网络速率(MB/秒):</div>
-                              <div class="valueCls"><input id="claNetworkrate" name="networkRate" class="inputCla"></input></div>
+                                  <div class="valueCls"><input name="networkRate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">QoS 类型:</div>
-                              <div class="valueCls"><select class="selectCls" name="qosType">
-                                  <option value=""></option>
-                                  <option value="hypervisor">hypervisor</option>
-                                  <option value="storage">storage</option>
-                              </select></div>
+                                  <div class="nameCla">来宾类型:</div>
+                                  <div class="valueCls"><select name="guestIpType" v-model="guestIpTypeVal" class="selectCls claValue">
+                                      <option value="Isolated">Isolated</option>
+                                      <option value="Shared">Shared</option>
+                                      <option value="L2">L2</option>
+                                  </select></div>
+                              </div>
+                               <div class="bodyRow">
+                                  <div class="nameCla">永久:</div>
+                                  <div class="valueCls"><input name="isPersistent" type="checkbox" class="claValue inputClaC"></input></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">自定义 IOPS:</div>
-                              <div class="valueCls"><input id="isCustomizedIops" name="isCustomizedIops" type="checkbox"></input></div>
+                                  <div class="nameCla">指定 VLAN:</div>
+                                  <div class="valueCls"><input name="specifyVlan" type="checkbox" class="claValue inputClaC"></input></div>
                               </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">最小 IOPS:</div>
-                              <div class="valueCls"><input id="minIops" name="minIops" class="inputCla"></input></div>
+                              <div class="bodyRow" v-show="guestIpTypeVal=='Isolated'">
+                                  <div class="nameCla">VPC:</div>
+                                  <div class="valueCls"><input name="useVpc" type="checkbox" class="claValue inputClaC"></input></div>
                               </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">最大 IOPS:</div>
-                              <div class="valueCls"><input id="maxIops" name="maxIops" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">虚拟机管理程序快照预留:</div>
-                              <div class="valueCls"><input name="hypervisorSnapshotReserve" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">磁盘读取速度(BPS):</div>
-                              <div class="valueCls"><input name="diskBytesReadRate" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">磁盘写入速度(BPS):</div>
-                              <div class="valueCls"><input name="diskBytesWriteRate" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">磁盘读取速度(IOPS):</div>
-                              <div class="valueCls"><input name="diskIopsReadRate" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">磁盘写入速度(IOPS):</div>
-                              <div class="valueCls"><input name="diskIopsWriteRate" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">提供高可用性:</div>
-                              <div class="valueCls"><input id="claOfferha" name="offerHA" type="checkbox"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">存储标签:</div>
-                              <div class="valueCls"><input id="claTags" name="storageTags" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">宿主机标签:</div>
-                              <div class="valueCls"><input id="claHosttags" name="hostTags" class="inputCla"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">CPU 上限:</div>
-                              <div class="valueCls"><input id="claLimitcpuuse" name="cpuCap" type="checkbox"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">公用:</div>
-                              <div class="valueCls"><input type="checkbox" name="isPublic"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">可变:</div>
-                                  <div class="valueCls"><input id="claIsvolatile" name="isVolatile" type="checkbox"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">部署规划器:</div>
-                                  <div class="valueCls"><select id="claDeploymentPlanner" name="deploymentPlanner" class="selectCls"></select></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">规划器模式:</div>
-                                  <div class="valueCls"><select class="selectCls" name="plannerMode">
-                                      <option value=""></option>
-                                      <option value="Strict">Strict</option>
-                                      <option value="Preferred">Preferred</option>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">负载平衡器类型:</div>
+                                  <div class="valueCls"><select name="lbType" class="selectCls claValue">
+                                      <option value="publicLb">Public LB</option>
+                                      <option value="internalLb">Internal LB</option>
                                   </select></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">GPU:</div>
-                                  <div class="valueCls"><select class="selectCls" name="pciDevice">
+                                  <div class="nameCla">Promiscuous Mode:</div>
+                                  <div class="valueCls"><select name="details[0].promiscuousMode" class="selectCls claValue">
                                       <option value=""></option>
-                                      <option value="Group of NVIDIA Corporation GK107GL [GRID K1] GPUs">NVIDIA GRID K1</option>
-                                      <option value="Group of NVIDIA Corporation GK104GL [GRID K2] GPUs">NVIDIA GRID K2</option>
+                                      <option value="true">Accept</option>
+                                      <option value="false">Reject</option>
                                   </select></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">vGPU 类型:</div>
-                                  <div class="valueCls"><select id="hostname" name="vgpuType" class="selectCls">
+                                  <div class="nameCla">MAC Address Changes:</div>
+                                  <div class="valueCls"><select name="macAddressChanges" class="selectCls claValue">
                                       <option value=""></option>
-                                      <option value="passthrough">passthrough</option>
-                                      <option value="GRID K100">GRID K100</option>
-                                      <option value="GRID K120Q">GRID K120Q</option>
-                                      <option value="GRID K140Q">GRID K140Q</option>
-                                      <option value="GRID K160Q">GRID K160Q</option>
-                                      <option value="GRID K180Q">GRID K180Q</option>
-                                      <option value="GRID K200">GRID K200</option>
-                                      <option value="GRID K220Q">GRID K220Q</option>
-                                      <option value="GRID K240Q">GRID K240Q</option>
-                                      <option value="GRID K260Q">GRID K260Q</option>
-                                      <option value="GRID K280Q">GRID K280Q</option>
+                                      <option value="true">Accept</option>
+                                      <option value="false">Reject</option>
                                   </select></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">域:</div>
-                                  <div class="valueCls"><select id="claDomains" name="domainId" class="selectCls"></select></div>
+                                  <div class="nameCla">Forged Transmits:</div>
+                                  <div class="valueCls"><select name="details[0].forgedTransmits" class="selectCls claValue">
+                                      <option value=""></option>
+                                      <option value="true">Accept</option>
+                                      <option value="false">Reject</option>
+                                  </select></div>
+                              </div>
+                              <div class="bodyRow1" v-show="guestIpTypeVal!='L2'">
+                                  <div class="nameCla">支持的服务:</div>
+                                  <div class="valueDiv">
+                                        <span v-for="support in supportedNetworkServices">
+                                        <div class="bodyRow">
+                                            <div class="nameCla">{{support.name}}  ： </div>
+                                            <div class="valueCls"><input v-model="supportedServices[support.name]" type="checkbox" class="inputClaC"></input></div>
+                                        </div>
+                                        <div class="bodyRow" v-show="supportedServices[support.name]">
+                                            <div class="nameCla">{{support.name}} Provider:</div>
+                                            <div class="valueCls">
+                                                <select :class="support.name">
+                                                        <option v-for="provider in support.provider" value="provider.name">{{provider.name}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        </span>
+                                    </div>
+                              </div>
+                              <div class="bodyRow">
+                                  <div class="nameCla">路由器的系统方案:</div>
+                                  <div class="valueCls"><select id="calServiceOffering" name="serviceofferingid" class="selectCls claValue"></select></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">冗余路由器功能:</div>
+                                  <div class="valueCls"><input name="service.SourceNat.redundantRouterCapabilityCheckbox" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">支持的源 NAT 类型:</div>
+                                  <div class="valueCls"><select class="selectCls claValue" name="service.SourceNat.sourceNatTypeDropdown">
+                                     <option value="peraccount">Per account</option>
+                                     <option value="perzone">Per zone</option>
+                                  </select></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">弹性负载平衡器:</div>
+                                  <div class="valueCls"><input name="service.Lb.elasticLbCheckbox" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">模式:</div>
+                                  <div class="valueCls"><select name="service.Lb.inlineModeDropdown" class="selectCls claValue">
+                                      <option value="false">side by side</option>
+                                      <option value="true">内联</option>
+                                  </select></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">Netscaler Service Packages:</div>
+                                  <div class="valueCls"><select name="service.Lb.Netscaler.servicePackages" class="selectCls claValue">
+                                      <option></option>
+                                  </select></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">Service Package Description:</div>
+                                  <div class="valueCls"><input name="service.Lb.Netscaler.servicePackages.description" class="inputCla claValue"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">负载平衡器隔离:</div>
+                                  <div class="valueCls"><select name="service.Lb.lbIsolationDropdown" class="selectCls claValue">
+                                        <option value="dedicated">Dedicated</option>
+                                        <option value="shared">Shared</option>
+                                  </select></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">弹性 IP:</div>
+                                  <div class="valueCls"><input name="service.StaticNat.elasticIpCheckbox" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">关联公用 IP:</div>
+                                  <div class="valueCls"><input name="service.StaticNat.associatePublicIP" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">支持扩展二级子网:</div>
+                                  <div class="valueCls"><input name="supportsstrechedl2subnet" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">Supports Public Access:</div>
+                                  <div class="valueCls"><input name="supportspublicaccess" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow">
+                                  <div class="nameCla">节能模式:</div>
+                                  <div class="valueCls"><input name="conservemode" type="checkbox" class="claValue inputClaC"></input></div>
+                              </div>
+                              <div class="bodyRow">
+                                  <div class="nameCla">标签:</div>
+                                  <div class="valueCls"><input name="tags" class="inputCla claValue"></input></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">可用性:</div>
+                                  <div class="valueCls"><select name="availability" class="selectCls claValue">
+                                      <option value="Optional">可选</option>
+                                      <option value="Required">必填项</option>
+                                  </select></div>
+                              </div>
+                              <div class="bodyRow" v-show="haha">
+                                  <div class="nameCla">默认出口规则:</div>
+                                  <div class="valueCls"><select name="egressdefaultpolicy" class="selectCls claValue">
+                                      <option value="ALLOW">允许</option>
+                                      <option value="DENY">拒绝</option>
+                                  </select></div>
                               </div>
                           </div>
                       </div>                        
                   </div>
-              </v-iDialog>                                  
+              </v-iDialog>                               
        </div>
 </template>
 
@@ -200,7 +215,11 @@ export default {
         dataList: '',
         mykeyword: '',        
         isShow: false,
+        haha: false,
         ibutton: [{text: '保存', value: 'ok'}, {text: '取消', value: 'cancel'}],
+        guestIpTypeVal: 'Isolated',
+        supportedServices: {},
+        supportedNetworkServices: [],
     }
   },
   methods:{
@@ -249,52 +268,112 @@ export default {
       //新增窗口
         openDialog: function () {
             this.isShow = true;
-            if(this.isCal){
-                let params = {
-                    command:"listStorageTags",
-                    response:"json"
-                };
-                this.$http.get("/client/api",{
-                    params:params
-                }).then(function(response){
-                    
-                }.bind(this))
+            
+            this.listSupportedNetworkServices();
+            this.listServiceOfferings();
+            this.listRegisteredServicePackages();
+            this.listZones();
+        },
+        //支持的服务选项
+        listSupportedNetworkServices(){
+            let params = {
+                command:"listSupportedNetworkServices",
+                response:"json"
+            };
+            this.$http.get("/client/api",{
+                params:params
+            }).then(function(response){
+                this.supportedNetworkServices = response.listsupportednetworkservicesresponse.networkservice;
+                // for(let i = 0; i < this.supportedNetworkServices.length; i++){
+                //     this.supportedServices[this.supportedNetworkServices.name] = false;
+                // }
+            }.bind(this))
+        },
+        //路由器的系统方案的选项
+        listServiceOfferings(){
+            let params = {
+                command: "listServiceOfferings",
+                response: "json",
+                systemvmtype: "domainrouter",
+                issystem: true
+            };
+            this.$http.get("/client/api",{
+                params:params
+            }).then(function(response){
+                // let data = response.listserviceofferingsresponse.serviceoffering;
+            }.bind(this))
+        },
+        listRegisteredServicePackages(){
+            let params = {
+                command: "listRegisteredServicePackages",
+                response: "json"
+            };
+            this.$http.get("/client/api",{
+                params:params
+            }).then(function(response){
+                // response.listregisteredservicepackage
+            }.bind(this))
+        }
+        ,
+        listZones(){
+            let params = {
+                command: "listZones",
+                response: "json"
 
-                params = {
-                    command:"listDeploymentPlanners",
-                    response:"json"
-                };
-                this.$http.get("/client/api",{
-                    params:params
-                }).then(function(response){
-                    var obj=document.getElementById('claDeploymentPlanner'); 
-                    let list = response.listdeploymentplannersresponse.deploymentPlanner;
-                    obj.options.add(new Option("", "")); 
-                    for(var i = 0; i < list.length; i++){
-                        obj.options.add(new Option(list[i].name, list[i].name)); 
-                    }
-                }.bind(this))
-
-                params = {
-                    command:"listDomains",
-                    response:"json"
-                };
-                this.$http.get("/client/api",{
-                    params:params
-                }).then(function(response){
-                    var obj=document.getElementById('claDomains'); 
-                    let list = response.listdomainsresponse.domain;
-                    for(var i = 0; i < list.length; i++){
-                        obj.options.add(new Option(list[i].name, list[i].id)); 
-                    }
-                }.bind(this))
-            }
+            };
+            this.$http.get("/client/api",{
+                params:params
+            }).then(function(response){
+                // response.listzonesresponse.zone
+            }.bind(this))
         },
         setDialogVisible(val){
             this.isShow = false;
             if(val == "ok"){
-                this.success({});
+                let params = {
+                    command: "createServiceOffering",
+                    response: "json",
+                    issystem: false
+                };
+                debugger
+                let b = 0;
+                let supportedServices = '';
+                for(var key in this.supportedServices){
+                    if(this.supportedServices[key]){
+                        let c1 = "serviceProviderList[" + b + "].service";
+                        let c2 = "serviceProviderList[" + b + "].provider";
+                        params[c1] = key;
+                        params[c2] = document.getElementsByClassName(key)[0].value;
+                        supportedServices += key+",";
+                        b++;
+                    }
+                }
+                params.supportedServices = supportedServices.substring(0, supportedServices.length - 1);
+                let a = document.getElementsByClassName("claValue");
+                for(let i = 0; i < a.length; i++){
+                    if(a[i].tagName == "INPUT" && a[i].type == "text" && a[i].value != ""){
+                        params[a[i].name] = a[i].value;
+                    }
+                    else if(a[i].tagName == "INPUT" && a[i].type == "checkbox"){
+                        params[a[i].name] = a[i].checked;
+                    }
+                    else if(a[i].tagName == "SELECT" && a[i].value != ""){
+                        params[a[i].name] = a[i].value;
+                    } 
+                }
+                this.$http.get("/client/api",{
+                    params:params
+                }).then(function(response){
+                    this.success({});
+                    this.getItScheme();
+                }.bind(this))
+                
             }
+        },
+        showOption(optionName){
+            debugger
+            var a = document.getElementsByClassName(optionName);
+            a.style.display = "block";
         },
         //成功提示框
         success (nodesc) {
@@ -425,31 +504,57 @@ export default {
                 .bodyRow{
                     height:50px;
                     margin: 5px;
+                    width: 100%;
 
                     div{
                         float: left;
                     }
                 }
+
+                .bodyRow1{
+                    height: 270px;
+                    margin: 5px;    
+                    div{
+                        float: left;
+                    }                
+
+                    .valueDiv{
+                        height: 250px;
+                        width: 70%;
+                        overflow-y: scroll;
+                        border:1px solid #cdcdcd;
+                        padding-left: 20px;
+
+                        .bodyRow{
+                            height: auto;
+                            width: 95%;
+
+                            div{
+                                float: left;
+                            }
+                        }
+                    }
+                }
                 
                 .nameCla{
-                    width: 130px;
+                    width: 30%;
                     font-size: 15px;
                     line-heighr:30px;
                 }
                 .valueCls{
                     height: 30px;
-                    width: 300px; 
+                    width: 70%; 
                     
                     .inputCla{ 
                         height: 30px;
-                        width: 300px; 
+                        width: 100%; 
                         font-size: 14px; 
                         border:1px solid #cdcdcd;
                         border-radius: 5px;
                     }
                     .selectCls{
                         height: 30px;
-                        width: 300px; 
+                        width: 100%; 
                         font-size: 14px; 
                         border:1px solid #cdcdcd;
                         border-radius: 5px;

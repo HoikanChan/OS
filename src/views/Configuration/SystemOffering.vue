@@ -36,7 +36,15 @@
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">* 说明:</div>
-                                  <div class="valueCls"><input name="description" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="displaytext" class="inputCla claValue"></input></div>
+                              </div>
+                              <div class="bodyRow">
+                                  <div class="nameCla">系统 VM 类型:</div>
+                                  <div class="valueCls"><select name="systemvmtype" class="selectCls claValue">
+                                      <option value="domainrouter">域路由器</option>
+                                      <option value="consoleproxy">控制台代理</option>
+                                      <option value="secondarystoragevm">二级存储 VM</option>
+                                  </select></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">存储类型:</div>
@@ -54,24 +62,20 @@
                                   </select></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">自定义:</div>
-                                  <div class="valueCls"><input name="isCustomized" v-model="isClaCustomized" type="checkbox" class="inputClaC claValue"></input></input></div>
-                              </div>
-                              <div class="bodyRow" v-if="!isClaCustomized">
                                   <div class="nameCla">* CPU 内核数:</div>
                                   <div class="valueCls"><input name="cpuNumber" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="!isClaCustomized">
+                              <div class="bodyRow">
                                   <div class="nameCla">* CPU (MHz):</div>
                                   <div class="valueCls"><input name="cpuSpeed" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="!isClaCustomized">
+                              <div class="bodyRow">
                                   <div class="nameCla">* 内存(MB):</div>
                               <div class="valueCls"><input name="memory" class="inputCla claValue"></input></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">网络速率(MB/秒):</div>
-                              <div class="valueCls"><input name="networkRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="networkrate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">QoS 类型:</div>
@@ -81,107 +85,58 @@
                                   <option value="storage">storage</option>
                               </select></div>
                               </div>
-                              <div class="bodyRow" v-if="claQos == 'storage'">
-                                  <div class="nameCla">自定义 IOPS:</div>
-                              <div class="valueCls"><input name="isCustomizedIops" class="claValue" type="checkbox" v-model="isCustomizedIops"></input></div>
-                              </div>
-                              <div class="bodyRow" v-if="claQos=='storage' && !isCustomizedIops">
+                              <div class="bodyRow" v-show="claQos == 'storage' && !isCustomizedIops">
                                   <div class="nameCla">最小 IOPS:</div>
-                              <div class="valueCls"><input name="minIops" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="miniops" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="claQos=='storage' && !isCustomizedIops">
+                              <div class="bodyRow" v-show="claQos == 'storage' && !isCustomizedIops">
                                   <div class="nameCla">最大 IOPS:</div>
-                              <div class="valueCls"><input name="maxIops" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="maxiops" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="claQos == 'storage'">
-                                  <div class="nameCla">虚拟机管理程序快照预留:</div>
-                              <div class="valueCls"><input name="hypervisorSnapshotReserve" class="inputCla claValue"></input></div>
-                              </div>
-                              <div class="bodyRow" v-if="claQos == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘读取速度(BPS):</div>
-                              <div class="valueCls"><input name="diskBytesReadRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="bytesreadrate" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="claQos == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘写入速度(BPS):</div>
-                              <div class="valueCls"><input name="diskBytesWriteRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="byteswriterate" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="claQos == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘读取速度(IOPS):</div>
-                              <div class="valueCls"><input name="diskIopsReadRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="iopsreadrate" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="claQos == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘写入速度(IOPS):</div>
-                              <div class="valueCls"><input name="diskIopsWriteRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="iopswriterate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">提供高可用性:</div>
-                              <div class="valueCls"><input name="offerHA" type="checkbox" class="claValue"></input></div>
+                              <div class="valueCls"><input name="offerha" type="checkbox" class="claValue inputClaC"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">存储标签:</div>
-                              <div class="valueCls"><input name="storageTags" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="tags" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
-                                  <div class="nameCla">宿主机标签:</div>
-                              <div class="valueCls"><input name="hostTags" class="inputCla claValue"></input></div>
+                                  <div class="nameCla">主机标签:</div>
+                              <div class="valueCls"><input name="hosttags" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">CPU 上限:</div>
-                              <div class="valueCls"><input name="cpuCap" type="checkbox" class="claValue"></input></div>
+                              <div class="valueCls"><input name="limitcpuuse" type="checkbox" class="claValue inputClaC"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">公用:</div>
-                              <div class="valueCls"><input type="checkbox" v-model="isPublic" name="isPublic" class="claValue"></input></div>
+                              <div class="valueCls"><input type="checkbox" v-model="isPublic" name="isPublic" class="claValue inputClaC"></input></div>
                               </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">可变:</div>
-                                  <div class="valueCls"><input name="isVolatile" type="checkbox" class="claValue"></input></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">部署规划器:</div>
-                                  <div class="valueCls"><select id="claDeploymentPlanner" v-model="plannerMode" name="deploymentPlanner" class="selectCls claValue"></select></div>
-                              </div>
-                              <div class="bodyRow" v-if="plannerMode=='ImplicitDedicationPlanner'">
-                                  <div class="nameCla">规划器模式:</div>
-                                  <div class="valueCls"><select class="selectCls claValue" name="plannerMode">
-                                      <option value=""></option>
-                                      <option value="Strict">Strict</option>
-                                      <option value="Preferred">Preferred</option>
-                                  </select></div>
-                              </div>
-                              <div class="bodyRow">
-                                  <div class="nameCla">GPU:</div>
-                                  <div class="valueCls"><select v-model="GPU" class="selectCls claValue" name="pciDevice">
-                                      <option value=""></option>
-                                      <option value="Group of NVIDIA Corporation GK107GL [GRID K1] GPUs">NVIDIA GRID K1</option>
-                                      <option value="Group of NVIDIA Corporation GK104GL [GRID K2] GPUs">NVIDIA GRID K2</option>
-                                  </select></div>
-                              </div>
-                              <div class="bodyRow" v-if="GPU!=''">
-                                  <div class="nameCla">vGPU 类型:</div>
-                                  <div class="valueCls"><select name="vgpuType" class="selectCls claValue">
-                                      <option value=""></option>
-                                      <option value="passthrough">passthrough</option>
-                                      <option value="GRID K100" v-if="GPU=='Group of NVIDIA Corporation GK107GL [GRID K1] GPUs'">GRID K100</option>
-                                      <option value="GRID K120Q" v-if="GPU=='Group of NVIDIA Corporation GK107GL [GRID K1] GPUs'">GRID K120Q</option>
-                                      <option value="GRID K140Q" v-if="GPU=='Group of NVIDIA Corporation GK107GL [GRID K1] GPUs'">GRID K140Q</option>
-                                      <option value="GRID K160Q" v-if="GPU=='Group of NVIDIA Corporation GK107GL [GRID K1] GPUs'">GRID K160Q</option>
-                                      <option value="GRID K180Q" v-if="GPU=='Group of NVIDIA Corporation GK107GL [GRID K1] GPUs'">GRID K180Q</option>
-                                      <option value="GRID K200" v-if="GPU=='Group of NVIDIA Corporation GK104GL [GRID K2] GPUs'">GRID K200</option>
-                                      <option value="GRID K220Q" v-if="GPU=='Group of NVIDIA Corporation GK104GL [GRID K2] GPUs'">GRID K220Q</option>
-                                      <option value="GRID K240Q" v-if="GPU=='Group of NVIDIA Corporation GK104GL [GRID K2] GPUs'">GRID K240Q</option>
-                                      <option value="GRID K260Q" v-if="GPU=='Group of NVIDIA Corporation GK104GL [GRID K2] GPUs'">GRID K260Q</option>
-                                      <option value="GRID K280Q" v-if="GPU=='Group of NVIDIA Corporation GK104GL [GRID K2] GPUs'">GRID K280Q</option>
-                                  </select></div>
-                              </div>
-                              <div class="bodyRow" v-if="!isPublic">
+                              <div class="bodyRow" v-show="!isPublic">
                                   <div class="nameCla">域:</div>
-                                  <div class="valueCls"><select name="domainId" class="selectCls claValue"></select></div>
+                                  <div class="valueCls"><select id="claDomains" name="domainid" class="selectCls claValue"></select></div>
                               </div>
                           </div>
                       </div>                        
                   </div>
-              </v-iDialog>                                   
+              </v-iDialog>                                    
        </div>
 </template>
 
@@ -200,12 +155,8 @@ export default {
         mykeyword: '',        
         isShow: false,
         ibutton: [{text: '保存', value: 'ok'}, {text: '取消', value: 'cancel'}],
-        isClaCustomized: false,
         claQos: '',
         isPublic: false,
-        plannerMode:'',
-        GPU:'',
-        isCustomizedIops: false,
     }
   },
   methods:{
@@ -255,51 +206,55 @@ export default {
       //新增窗口
         openDialog: function () {
             this.isShow = true;
-            if(this.isCal){
-                let params = {
-                    command:"listStorageTags",
-                    response:"json"
-                };
-                this.$http.get("/client/api",{
-                    params:params
-                }).then(function(response){
-                    
-                }.bind(this))
-
-                params = {
-                    command:"listDeploymentPlanners",
-                    response:"json"
-                };
-                this.$http.get("/client/api",{
-                    params:params
-                }).then(function(response){
-                    var obj=document.getElementById('claDeploymentPlanner'); 
-                    let list = response.listdeploymentplannersresponse.deploymentPlanner;
-                    obj.options.add(new Option("", "")); 
-                    for(var i = 0; i < list.length; i++){
-                        obj.options.add(new Option(list[i].name, list[i].name)); 
-                    }
-                }.bind(this))
-
-                params = {
-                    command:"listDomains",
-                    response:"json"
-                };
-                this.$http.get("/client/api",{
-                    params:params
-                }).then(function(response){
-                    var obj=document.getElementById('claDomains'); 
-                    let list = response.listdomainsresponse.domain;
-                    for(var i = 0; i < list.length; i++){
-                        obj.options.add(new Option(list[i].name, list[i].id)); 
-                    }
-                }.bind(this))
-            }
+            this.listDomains();   
+        },
+        listDomains(){
+            let params = {
+                command: "listDomains",
+                listAll: true,
+                details: "min",
+                response: "json"
+            };
+            this.$http.get("/client/api",{
+                params:params
+            }).then(function(response){
+                var obj=document.getElementById('claDomains'); 
+                let list = response.listdomainsresponse.domain;
+                for(var i = 0; i < list.length; i++){
+                    obj.options.add(new Option(list[i].name, list[i].id)); 
+                }
+            }.bind(this))
         },
         setDialogVisible(val){
             this.isShow = false;
             if(val == "ok"){
-                this.success({});
+                let params = {
+                    command: "createServiceOffering",
+                    response: "json",
+                    issystem: true
+                };
+                let a = document.getElementsByClassName("claValue");
+                for(let i = 0; i < a.length; i++){
+                    
+                    if(a[i].tagName == "INPUT" && a[i].type == "text" && a[i].value != ""){
+                        params[a[i].name] = a[i].value;
+                    }
+                    else if(a[i].tagName == "INPUT" && a[i].type == "checkbox"){
+                        params[a[i].name] = a[i].checked;
+                    }
+                    else if(a[i].tagName == "SELECT" && a[i].value != ""){
+                        params[a[i].name] = a[i].value;
+                    } 
+                }
+                if(this.isPublic){
+                    delete params.domainid;
+                }
+                this.$http.get("/client/api",{
+                    params:params
+                }).then(function(response){
+                    this.success({});
+                    this.getSystemScheme();
+                }.bind(this))
             }
         },
         //成功提示框

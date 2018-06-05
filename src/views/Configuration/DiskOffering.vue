@@ -38,7 +38,7 @@
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">* 说明:</div>
-                                  <div class="valueCls"><input name="description" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="displaytext" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">存储类型:</div>
@@ -57,72 +57,76 @@
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">自定义磁盘大小:</div>
-                                  <div class="valueCls"><input name="isCustomized" v-model="isClaCustomized" type="checkbox" class="inputClaC claValue"></input></input></div>
+                                  <div class="valueCls"><input name="customized" v-model="isClaCustomized" type="checkbox" class="inputClaC claValue"></input></input></div>
                               </div>
-                              <div class="bodyRow" v-if="!isClaCustomized">
-                                  <div class="nameCla">* 磁盘大小(GB):</div>
+                              <div class="bodyRow" v-show="!isClaCustomized">
+                                  <div class="nameCla"> *磁盘大小(GB):</div>
                                   <div class="valueCls"><input name="disksize" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">QoS 类型:</div>
-                              <div class="valueCls"><select v-model="qosVal" class="selectCls claValue" name="qosType">
-                                  <option value=""></option>
-                                  <option value="hypervisor">hypervisor</option>
-                                  <option value="storage">storage</option>
-                              </select></div>
+                                  <div class="valueCls"><select v-model="claQos" class="selectCls claValue" name="qosType">
+                                        <option value=""></option>
+                                        <option value="hypervisor">hypervisor</option>
+                                        <option value="storage">storage</option>
+                                  </select></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'storage'">
+                              <div class="bodyRow" v-show="claQos == 'storage'">
                                   <div class="nameCla">自定义 IOPS:</div>
-                              <div class="valueCls"><input name="isCustomizedIops" class="claValue" type="checkbox"></input></div>
+                                  <div class="valueCls"><input name="customizediops" v-model="isCustomizedIops" class="inputClaC claValue" type="checkbox"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'storage' && !isCustomizedIops">
+                              <div class="bodyRow" v-show="claQos == 'storage' && !isCustomizedIops">
                                   <div class="nameCla">最小 IOPS:</div>
-                                  <div class="valueCls"><input name="minIops" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="miniops" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'storage' && !isCustomizedIops">
+                              <div class="bodyRow" v-show="claQos == 'storage' && !isCustomizedIops">
                                   <div class="nameCla">最大 IOPS:</div>
-                                  <div class="valueCls"><input name="maxIops" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="maxiops" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'storage'">
+                              <div class="bodyRow" v-show="claQos == 'storage'">
                                   <div class="nameCla">虚拟机管理程序快照预留:</div>
-                                  <div class="valueCls"><input name="hypervisorSnapshotReserve" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="hypervisorsnapshotreserve" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘读取速度(BPS):</div>
-                                  <div class="valueCls"><input name="diskBytesReadRate" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="bytesreadrate" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘写入速度(BPS):</div>
-                                  <div class="valueCls"><input name="diskBytesWriteRate" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="byteswriterate" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘读取速度(IOPS):</div>
-                                  <div class="valueCls"><input name="diskIopsReadRate" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="iopsreadrate" class="inputCla claValue"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="qosVal == 'hypervisor'">
+                              <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘写入速度(IOPS):</div>
-                                  <div class="valueCls"><input name="diskIopsWriteRate" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="iopswriterate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">写入缓存类型:</div>
-                              <div class="valueCls"><input name="cacheMode" type="checkbox" class="claValue"></input></div>
+                                  <div class="valueCls"><select class="selectCls claValue" name="cacheMode">
+                                        <option value="none">No disk cache</option>
+                                        <option value="writeback">Write-back disk caching</option>
+                                        <option value="writethrough">Write-through disk caching</option>
+                                  </select></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">存储标签:</div>
-                              <div class="valueCls"><input name="tags" class="inputCla claValue"></input></div>
+                                  <div class="valueCls"><input name="tags" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">公用:</div>
-                              <div class="valueCls"><input type="checkbox" v-model="isPublic" name="isPublic" class="claValue"></input></div>
+                                  <div class="valueCls"><input type="checkbox" v-model="isPublic" name="isPublic" class="claValue inputClaC"></input></div>
                               </div>
-                              <div class="bodyRow" v-if="!isPublic">
+                              <div class="bodyRow" v-show="!isPublic">
                                   <div class="nameCla">域:</div>
-                                  <div class="valueCls"><select name="domainId" class="selectCls claValue"></select></div>
+                                  <div class="valueCls"><select id="claDomains" name="domainid" class="selectCls claValue"></select></div>
                               </div>
                           </div>
                       </div>                        
                   </div>
-              </v-iDialog>                                   
+              </v-iDialog>                                  
        </div>
 </template>
 
@@ -137,15 +141,14 @@ export default {
   },
   data () {
     return {
-        mykeyword: '',
-        dataList: '',
+        dataList: [],
         mykeyword: '',        
         isShow: false,
         ibutton: [{text: '保存', value: 'ok'}, {text: '取消', value: 'cancel'}],
         isClaCustomized: false,
-        qosVal: '',
-        isCustomizedIops: false,
+        claQos: '',
         isPublic: false,
+        isCustomizedIops: false,
     }
   },
   methods:{
@@ -169,7 +172,6 @@ export default {
       },
       //详细信息页面
       operaDetail(itemId){
-          // alert(itemId);
           this.$router.push({name:'openDetail', params: { itemId: itemId, type: 'disk'}});
       },
       //获取磁盘方案
@@ -195,12 +197,55 @@ export default {
       //新增窗口
         openDialog: function () {
             this.isShow = true;
-            
+            this.listDomains();   
+        },
+        listDomains(){
+            let params = {
+                command: "listDomains",
+                listAll: true,
+                details: "min",
+                response: "json"
+            };
+            this.$http.get("/client/api",{
+                params:params
+            }).then(function(response){
+                var obj=document.getElementById('claDomains'); 
+                let list = response.listdomainsresponse.domain;
+                for(var i = 0; i < list.length; i++){
+                    obj.options.add(new Option(list[i].name, list[i].id)); 
+                }
+            }.bind(this))
         },
         setDialogVisible(val){
             this.isShow = false;
             if(val == "ok"){
-                this.success({});
+                let params = {
+                    command: "createDiskOffering",
+                    response: "json",
+                    isMirrored: false
+                };
+                let a = document.getElementsByClassName("claValue");
+                for(let i = 0; i < a.length; i++){
+                    
+                    if(a[i].tagName == "INPUT" && a[i].type == "text" && a[i].value != ""){
+                        params[a[i].name] = a[i].value;
+                    }
+                    else if(a[i].tagName == "INPUT" && a[i].type == "checkbox"){
+                        params[a[i].name] = a[i].checked;
+                    }
+                    else if(a[i].tagName == "SELECT" && a[i].value != ""){
+                        params[a[i].name] = a[i].value;
+                    } 
+                }
+                if(this.isPublic){
+                    delete params.domainid;
+                }
+                debugger
+                this.$http.get("/client/api",{
+                    params:params
+                }).then(function(response){
+                    this.success({});
+                }.bind(this))
             }
         },
         //成功提示框

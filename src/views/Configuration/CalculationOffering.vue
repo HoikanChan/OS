@@ -83,35 +83,35 @@
                               </div>
                               <div class="bodyRow" v-show="claQos == 'storage'">
                                   <div class="nameCla">自定义 IOPS:</div>
-                              <div class="valueCls"><input name="isCustomizedIops" v-model="isCustomizedIops" class="inputClaC claValue" type="checkbox"></input></div>
+                              <div class="valueCls"><input name="customizediops" v-model="isCustomizedIops" class="inputClaC claValue" type="checkbox"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'storage' && !isCustomizedIops">
                                   <div class="nameCla">最小 IOPS:</div>
-                              <div class="valueCls"><input name="minIops" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="miniops" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'storage' && !isCustomizedIops">
                                   <div class="nameCla">最大 IOPS:</div>
-                              <div class="valueCls"><input name="maxIops" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="maxiops" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'storage'">
                                   <div class="nameCla">虚拟机管理程序快照预留:</div>
-                              <div class="valueCls"><input name="hypervisorSnapshotReserve" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="hypervisorsnapshotreserve" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘读取速度(BPS):</div>
-                              <div class="valueCls"><input name="diskBytesReadRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="bytesreadrate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘写入速度(BPS):</div>
-                              <div class="valueCls"><input name="diskBytesWriteRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="byteswriterate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘读取速度(IOPS):</div>
-                              <div class="valueCls"><input name="diskIopsReadRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="iopsreadrate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow" v-show="claQos == 'hypervisor'">
                                   <div class="nameCla">磁盘写入速度(IOPS):</div>
-                              <div class="valueCls"><input name="diskIopsWriteRate" class="inputCla claValue"></input></div>
+                              <div class="valueCls"><input name="iopswriterate" class="inputCla claValue"></input></div>
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">提供高可用性:</div>
@@ -139,11 +139,11 @@
                               </div>
                               <div class="bodyRow">
                                   <div class="nameCla">部署规划器:</div>
-                                  <div class="valueCls"><select id="claDeploymentPlanner" v-model="plannerMode" name="deploymentPlanner" class="selectCls claValue"></select></div>
+                                  <div class="valueCls"><select id="deploymentplanner" v-model="plannerMode" name="deploymentPlanner" class="selectCls claValue"></select></div>
                               </div>
                               <div class="bodyRow" v-show="plannerMode=='ImplicitDedicationPlanner' || plannerMode==''">
                                   <div class="nameCla">规划器模式:</div>
-                                  <div class="valueCls"><select class="selectCls claValue" name="plannerMode">
+                                  <div class="valueCls"><select class="selectCls claValue" name="ImplicitDedicationMode">
                                       <option value=""></option>
                                       <option value="Strict">Strict</option>
                                       <option value="Preferred">Preferred</option>
@@ -259,9 +259,7 @@ export default {
 
             this.listStorageTags();
             this.listDeploymentPlanners();
-            this.listDomains();    
-
-                
+            this.listDomains();   
         },
         listStorageTags(){
             let params = {
@@ -313,12 +311,16 @@ export default {
                     response: "json",
                     issystem: false
                 };
-                params.serviceofferingdetails = [];
                 let a = document.getElementsByClassName("claValue");
+                let b = 0;
                 for(let i = 0; i < a.length; i++){
-                    if(a[i].tagName == "SELECT" && (a[i].name == "pciDevice" || a[i].name == "vgpuType")  && a[i].value != ""){
-                        let b = {key: a[i].name, value: a[i].value};
-                        params.serviceofferingdetails.push(b);
+                    if(a[i].tagName == "SELECT"  && a[i].value != "" && 
+                        (a[i].name == "pciDevice" || a[i].name == "vgpuType" || a[i].name == "ImplicitDedicationMode")){
+                        let c1 = "serviceofferingdetails[" + b + "].key";
+                        let c2 = "serviceofferingdetails[" + b + "].value";
+                        params[c1] = a[i].name;
+                        params[c2] = a[i].value;
+                        b++;
                         continue;
                     }
                     if(a[i].tagName == "INPUT" && a[i].type == "text" && a[i].value != ""){
@@ -331,8 +333,6 @@ export default {
                         params[a[i].name] = a[i].value;
                     } 
                 }
-                debugger
-                // params.serviceofferingdetails = JSON.stringify(serviceofferingdetails);
                 this.$http.get("/client/api",{
                     params:params
                 }).then(function(response){
