@@ -9,12 +9,16 @@ import Qs from 'qs'
 import store from './vuex/store'
 import 'iview/dist/styles/iview.css';
 import 'iview/dist/iview.js';
-
+import Breadcrumb from '@/components/Breadcrumb';
 
 Vue.use(iView)
+
+//将breadcrumb注册为全局组件
+Vue.component('v-breadcrumb', Breadcrumb)
+
 // `baseURL` 将自动加在 `url` 前面，除非 `url` 是一个绝对 URL。
 // 它可以通过设置一个 `baseURL` 便于为 axios 实例的方法传递相对 URL
-// axios.defaults.baseURL = store.state.host;
+axios.defaults.baseURL = store.state.host;
 axios.defaults.transformRequest = [function (data) {
     // Do whatever you want to transform the data
     let ret = ''

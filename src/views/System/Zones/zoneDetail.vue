@@ -92,8 +92,8 @@ export default {
             }
         }
     }
-    .tab-content{
-    }
+    // .tab-content{
+    // }
      //iview table 表头样式
     .ivu-table-header{
         thead{
