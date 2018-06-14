@@ -179,7 +179,7 @@ export default {
       }
     },
     clickTableRow (data) {
-      this.$router.push({name:'accountDetail',query:{id:data.id}})   
+      this.$router.push({name:'accountDetail',query:{id:data.id}});   
     }
   },
   mounted() {

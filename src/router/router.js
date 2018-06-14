@@ -87,7 +87,9 @@ import DomainConfiguration from '../views/Configuration/DomainConfiguration.vue'
 import Configuration from '../views/Configuration/Configuration.vue'
 import OpenDetail from '../views/Configuration/OpenDetail.vue'
 //项目
+import ProjectsIndex from '../views/Projects/Index.vue'
 import Projects from '../views/Projects/Projects.vue'
+import ProjectDetail from '../views/Projects/ProjectDetail.vue'
 //地理区域
 import Regions from '../views/Regions/Regions.vue'
 import RegionsDetail from '../views/Regions/RegionsDetail.vue'
@@ -409,11 +411,23 @@ const router = new Router({
                     ],
 
                 },
+                
                 {
                     path: 'projects',
                     name: 'projects',
-                    component: Projects,
+                    component: ProjectsIndex,
                     meta: { cnName: "项目", activeName: "projects" },
+                    children: [{
+                        path: '',
+                        name: 'projects',
+                        component: Projects,
+                        meta: { cnName: "", activeName: "projects" },
+                    }, {
+                        path: 'projectDetail/',
+                        name: 'projectDetail',
+                        component: ProjectDetail,
+                        meta: { cnName: "", activeName: "projects" },
+                    }]
                     // beforeEnter: (to, from, next) => {
                     //     if (getCookie('role')==1||getCookie('role')==2) {
                     //         next()

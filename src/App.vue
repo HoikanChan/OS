@@ -31,7 +31,29 @@ ul {
     clear: both;
   }
 }
-
+//iview Tab组件
+.ivu-tabs-bar {
+  border-bottom: none;
+  .ivu-tabs-nav-wrap {
+    display: flex;
+    justify-content: center;
+    .ivu-tabs-ink-bar {
+      height: 0;
+    }
+    .ivu-tabs-tab {
+      width: 200px;
+      height: 40px;
+      background-color: #353c4c;
+      color: #ffffff;
+      text-align: center;
+      font-size: 16px;
+      margin-right: 2px;
+    }
+    .ivu-tabs-tab-active {
+      background-color: #51e299;
+    }
+  }
+}
 //iview modal组件
 .ivu-modal {
   .ivu-modal-body {

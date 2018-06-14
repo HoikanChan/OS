@@ -104,8 +104,7 @@ export default {
     };
   },
   methods: {
-    onChange(type) {
-    },
+    onChange(type) {},
     async submit() {
       await this.updateAccount();
       this.$emit("toggleEdit");
@@ -120,8 +119,7 @@ export default {
               domainid: this.accoutInfo.domainid,
               account: this.accoutInfo.name,
               newname: this.newAccount.name,
-              networkdomain: this.newAccount.networkdomain,
-              _: "1528697728535"
+              networkdomain: this.newAccount.networkdomain
             });
           } else {
             this.sendRequest({
@@ -130,8 +128,7 @@ export default {
               resourceType: this.resourceDictionary[key],
               max: this.newAccount[key],
               domainid: this.accoutInfo.domainid,
-              account: this.accoutInfo.name,
-              _: "1528697728535"
+              account: this.accoutInfo.name
             });
           }
         }
@@ -143,12 +140,15 @@ export default {
           params: params
         });
       } catch (error) {
-        console.log(error.response.data);
-        this.$message({
-          showClose: true,
-          message: error.response.data,
-          type: "error"
-        });
+        console.log("error", error.response.data);
+        if (error.response.data.updateresourcelimitresponse) {
+          this.$Modal.error({
+            title: "错误",
+            content: `<p>${
+              error.response.data.updateresourcelimitresponse.errortext
+            }</p>`
+          });
+        }
       }
     },
     quitEditing() {
