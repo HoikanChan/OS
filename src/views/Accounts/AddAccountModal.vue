@@ -13,27 +13,27 @@
         </Row>
         <Row>
           <FormItem label="密码" prop="password" >
-            <Input  type="password" placeholder="请输入角色说明" v-model="addAccountForm.password"/>
+            <Input  type="password" placeholder="请输入密码" v-model="addAccountForm.password"/>
           </FormItem>
         </Row>
         <Row>
           <FormItem label="确认密码" prop="passwordConfirm">
-            <Input  type="password" placeholder="请输入角色说明" v-model="addAccountForm.passwordConfirm"/>
+            <Input  type="password" placeholder="请输入密码" v-model="addAccountForm.passwordConfirm"/>
           </FormItem>
         </Row>
         <Row>
           <FormItem label="电子邮件" prop="email" >
-            <Input  placeholder="请输入角色说明" v-model="addAccountForm.email"/>
+            <Input  placeholder="请输入电子邮件" v-model="addAccountForm.email"/>
           </FormItem>
         </Row>
         <Row>
           <FormItem label="名字" prop="firstname" >
-            <Input  placeholder="请输入角色说明" v-model="addAccountForm.firstname"/>
+            <Input  placeholder="请输入名字" v-model="addAccountForm.firstname"/>
           </FormItem>
         </Row>
         <Row>
           <FormItem label="姓氏" prop="lastname" >
-            <Input  placeholder="请输入角色说明" v-model="addAccountForm.lastname"/>
+            <Input  placeholder="请输入姓氏" v-model="addAccountForm.lastname"/>
           </FormItem>
         </Row>
         <Row>

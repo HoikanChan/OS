@@ -27,7 +27,7 @@ export default {
   name: "grid-list",
   props: {
     data: {
-      type: Object,
+      type: Array,
       required: true
     },
     cols: {

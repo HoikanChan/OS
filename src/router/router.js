@@ -61,7 +61,9 @@ import ZoneIndicators from '../views/System/Zones/ZoneIndicators.vue'
 //基础架构-资源域-详情
 import ZoneDetail from '../views/System/Zones/zoneDetail.vue'
 //基础架构-机柜
-import Pods from '../views/System/Pods.vue'
+import PodsIndex from '../views/System/Pods/index'
+import PodDetail from '../views/System/Pods/PodDetail'
+import Pods from '../views/System/Pods/Pods.vue'
 //基础架构-群集
 import Clusters from '../views/System/Clusters.vue'
 //基础架构-主机
@@ -104,434 +106,448 @@ import AffinityGroups from "../views/AffinityGroups/AffinityGroups.vue";
 import { setCookie, getCookie, delCookie } from '../common/js/cookie'
 //路由实例化
 const router = new Router({
-    mode: "history",
-    base: __dirname,
-    routes: [
+  mode: "history",
+  base: __dirname,
+  routes: [
+    {
+      path: '/',
+      component: Home,
+      name: 'index',
+      redirect: { name: 'adminDashboard' },
+      meta: { cnName: "" },
+      children: [
         {
-            path: '/',
-            component: Home,
-            name: 'index',
-            redirect: { name: 'adminDashboard' },
-            meta: { cnName: "" },
-            children: [
-                {
-                    path: '/',
-                    name: 'adminDashboard',
-                    redirect: { name: 'dashboard' },
-                    component: Dashboard,
-                    //cnName是显示的文字，activeName是默认显示导航高亮
-                    meta: { cnName: "首页", activeName: "index" },
-                    children: [
+          path: '/',
+          name: 'adminDashboard',
+          redirect: { name: 'dashboard' },
+          component: Dashboard,
+          //cnName是显示的文字，activeName是默认显示导航高亮
+          meta: { cnName: "首页", activeName: "index" },
+          children: [
 
-                        {
-                            path: '',
-                            name: 'dashboard',
-                            component: AdminDashboard,
-                            meta: { cnName: "", activeName: "index" },
-                            beforeEnter: (to, from, next) => {
-                                if (getCookie('role') == 1) {
-                                    next()
-                                } else {
-                                    next({ name: 'normalDashboard' })
-                                }
-                            }
-                        },
-                        {
-                            path: 'alertsDetail',
-                            name: 'alertsDetail',
-                            component: AlertsDetail,
-                            meta: { cnName: "警报详情", activeName: "index" },
-                        },
-                    ],
-                },
-                {
-                    path: 'normalDashboard',
-                    name: 'normalDashboard',
-                    component: NormalDashboard,
-                    meta: { cnName: "首页", activeName: "index" },
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1) {
-                            next({ name: 'adminDashboard' })
-                        } else {
-                            next()
-                        }
-                    }
-                },
-                {
-                    path: 'instances',
-                    redirect: { name: 'dashboard' },
-                    component: InstancesIndex,
-                    meta: { cnName: "虚拟机", activeName: "instances" },
-                    children: [
-                        {
-                            path: '',
-                            name: 'instances',
-                            component: Instances,
-                            meta: { cnName: "", activeName: "instances" },
-                        },
-                        {
-                            path: 'operationalIndicators',
-                            name: 'operationalIndicators',
-                            component: OperationalIndicators,
-                            meta: { cnName: "运行指数", activeName: "instances" },
-                        },
-                        {
-                            path: 'instancesdetails/',
-                            name: 'instancesdetails',
-                            component: InstancesDetails,
-                            meta: { cnName: "详情信息", activeName: "instances" },
-                        },
-                    ]
-                },
-                {
-                    path: 'storage',
-                    name: 'storage',
-                    component: Vstorage,
-                    meta: { cnName: "存储", activeName: "storage" }
-                },
-                {
-                    path: 'network',
-                    name: 'network',
-                    component: Network,
-                    meta: { cnName: "网络", activeName: "network" }
-                },
-                {
-                    path: 'templates',
-                    name: 'templates',
-                    component: Vtemplate,
-                    meta: { cnName: "模板", activeName: "templates" }
-                },
-                {
-                    path: 'roles',
-                    name: 'roles',
-                    component: Roles,
-                    meta: { cnName: "角色管理", activeName: "roles" },
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1) {
-                            next()
-                        }
-                    }
-                },
-                {
-                    path: 'accounts',
-                    name: 'accounts',
-                    component: AccountsIndex,
-                    meta: { cnName: "帐户管理", activeName: "accounts" },
-                    children: [
-                        {
-                            path: '',
-                            name: 'accounts',
-                            component: Accounts,
-                            meta: { cnName: "", activeName: "accounts" },
-                        },
-                        {
-                            path: 'accountDetail/',
-                            name: 'accountDetail',
-                            component: AccountDetail,
-                            meta: { cnName: "账户详情", activeName: "accounts" },
-                        },
-                    ]
-                },
-                {
-                    path: 'domains',
-                    name: 'domains',
-                    component: Domains,
-                    meta: { cnName: "域", activeName: "domains" },
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1 || getCookie('role') == 2) {
-                            next()
-                        }
-                    }
-                },
-                {
-                    path: 'events',
-                    name: 'events',
-                    component: Vevents,
-                    meta: { cnName: "事件", activeName: "events" }
-                },
-                {
-                    path: 'system',
-                    name: '',
-                    component: SystemIndex,
-                    meta: { cnName: "基础架构", activeName: "system" },
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1) {
-                            next()
-                        }
-                    },
-                    children: [
-                        {
-                            path: '',
-                            name: 'system',
-                            component: System,
-                            meta: { cnName: "基础架构", activeName: "system" },
-                        },
-                        {
-                            path: 'zones',
-                            name: '',
-                            component: ZonesIndex,
-                            meta: { cnName: "资源域", activeName: "system" },
-                            children: [
-                                {
-                                    path: '',
-                                    name: 'zones',
-                                    component: Zones,
-                                    meta: { cnName: "", activeName: "system" },
-                                },
-                                {
-                                    path: 'zoneindicators',
-                                    name: 'zoneindicators',
-                                    component: ZoneIndicators,
-                                    meta: { cnName: "运行指标", activeName: "system" },
-                                },
-                                {
-                                    path: 'zonedetail/',
-                                    name: 'ZoneDetail',
-                                    component: ZoneDetail,
-                                    meta: { cnName: "运行指标", activeName: "system" },
-                                },
-                            ]
-                        },
-                        {
-                            path: 'Pods',
-                            name: 'Pods',
-                            component: Pods,
-                            meta: { cnName: "机柜", activeName: "system" },
-                        },
-                        {
-                            path: 'Clusters',
-                            name: 'Clusters',
-                            component: Clusters,
-                            meta: { cnName: "群集", activeName: "system" },
-                        },
-                        {
-                            path: 'Hosts',
-                            name: 'Hosts',
-                            component: Hosts,
-                            meta: { cnName: "主机", activeName: "system" },
-                        },
-                        {
-                            path: 'PrimaryStorage',
-                            name: 'PrimaryStorage',
-                            component: PrimaryStorage,
-                            meta: { cnName: "主存储", activeName: "system" },
-                        },
-                        {
-                            path: 'SecondaryStorage',
-                            name: 'SecondaryStorage',
-                            component: SecondaryStorage,
-                            meta: { cnName: "二级存储", activeName: "system" },
-                        },
-                        {
-                            path: 'SystemVMs',
-                            name: 'SystemVMs',
-                            component: SystemVMs,
-                            meta: { cnName: "系统VM", activeName: "system" },
-                        },
-                        {
-                            path: 'VirtualRouters',
-                            name: 'VirtualRouters',
-                            component: VirtualRouters,
-                            meta: { cnName: "虚拟路由器", activeName: "system" },
-                        },
-                        {
-                            path: 'CPUSockets',
-                            name: 'CPUSockets',
-                            component: CPUSockets,
-                            meta: { cnName: "CPU后插槽", activeName: "system" },
-                        },
-                    ]
-
-                },
-                {
-                    path: 'globalSettings',
-                    name: 'globalSettings',
-                    component: GlobalSettings,
-                    meta: { cnName: "全局设置", activeName: "globalSettings" },
-                    beforeEnter: (to, from, next) => {
-                        if (getCookie('role') == 1) {
-                            next()
-                        }
-                    }
-                },
-                {
-                    path: 'configuration',
-                    name: 'configuration',
-                    component: ConfigurationIndex,
-                    meta: { cnName: "服务方案", activeName: "configuration" },
-                    children: [
-                        {
-                            path: '',
-                            name: 'configuration',
-                            component: Configuration,
-                            meta: { cnName: "", activeName: "configuration" },
-                            beforeEnter: (to, from, next) => {
-                                if (getCookie('role') == 1) {
-                                    next()
-                                }
-                                else if (getCookie('role') == 2) {
-                                    next({ name: 'domainConfiguration' })
-                                }
-                            }
-                        },
-                        {
-                            path: 'openDetail',
-                            name: 'openDetail',
-                            component: OpenDetail,
-                            meta: { cnName: "详细信息", activeName: "configuration" },
-                        }
-                    ],
-                },
-                {
-                    path: 'domainConfiguration',
-                    name: 'domainConfiguration',
-                    component: ConfigurationIndex,
-                    meta: { cnName: "服务方案", activeName: "domainConfiguration" },
-                    children: [
-                        {
-                            path: '',
-                            name: 'domainConfiguration',
-                            component: DomainConfiguration,
-                            meta: { cnName: "", activeName: "domainConfiguration" },
-                            beforeEnter: (to, from, next) => {
-                                if (getCookie('role') == 1) {
-                                    next({ name: 'configuration' })
-                                }
-                                else if (getCookie('role') == 2) {
-                                    next()
-                                }
-                            }
-                        },
-                        {
-                            path: 'openDetail',
-                            name: 'openDetail',
-                            component: OpenDetail,
-                            meta: { cnName: "详细信息", activeName: "domainConfiguration" },
-                        }
-                    ],
-
-                },
-                
-                {
-                    path: 'projects',
-                    name: 'projects',
-                    component: ProjectsIndex,
-                    meta: { cnName: "项目", activeName: "projects" },
-                    children: [{
-                        path: '',
-                        name: 'projects',
-                        component: Projects,
-                        meta: { cnName: "", activeName: "projects" },
-                    }, {
-                        path: 'projectDetail/',
-                        name: 'projectDetail',
-                        component: ProjectDetail,
-                        meta: { cnName: "", activeName: "projects" },
-                    }]
-                    // beforeEnter: (to, from, next) => {
-                    //     if (getCookie('role')==1||getCookie('role')==2) {
-                    //         next()
-                    //     }
-                    // }
-                },
-                {
-                    path: 'regions',
-                    name: 'regions',
-                    component: RegionsIndex,
-                    meta: { cnName: "地理区域", activeName: "regions" },
-                    children: [
-                        {
-                            path: '',
-                            name: 'regions',
-                            component: Regions,
-                            meta: { cnName: "", activeName: "regions" },
-                        },
-                        {
-                            path: '/regions/regionDetail',
-                            name: 'regionDetail',
-                            component: RegionsDetailIndex,
-                            meta: { cnName: "地理区域详情", activeName: "regions" },
-                            children: [
-                                {
-                                    path: '/regions/regionDetail/:id',
-                                    name: 'regionDetail',
-                                    component: RegionsDetail,
-                                    meta: { cnName: "", activeName: "regions" },
-                                },
-                                {
-                                    path: '/regions/regionDetail/portableIPRange/:id',
-                                    name: 'portableIPRange',
-                                    component: PortableIPRange,
-                                    meta: { cnName: "可移植 IP 范围", activeName: "regions" },
-                                },
-                                {
-                                    path: '/regions/regionDetail/gslb/:id',
-                                    name: 'gslb',
-                                    component: GSLB,
-                                    meta: { cnName: "GSLB", activeName: "regions" },
-                                },
-                                {
-                                    path: '/regions/regionDetail/vpc/:id',
-                                    name: 'vpc',
-                                    component: VPC,
-                                    meta: { cnName: "VPC", activeName: "regions" },
-                                }
-                            ]
-                        },
-                    ]
-                },
-                {
-                    path: 'affinityGroups',
-                    name: 'affinityGroups',
-                    component: AffinityGroups,
-                    meta: { cnName: "关联性组", activeName: "affinityGroups" }
+            {
+              path: '',
+              name: 'dashboard',
+              component: AdminDashboard,
+              meta: { cnName: "", activeName: "index" },
+              beforeEnter: (to, from, next) => {
+                if (getCookie('role') == 1) {
+                  next()
+                } else {
+                  next({ name: 'normalDashboard' })
                 }
-            ],
+              }
+            },
+            {
+              path: 'alertsDetail',
+              name: 'alertsDetail',
+              component: AlertsDetail,
+              meta: { cnName: "警报详情", activeName: "index" },
+            },
+          ],
+        },
+        {
+          path: 'normalDashboard',
+          name: 'normalDashboard',
+          component: NormalDashboard,
+          meta: { cnName: "首页", activeName: "index" },
+          beforeEnter: (to, from, next) => {
+            if (getCookie('role') == 1) {
+              next({ name: 'adminDashboard' })
+            } else {
+              next()
+            }
+          }
+        },
+        {
+          path: 'instances',
+          redirect: { name: 'dashboard' },
+          component: InstancesIndex,
+          meta: { cnName: "虚拟机", activeName: "instances" },
+          children: [
+            {
+              path: '',
+              name: 'instances',
+              component: Instances,
+              meta: { cnName: "", activeName: "instances" },
+            },
+            {
+              path: 'operationalIndicators',
+              name: 'operationalIndicators',
+              component: OperationalIndicators,
+              meta: { cnName: "运行指数", activeName: "instances" },
+            },
+            {
+              path: 'instancesdetails/',
+              name: 'instancesdetails',
+              component: InstancesDetails,
+              meta: { cnName: "详情信息", activeName: "instances" },
+            },
+          ]
+        },
+        {
+          path: 'storage',
+          name: 'storage',
+          component: Vstorage,
+          meta: { cnName: "存储", activeName: "storage" }
+        },
+        {
+          path: 'network',
+          name: 'network',
+          component: Network,
+          meta: { cnName: "网络", activeName: "network" }
+        },
+        {
+          path: 'templates',
+          name: 'templates',
+          component: Vtemplate,
+          meta: { cnName: "模板", activeName: "templates" }
+        },
+        {
+          path: 'roles',
+          name: 'roles',
+          component: Roles,
+          meta: { cnName: "角色管理", activeName: "roles" },
+          beforeEnter: (to, from, next) => {
+            if (getCookie('role') == 1) {
+              next()
+            }
+          }
+        },
+        {
+          path: 'accounts',
+          name: 'accounts',
+          component: AccountsIndex,
+          meta: { cnName: "帐户管理", activeName: "accounts" },
+          children: [
+            {
+              path: '',
+              name: 'accounts',
+              component: Accounts,
+              meta: { cnName: "", activeName: "accounts" },
+            },
+            {
+              path: 'accountDetail/',
+              name: 'accountDetail',
+              component: AccountDetail,
+              meta: { cnName: "账户详情", activeName: "accounts" },
+            },
+          ]
+        },
+        {
+          path: 'domains',
+          name: 'domains',
+          component: Domains,
+          meta: { cnName: "域", activeName: "domains" },
+          beforeEnter: (to, from, next) => {
+            if (getCookie('role') == 1 || getCookie('role') == 2) {
+              next()
+            }
+          }
+        },
+        {
+          path: 'events',
+          name: 'events',
+          component: Vevents,
+          meta: { cnName: "事件", activeName: "events" }
+        },
+        {
+          path: 'system',
+          name: '',
+          component: SystemIndex,
+          meta: { cnName: "基础架构", activeName: "system" },
+          beforeEnter: (to, from, next) => {
+            if (getCookie('role') == 1) {
+              next()
+            }
+          },
+          children: [
+            {
+              path: '',
+              name: 'system',
+              component: System,
+              meta: { cnName: "基础架构", activeName: "system" },
+            },
+            {
+              path: 'zones',
+              name: '',
+              component: ZonesIndex,
+              meta: { cnName: "资源域", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'zones',
+                  component: Zones,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'zoneindicators',
+                  name: 'zoneindicators',
+                  component: ZoneIndicators,
+                  meta: { cnName: "运行指标", activeName: "system" },
+                },
+                {
+                  path: 'zonedetail/',
+                  name: 'ZoneDetail',
+                  component: ZoneDetail,
+                  meta: { cnName: "运行指标", activeName: "system" },
+                },
+              ]
+            },
+            {
+              path: 'Pods',
+              name: '',
+              component: PodsIndex,
+              meta: { cnName: "机柜", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'Pods',
+                  component: Pods,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'podDetail/',
+                  name: 'PodDetail',
+                  component: PodDetail,
+                  meta: { cnName: "运行指标", activeName: "system" },
+                },
+              ]
+            },
+            {
+              path: 'Clusters',
+              name: 'Clusters',
+              component: Clusters,
+              meta: { cnName: "群集", activeName: "system" },
+            },
+            {
+              path: 'Hosts',
+              name: 'Hosts',
+              component: Hosts,
+              meta: { cnName: "主机", activeName: "system" },
+            },
+            {
+              path: 'PrimaryStorage',
+              name: 'PrimaryStorage',
+              component: PrimaryStorage,
+              meta: { cnName: "主存储", activeName: "system" },
+            },
+            {
+              path: 'SecondaryStorage',
+              name: 'SecondaryStorage',
+              component: SecondaryStorage,
+              meta: { cnName: "二级存储", activeName: "system" },
+            },
+            {
+              path: 'SystemVMs',
+              name: 'SystemVMs',
+              component: SystemVMs,
+              meta: { cnName: "系统VM", activeName: "system" },
+            },
+            {
+              path: 'VirtualRouters',
+              name: 'VirtualRouters',
+              component: VirtualRouters,
+              meta: { cnName: "虚拟路由器", activeName: "system" },
+            },
+            {
+              path: 'CPUSockets',
+              name: 'CPUSockets',
+              component: CPUSockets,
+              meta: { cnName: "CPU后插槽", activeName: "system" },
+            },
+          ]
+
+        },
+        {
+          path: 'globalSettings',
+          name: 'globalSettings',
+          component: GlobalSettings,
+          meta: { cnName: "全局设置", activeName: "globalSettings" },
+          beforeEnter: (to, from, next) => {
+            if (getCookie('role') == 1) {
+              next()
+            }
+          }
+        },
+        {
+          path: 'configuration',
+          name: 'configuration',
+          component: ConfigurationIndex,
+          meta: { cnName: "服务方案", activeName: "configuration" },
+          children: [
+            {
+              path: '',
+              name: 'configuration',
+              component: Configuration,
+              meta: { cnName: "", activeName: "configuration" },
+              beforeEnter: (to, from, next) => {
+                if (getCookie('role') == 1) {
+                  next()
+                }
+                else if (getCookie('role') == 2) {
+                  next({ name: 'domainConfiguration' })
+                }
+              }
+            },
+            {
+              path: 'openDetail',
+              name: 'openDetail',
+              component: OpenDetail,
+              meta: { cnName: "详细信息", activeName: "configuration" },
+            }
+          ],
+        },
+        {
+          path: 'domainConfiguration',
+          name: 'domainConfiguration',
+          component: ConfigurationIndex,
+          meta: { cnName: "服务方案", activeName: "domainConfiguration" },
+          children: [
+            {
+              path: '',
+              name: 'domainConfiguration',
+              component: DomainConfiguration,
+              meta: { cnName: "", activeName: "domainConfiguration" },
+              beforeEnter: (to, from, next) => {
+                if (getCookie('role') == 1) {
+                  next({ name: 'configuration' })
+                }
+                else if (getCookie('role') == 2) {
+                  next()
+                }
+              }
+            },
+            {
+              path: 'openDetail',
+              name: 'openDetail',
+              component: OpenDetail,
+              meta: { cnName: "详细信息", activeName: "domainConfiguration" },
+            }
+          ],
 
         },
 
         {
-            path: '/login',
-            name: 'login',
-            component: Login,
-            meta: { cnName: "登录" }
+          path: 'projects',
+          name: 'projects',
+          component: ProjectsIndex,
+          meta: { cnName: "项目", activeName: "projects" },
+          children: [{
+            path: '',
+            name: 'projects',
+            component: Projects,
+            meta: { cnName: "", activeName: "projects" },
+          }, {
+            path: 'projectDetail/',
+            name: 'projectDetail',
+            component: ProjectDetail,
+            meta: { cnName: "", activeName: "projects" },
+          }]
+          // beforeEnter: (to, from, next) => {
+          //     if (getCookie('role')==1||getCookie('role')==2) {
+          //         next()
+          //     }
+          // }
+        },
+        {
+          path: 'regions',
+          name: 'regions',
+          component: RegionsIndex,
+          meta: { cnName: "地理区域", activeName: "regions" },
+          children: [
+            {
+              path: '',
+              name: 'regions',
+              component: Regions,
+              meta: { cnName: "", activeName: "regions" },
+            },
+            {
+              path: '/regions/regionDetail',
+              name: 'regionDetail',
+              component: RegionsDetailIndex,
+              meta: { cnName: "地理区域详情", activeName: "regions" },
+              children: [
+                {
+                  path: '/regions/regionDetail/:id',
+                  name: 'regionDetail',
+                  component: RegionsDetail,
+                  meta: { cnName: "", activeName: "regions" },
+                },
+                {
+                  path: '/regions/regionDetail/portableIPRange/:id',
+                  name: 'portableIPRange',
+                  component: PortableIPRange,
+                  meta: { cnName: "可移植 IP 范围", activeName: "regions" },
+                },
+                {
+                  path: '/regions/regionDetail/gslb/:id',
+                  name: 'gslb',
+                  component: GSLB,
+                  meta: { cnName: "GSLB", activeName: "regions" },
+                },
+                {
+                  path: '/regions/regionDetail/vpc/:id',
+                  name: 'vpc',
+                  component: VPC,
+                  meta: { cnName: "VPC", activeName: "regions" },
+                }
+              ]
+            },
+          ]
+        },
+        {
+          path: 'affinityGroups',
+          name: 'affinityGroups',
+          component: AffinityGroups,
+          meta: { cnName: "关联性组", activeName: "affinityGroups" }
         }
-    ],
-    //路由滚动行为
-    scrollBehavior(to, from, savedPosition) {
-        if (savedPosition) {
-            return savedPosition
-        } else {
-            return { x: 0, y: 0 }
-        }
+      ],
+
+    },
+
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
+      meta: { cnName: "登录" }
     }
+  ],
+  //路由滚动行为
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  }
 });
 
 //路由独享守卫
 router.beforeEach((to, from, next) => {
-    //判断用户是否登录，没有就跳转到登录页面
-    //判断登陆的时间跟现在的时间相差有没有十分钟，超过的话重新登陆
-    if (localStorage.getItem('loginTime')) {
-        if (new Date().getTime() - Number(localStorage.getItem('loginTime')) > 6000000) {
-            Store.commit('changeLoginStatus', 0)
-        } else {
-            Store.commit('changeLoginStatus', 1)
-        }
-    }
-    if (to.path.indexOf("login") != -1) {
-        if (Store.state.isLogin != 1) {
-            next()
-        } else {
-            next({ path: '/' })
-        }
+  //判断用户是否登录，没有就跳转到登录页面
+  //判断登陆的时间跟现在的时间相差有没有十分钟，超过的话重新登陆
+  if (localStorage.getItem('loginTime')) {
+    if (new Date().getTime() - Number(localStorage.getItem('loginTime')) > 6000000) {
+      Store.commit('changeLoginStatus', 0)
     } else {
-        if (Store.state.isLogin != 1) {
-            // confirm('会话超时')
-            next({ path: '/login' })
-        } else {
-            next()
-        }
+      Store.commit('changeLoginStatus', 1)
     }
+  }
+  if (to.path.indexOf("login") != -1) {
+    if (Store.state.isLogin != 1) {
+      next()
+    } else {
+      next({ path: '/' })
+    }
+  } else {
+    if (Store.state.isLogin != 1) {
+      // confirm('会话超时')
+      next({ path: '/login' })
+    } else {
+      next()
+    }
+  }
 });
 
 export default router

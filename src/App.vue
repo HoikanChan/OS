@@ -31,6 +31,86 @@ ul {
     clear: both;
   }
 }
+//操作栏样式
+.operation-row {
+  height: 93px;
+  border-bottom: 1px solid #e2e2e2;
+  background-color: #f6f6f6;
+  .operation-center-row {
+    width: 1200px;
+    margin: 0 auto;
+    .left-operation-row {
+      width: 610px;
+      ul {
+        li {
+          float: left;
+          margin: 8px 33px 0;
+          padding-bottom: 6px;
+          list-style: none;
+          position: relative;
+          cursor: pointer;
+          .icon {
+            width: 53px;
+            height: 53px;
+            line-height: 53px;
+            border-radius: 50%;
+            background-color: #fff;
+            text-align: center;
+            img {
+              vertical-align: middle;
+            }
+          }
+          .icon,
+          .dark {
+            background-color: #f3f3f3;
+          }
+          span {
+            position: absolute;
+            white-space: nowrap;
+            left: 50%;
+            bottom: -14px;
+            transform: translateX(-50%);
+          }
+        }
+      }
+    }
+    .right-operation-row {
+      width: 590px;
+      padding-top: 32px;
+      .select-operation {
+        width: 150px;
+      }
+      .search-operation {
+        width: 440px;
+        input {
+          padding-left: 15px;
+          width: 326px;
+          height: 30px;
+          line-height: 28px;
+          border: 1px solid #bdbdbd;
+          border-radius: 3px;
+        }
+        button {
+          width: 103px;
+          height: 30px;
+          line-height: 28px;
+          margin-left: 5px;
+          text-align: center;
+          color: #fff;
+          background-color: #51e299;
+          border: 1px solid #51e299;
+          border-radius: 3px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+.operation-row,
+.dark {
+  background: #fff;
+  border: none;
+}
 //iview Tab组件
 .ivu-tabs-bar {
   border-bottom: none;

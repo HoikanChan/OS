@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import AddAccountModal from './AddAccountModal';
+import AddAccountModal from "./AddAccountModal";
 export default {
   name: "v-accounts",
-  components:{
-    'v-addAccountModal':AddAccountModal,
+  components: {
+    "v-addAccountModal": AddAccountModal
   },
   data() {
     return {
@@ -62,8 +62,7 @@ export default {
         response: "json",
         listAll: "true",
         page: "1",
-        pagesize: "20",
-        _: "1521791056413"
+        pagesize: "-1",
       },
       searchValue: null,
       accountsTable: [],
@@ -95,8 +94,8 @@ export default {
           title: "状态",
           key: "state",
           align: "center"
-        }
-        ,{
+        },
+        {
           title: "操作",
           key: "action",
           width: 120,
@@ -122,7 +121,7 @@ export default {
             ]);
           }
         }
-      ],
+      ]
     };
   },
   methods: {
@@ -136,14 +135,10 @@ export default {
       let params = this.searchValue
         ? Object.assign(searchParams, this.accountsParam)
         : this.accountsParam;
-      try {
-        const response = await this.$http.get("client/api", {
-          params: params
-        });
-        this.accountsTable = response.listaccountsresponse.account;
-      } catch (error) {
-        this.handleError(error).bind(this);
-      }
+
+      const response = await this.$get(params, "listaccountsresponse");
+      console.log(response);
+      this.accountsTable = response.listaccountsresponse.account;
     },
     async deleteAccount(rodeId) {
       if (!this.accountToDelete) return;
@@ -164,7 +159,7 @@ export default {
         this.handleError(error).bind(this);
       }
     },
-    handleError (error) {
+    handleError(error) {
       console.log(error.response.data);
       this.$message({
         showClose: true,
@@ -172,14 +167,14 @@ export default {
         type: "error"
       });
     },
-    show (isShow, isReload) {
+    show(isShow, isReload) {
       this.isModalShow = isShow;
       if (isReload) {
         this.fetchData();
       }
     },
-    clickTableRow (data) {
-      this.$router.push({name:'accountDetail',query:{id:data.id}});   
+    clickTableRow(data) {
+      this.$router.push({ name: "accountDetail", query: { id: data.id } });
     }
   },
   mounted() {
@@ -202,74 +197,5 @@ export default {
 .accounts-table {
   margin: 24px 0 36px;
 }
-.operation-row {
-  height: 93px;
-  border-bottom: 1px solid #e2e2e2;
-  background-color: #f6f6f6;
-  .operation-center-row {
-    width: 1200px;
-    margin: 0 auto;
-    .left-operation-row {
-      width: 610px;
-      ul {
-        li {
-          float: left;
-          margin: 8px 33px 0;
-          padding-bottom: 6px;
-          list-style: none;
-          position: relative;
-          cursor: pointer;
-          .icon {
-            width: 53px;
-            height: 53px;
-            line-height: 53px;
-            border-radius: 50%;
-            background-color: #fff;
-            text-align: center;
-            img {
-              vertical-align: middle;
-            }
-          }
-          span {
-            position: absolute;
-            white-space: nowrap;
-            left: 50%;
-            bottom: -14px;
-            transform: translateX(-50%);
-          }
-        }
-      }
-    }
-    .right-operation-row {
-      width: 590px;
-      padding-top: 32px;
-      .select-operation {
-        width: 150px;
-      }
-      .search-operation {
-        width: 440px;
-        input {
-          padding-left: 15px;
-          width: 326px;
-          height: 30px;
-          line-height: 28px;
-          border: 1px solid #bdbdbd;
-          border-radius: 3px;
-        }
-        button {
-          width: 103px;
-          height: 30px;
-          line-height: 28px;
-          margin-left: 5px;
-          text-align: center;
-          color: #fff;
-          background-color: #51e299;
-          border: 1px solid #51e299;
-          border-radius: 3px;
-          cursor: pointer;
-        }
-      }
-    }
-  }
-}
+
 </style>
