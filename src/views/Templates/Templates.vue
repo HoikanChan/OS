@@ -1,8 +1,8 @@
 <template>
-       <div class="templates">
-           <!--模板-->
-           模板
-       </div>
+  <div class="templates">
+      <!--模板-->
+      模板
+  </div>
 </template>
 
 <script>

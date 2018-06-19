@@ -8,7 +8,7 @@
               <div class="icon">
                 <img src="@/assets/add_instances_icon.png" alt="">
               </div>
-              <span>添加提供点</span>
+              <span>添加群集</span>
             </li>
           </ul>
         </Col>
@@ -22,41 +22,41 @@
         </Col>
       </Row>
     </Row>
-    <v-grid-list :data="pods" :cols="cols" :hoverCols="hoverCols" @view="viewPod"></v-grid-list>
-    <newpod-modal :isModalShow="isModalShow" @show="show"></newpod-modal>
+    <v-grid-list :data="clusters" :cols="cols" :hoverCols="hoverCols" @view="viewPod"></v-grid-list>
+    <newcluster-modal :isModalShow="isModalShow" @show="show"></newcluster-modal>
   </div>
 </template>
 
 <script>
-import NewPodModal from "./NewPodModal";
+import NewClusterModal from './NewClusterModal';
 export default {
-  name: "v-Pods",
+  name: "v-clusters",
   components: {
-    "newpod-modal": NewPodModal
+    "newcluster-modal": NewClusterModal
   },
   data() {
     return {
-      pods: [],
+      clusters: [],
       searchValue: "",
       isModalShow: false,
       cols: {
         name: "名称",
-        gateway: "网关",
-        netmask: "网络掩码",
-        state: "分配状态"
+        podname: "提供点",
+        hypervisortype: "虚拟机管理程序",
+        allocationstate: "状态"
       },
       hoverCols: {
         name: "名称",
         id: "ID",
-        netmask: "网络掩码",
-        startip: "起始IP"
+        zonename: "资源域",
+        podname: "提供点"
       }
     };
   },
   methods: {
     async fetchData() {
       const params = {
-        command: "listPods",
+        command: "listClusters",
         listAll: true,
         page: 1,
         pagesize: 20
@@ -65,7 +65,7 @@ export default {
         params.keyword = this.searchValue;
       }
       const res = await this.$get(params);
-      this.pods = res.listpodsresponse.pod;
+      this.clusters = res.listclustersresponse.cluster;
     },
     show(isShow, isReload) {
       this.isModalShow = isShow;
@@ -75,8 +75,8 @@ export default {
     },
     viewPod(item) {
       this.$router.push({
-        name: "PodDetail",
-        query: { id: item.id, zoneId: item.zoneid }
+        name: "ClusterDetail",
+        query: { id: item.id }
       });
     }
   },
@@ -88,8 +88,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
-// .container {
-//   width: 1200px;
-//   margin: 0 auto;
-// }
 </style>

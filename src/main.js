@@ -75,7 +75,6 @@ Vue.prototype.$safeGet = async (params) => {
     return response;
   } catch (error) {
     console.error(error)
-    debugger
     Vue.prototype.$Notice.error({
       desc: error
     });

@@ -147,9 +147,9 @@ export default {
         background-color: #353c4c;
         color: #ffffff;
         text-align: center;
-        line-height: 30px;
+        line-height: 32px;
         font-size: 14px;
-        height: 30px;
+        height: 32px;
         width: 100px;
       }
       .searchBtn {
@@ -160,7 +160,8 @@ export default {
         cursor: pointer;
       }
       .inputCla {
-        height: 30px;
+        height: 32px;
+        padding-left: 8px;
         width: 325px;
         font-size: 14px;
         border: 1px solid #cdcdcd;

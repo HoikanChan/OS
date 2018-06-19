@@ -60,10 +60,6 @@ ul {
               vertical-align: middle;
             }
           }
-          .icon,
-          .dark {
-            background-color: #f3f3f3;
-          }
           span {
             position: absolute;
             white-space: nowrap;
@@ -106,10 +102,12 @@ ul {
     }
   }
 }
-.operation-row,
 .dark {
   background: #fff;
   border: none;
+}
+.icon-dark {
+  background-color: #f3f3f3;
 }
 //iview Tab组件
 .ivu-tabs-bar {

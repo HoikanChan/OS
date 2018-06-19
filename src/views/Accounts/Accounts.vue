@@ -137,7 +137,6 @@ export default {
         : this.accountsParam;
 
       const response = await this.$get(params, "listaccountsresponse");
-      console.log(response);
       this.accountsTable = response.listaccountsresponse.account;
     },
     async deleteAccount(rodeId) {

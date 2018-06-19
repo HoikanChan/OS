@@ -65,7 +65,9 @@ import PodsIndex from '../views/System/Pods/index'
 import PodDetail from '../views/System/Pods/PodDetail'
 import Pods from '../views/System/Pods/Pods.vue'
 //基础架构-群集
-import Clusters from '../views/System/Clusters.vue'
+import ClustersIndex from '../views/System/Clusters/index'
+import ClusterDetail from '../views/System/Clusters/ClusterDetail'
+import Clusters from '../views/System/Clusters/Clusters'
 //基础架构-主机
 import Hosts from '../views/System/Hosts.vue'
 //基础架构-主存储
@@ -316,9 +318,23 @@ const router = new Router({
             },
             {
               path: 'Clusters',
-              name: 'Clusters',
-              component: Clusters,
+              name: '',
+              component: ClustersIndex,
               meta: { cnName: "群集", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'Clusters',
+                  component: Clusters,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'clusterDetail/',
+                  name: 'ClusterDetail',
+                  component: ClusterDetail,
+                  meta: { cnName: "运行指标", activeName: "system" },
+                },
+              ]
             },
             {
               path: 'Hosts',
