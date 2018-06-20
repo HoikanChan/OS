@@ -84,7 +84,9 @@ import SecondaryStoragesIndex from '../views/System/SecondaryStorages/index'
 //基础架构-虚拟路由器
 import VirtualRouters from '../views/System/VirtualRouters.vue'
 //基础架构-系统VM
-import SystemVMs from '../views/System/SystemVMs.vue'
+import SystemVMsIndex from '../views/System/SystemVMs/index'
+import SystemVMDetail from '../views/System/SystemVMs/SystemVMDetail'
+import SystemVMs from '../views/System/SystemVMs/SystemVMs.vue'
 //基础架构-CPU后插槽
 import CPUSockets from '../views/System/CPUSockets.vue'
 
@@ -411,9 +413,23 @@ const router = new Router({
             },
             {
               path: 'SystemVMs',
-              name: 'SystemVMs',
-              component: SystemVMs,
+              name: '',
+              component: SystemVMsIndex,
               meta: { cnName: "系统VM", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'SystemVMs',
+                  component: SystemVMs,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'systemVMDetail/',
+                  name: 'SystemVMDetail',
+                  component: SystemVMDetail,
+                  meta: { cnName: "系统VM详情", activeName: "system" },
+                },
+              ]
             },
             {
               path: 'VirtualRouters',

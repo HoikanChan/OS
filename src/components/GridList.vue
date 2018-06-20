@@ -101,8 +101,8 @@ export default {
             border-radius: 50%;
             left: 50%;
             top: 50%;
-            background: #51e299 url("../assets/cloud_icon.png") no-repeat
-              center center;
+            background: #51e299 url("../assets/cloud_icon.png") no-repeat center
+              center;
             transform: translate(-50%, -50%);
           }
         }
