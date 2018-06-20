@@ -314,7 +314,7 @@ Vue.filter('vMState', (state) => {
   }
 })
 //将容量输出
-Vue.filter('convertByType', (alertCode, value) => {
+Vue.filter('convertByType', (value, alertCode=0) => {
   switch (alertCode) {
     case 0:
       return converters.convertBytes(value);

@@ -39,8 +39,9 @@ ul {
   .operation-center-row {
     width: 1200px;
     margin: 0 auto;
+    display: flex;
     .left-operation-row {
-      width: 610px;
+      align-self: flex-start;
       ul {
         li {
           float: left;
@@ -71,7 +72,7 @@ ul {
       }
     }
     .right-operation-row {
-      width: 590px;
+      align-self: flex-end;
       padding-top: 32px;
       .select-operation {
         width: 150px;

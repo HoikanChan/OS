@@ -69,9 +69,14 @@ import ClustersIndex from '../views/System/Clusters/index'
 import ClusterDetail from '../views/System/Clusters/ClusterDetail'
 import Clusters from '../views/System/Clusters/Clusters'
 //基础架构-主机
-import Hosts from '../views/System/Hosts.vue'
+import HostsIndex from '../views/System/Hosts/index'
+import HostDetail from '../views/System/Hosts/HostDetail'
+import Hosts from '../views/System/Hosts/Hosts.vue'
 //基础架构-主存储
-import PrimaryStorage from '../views/System/PrimaryStorage.vue'
+import PrimaryStorage from '../views/System/PrimaryStorages/PrimaryStorages'
+import PrimaryStoragesIndex from '../views/System/PrimaryStorages/index'
+import PrimaryStorageDetail from '../views/System/PrimaryStorages/PrimaryStorageDetail'
+import PrimaryStorages from '../views/System/PrimaryStorages/PrimaryStorages.vue'
 //基础架构-二级存储
 import SecondaryStorage from '../views/System/SecondaryStorage.vue'
 //基础架构-虚拟路由器
@@ -338,15 +343,43 @@ const router = new Router({
             },
             {
               path: 'Hosts',
-              name: 'Hosts',
-              component: Hosts,
+              name: '',
+              component: HostsIndex,
               meta: { cnName: "主机", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'Hosts',
+                  component: Hosts,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'hostDetail/',
+                  name: 'HostDetail',
+                  component: HostDetail,
+                  meta: { cnName: "主机指标", activeName: "system" },
+                },
+              ]
             },
             {
-              path: 'PrimaryStorage',
-              name: 'PrimaryStorage',
-              component: PrimaryStorage,
+              path: 'PrimaryStorages',
+              name: '',
+              component: PrimaryStoragesIndex,
               meta: { cnName: "主存储", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'PrimaryStorages',
+                  component: PrimaryStorages,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'primaryStorageDetail/',
+                  name: 'PrimaryStorageDetail',
+                  component: PrimaryStorageDetail,
+                  meta: { cnName: "主存储指标", activeName: "system" },
+                },
+              ]
             },
             {
               path: 'SecondaryStorage',
