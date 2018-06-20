@@ -117,7 +117,7 @@
         } else if (val == "primarys") {
           this.$router.push({ name: "PrimaryStorages" });
         } else if (val == "secondearys") {
-          this.$router.push({ name: "SecondaryStorage" });
+          this.$router.push({ name: "SecondaryStorages" });
         } else if (val == "systemv") {
           this.$router.push({ name: "SystemVMs" });
         } else if (val == "virtualr") {

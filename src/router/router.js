@@ -73,12 +73,14 @@ import HostsIndex from '../views/System/Hosts/index'
 import HostDetail from '../views/System/Hosts/HostDetail'
 import Hosts from '../views/System/Hosts/Hosts.vue'
 //基础架构-主存储
-import PrimaryStorage from '../views/System/PrimaryStorages/PrimaryStorages'
 import PrimaryStoragesIndex from '../views/System/PrimaryStorages/index'
 import PrimaryStorageDetail from '../views/System/PrimaryStorages/PrimaryStorageDetail'
 import PrimaryStorages from '../views/System/PrimaryStorages/PrimaryStorages.vue'
 //基础架构-二级存储
-import SecondaryStorage from '../views/System/SecondaryStorage.vue'
+import SecondaryStorages from '../views/System/SecondaryStorages/SecondaryStorages'
+import SecondaryStorageDetail from '../views/System/SecondaryStorages/SecondaryStorageDetail'
+import SecondaryStagingStorageDetail from '../views/System/SecondaryStorages/SecondaryStagingStorageDetail'
+import SecondaryStoragesIndex from '../views/System/SecondaryStorages/index'
 //基础架构-虚拟路由器
 import VirtualRouters from '../views/System/VirtualRouters.vue'
 //基础架构-系统VM
@@ -382,10 +384,30 @@ const router = new Router({
               ]
             },
             {
-              path: 'SecondaryStorage',
-              name: 'SecondaryStorage',
-              component: SecondaryStorage,
-              meta: { cnName: "二级存储", activeName: "system" },
+              path: 'SecondaryStorages',
+              name: '',
+              component: SecondaryStoragesIndex,
+              meta: { cnName: "主存储", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'SecondaryStorages',
+                  component: SecondaryStorages,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'secondaryStorageDetail/',
+                  name: 'SecondaryStorageDetail',
+                  component: SecondaryStorageDetail,
+                  meta: { cnName: "二级存储", activeName: "system" },
+                },
+                {
+                  path: 'secondaryStagingStorageDetail/',
+                  name: 'SecondaryStagingStorageDetail',
+                  component: SecondaryStagingStorageDetail,
+                  meta: { cnName: "二级暂存存储", activeName: "system" },
+                },
+              ]
             },
             {
               path: 'SystemVMs',

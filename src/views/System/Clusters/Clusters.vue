@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import NewClusterModal from './NewClusterModal';
+import NewClusterModal from "./NewClusterModal";
 export default {
   name: "v-clusters",
   components: {

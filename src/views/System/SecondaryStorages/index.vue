@@ -1,12 +1,12 @@
 <template>
        <div class="container">
-           
+           <router-view></router-view>
        </div>
 </template>
 
 <script>
 export default {
-    name: 'v-SecondaryStorage',
+    name: 'primaryStorage-index',
     data () {
         return{
 
