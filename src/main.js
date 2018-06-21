@@ -314,7 +314,7 @@ Vue.filter('vMState', (state) => {
   }
 })
 //将容量输出
-Vue.filter('convertByType', (value, alertCode=0) => {
+Vue.filter('convertByType', (value, alertCode = 0) => {
   switch (alertCode) {
     case 0:
       return converters.convertBytes(value);
@@ -334,7 +334,16 @@ Vue.filter('convertByType', (value, alertCode=0) => {
   return value
 })
 
-
+//将布尔值转为是否
+Vue.filter('booleanTrans', value => {
+  if (value === true || value === 'true') {
+    return '是'
+  } else if (value === false || value === 'false') {
+    return '否'
+  } else {
+    return value
+  }
+})
 //查询中文
 Vue.filter('getDictionary', (value) => {
   if (value.indexOf("label.") == -1) {

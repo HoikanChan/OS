@@ -120,7 +120,7 @@
           this.$router.push({ name: "SecondaryStorages" });
         } else if (val == "systemv") {
           this.$router.push({ name: "SystemVMs" });
-        } else if (val == "virtualr") {
+        } else if (val == "VirtualRouters") {
           this.$router.push({ name: "VirtualRouters" });
         } else if (val == "cpu") {
           this.$router.push({ name: "CPUSockets" });

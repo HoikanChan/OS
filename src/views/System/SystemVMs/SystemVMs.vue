@@ -13,17 +13,12 @@
       </Row>
     </Row>
     <v-grid-list :data="systemVMs" :cols="cols" :hoverCols="hoverCols" @view="viewSystemVM" v-if="isReset"></v-grid-list>
-    <newsystemVM-modal :isModalShow="isModalShow" @show="show"></newsystemVM-modal>
   </div>
 </template>
 
 <script>
-import NewSystemVMModal from "./NewSystemVMModal";
 export default {
   name: "v-SystemVMs",
-  components: {
-    "newsystemVM-modal": NewSystemVMModal
-  },
   data() {
     return {
       systemVMs: [],

@@ -82,7 +82,9 @@ import SecondaryStorageDetail from '../views/System/SecondaryStorages/SecondaryS
 import SecondaryStagingStorageDetail from '../views/System/SecondaryStorages/SecondaryStagingStorageDetail'
 import SecondaryStoragesIndex from '../views/System/SecondaryStorages/index'
 //基础架构-虚拟路由器
-import VirtualRouters from '../views/System/VirtualRouters.vue'
+import VirtualRoutersIndex from '../views/System/VirtualRouters/index'
+import VirtualRouterDetail from '../views/System/VirtualRouters/VirtualRouterDetail'
+import VirtualRouters from '../views/System/VirtualRouters/VirtualRouters.vue'
 //基础架构-系统VM
 import SystemVMsIndex from '../views/System/SystemVMs/index'
 import SystemVMDetail from '../views/System/SystemVMs/SystemVMDetail'
@@ -433,9 +435,23 @@ const router = new Router({
             },
             {
               path: 'VirtualRouters',
-              name: 'VirtualRouters',
-              component: VirtualRouters,
+              name: '',
+              component: VirtualRoutersIndex,
               meta: { cnName: "虚拟路由器", activeName: "system" },
+              children: [
+                {
+                  path: '',
+                  name: 'VirtualRouters',
+                  component: VirtualRouters,
+                  meta: { cnName: "", activeName: "system" },
+                },
+                {
+                  path: 'virtualRouterDetail/',
+                  name: 'VirtualRouterDetail',
+                  component: VirtualRouterDetail,
+                  meta: { cnName: "虚拟路由器详情", activeName: "system" },
+                },
+              ]
             },
             {
               path: 'CPUSockets',

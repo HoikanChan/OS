@@ -65,6 +65,12 @@ export default {
       hoverShowDiv.style.cssText = "display:none;";
       defaultShowDiv.style.cssText = "display:block;";
     }
+  },
+  mounted() {},
+  updated() {
+    setTimeout(() => {
+      this.$forceUpdate();
+    }, 10);
   }
 };
 </script>
@@ -101,7 +107,7 @@ export default {
             border-radius: 50%;
             left: 50%;
             top: 50%;
-            background: #51e299 url("../assets/cloud_icon.png") no-repeat center
+            background: #51e299 url("../../../assets/cloud_icon.png") no-repeat center
               center;
             transform: translate(-50%, -50%);
           }
