@@ -1,8 +1,8 @@
 <template>
-       <div class="storage">
-           <!--存储-->
-           存储
-       </div>
+  <div class="storage">
+      <!--存储-->
+      存储
+  </div>
 </template>
 
 <script>

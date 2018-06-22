@@ -122,7 +122,7 @@
           this.$router.push({ name: "SystemVMs" });
         } else if (val == "VirtualRouters") {
           this.$router.push({ name: "VirtualRouters" });
-        } else if (val == "cpu") {
+        } else if (val == "CPUSockets") {
           this.$router.push({ name: "CPUSockets" });
         }
       }

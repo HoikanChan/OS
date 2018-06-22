@@ -10,7 +10,7 @@
             </p>
           </div>
         </div>
-        <div class="hover-show">
+        <div class="hover-show" v-if="hoverCols">
           <div class="item-info">
             <p v-for="(value, key) in hoverCols" :key="key">
               <span>{{value}}：</span>{{item[key] | booleanTrans}}
@@ -36,7 +36,7 @@ export default {
     },
     hoverCols: {
       type: Object,
-      required: true
+      default: null
     }
   },
   data() {
