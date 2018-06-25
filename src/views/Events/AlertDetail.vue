@@ -7,13 +7,13 @@
         <Col class="left-operation-row" span="13">
           <ul>
             <li>
-              <div class="icon" @click="isDeleteEventModalShow = true">
+              <div class="icon" @click="isDeleteAlertModalShow = true">
                 <img src="../../assets/add_instances_icon.png" alt="">
               </div>
               <span>删除</span>
             </li>
             <li>
-              <div class="icon" @click="isArchiveEventModalShow=true">
+              <div class="icon" @click="isArchiveAlertModalShow=true">
                 <img src="../../assets/add_instances_icon.png" alt="">
               </div>
               <span>存档</span>
@@ -23,36 +23,26 @@
       </Row>
     </Row>
     <h4>基本信息</h4>
-    <div class="event-info">
+    <div class="alert-info">
       <Row :gutter="8" class="info-row">
-        <Col span="8"><Row><Col span="8">说明</Col><Col span="16">{{eventInfo.description}}</Col></Row></Col>
-        <Col span="8"><Row><Col span="8">状态</Col><Col span="16">{{eventInfo.state}}</Col></Row></Col>
-        <Col span="8"><Row><Col span="8">级别</Col><Col span="16">{{eventInfo.level}}</Col></Row></Col>
-      </Row>
-      <Row :gutter="8" class="info-row">
-        <Col span="8"><Row><Col span="8">类型</Col><Col span="16">{{eventInfo.type}}</Col></Row></Col>
-        <Col span="8"><Row><Col span="8">域</Col><Col span="16">{{eventInfo.domain}}</Col></Row></Col>
-        <Col span="8"><Row><Col span="8">账户</Col><Col span="16">{{eventInfo.account}}</Col></Row></Col>
-      </Row>
-      <Row :gutter="8" class="info-row">
-        <Col span="8"><Row><Col span="8">启动者</Col><Col span="16">{{eventInfo.username}}</Col></Row></Col>
-        <Col span="8"><Row><Col span="8">日期</Col><Col span="16">{{eventInfo.created | getTime('yyyy.MM.dd hh:mm') }}</Col></Row></Col>
-        <Col span="8"><Row><Col span="8">ID</Col><Col span="16">{{eventInfo.id}}</Col></Row></Col>
+        <Col span="8"><Row><Col span="8">ID</Col><Col span="16">{{alertInfo.id}}</Col></Row></Col>
+        <Col span="8"><Row><Col span="8">说明</Col><Col span="16">{{alertInfo.description}}</Col></Row></Col>
+        <Col span="8"><Row><Col span="8">日期</Col><Col span="16">{{alertInfo.sent | getTime('yyyy.MM.dd hh:mm') }}</Col></Row></Col>
       </Row>
     </div>
     <Modal
-      v-model="isDeleteEventModalShow"
+      v-model="isDeleteAlertModalShow"
       title="确认"
-      @on-ok="deleteEvent"
+      @on-ok="deleteAlert"
     >
-      <p>是否确实要删除此事件?</p>
+      <p>是否确实要删除此警报?</p>
     </Modal>
     <Modal
-      v-model="isArchiveEventModalShow"
+      v-model="isArchiveAlertModalShow"
       title="确认"
-      @on-ok="archiveEvent"
+      @on-ok="archiveAlert"
     >
-      <p>请确认您确实要存档此事件。</p>
+      <p>请确认您确实要存档此警报。</p>
     </Modal>
   </div>
 </template>
@@ -63,15 +53,15 @@ export default {
   components: {},
   data() {
     return {
-      eventInfo: {},
-      isDeleteEventModalShow: false,
-      isArchiveEventModalShow: false
+      alertInfo: {},
+      isDeleteAlertModalShow: false,
+      isArchiveAlertModalShow: false
     };
   },
   methods: {
     async fecthData() {
       let params = {
-        command: "listEvents",
+        command: "listAlerts",
         id: this.$route.query.id,
         response: "json"
       };
@@ -79,7 +69,7 @@ export default {
         const res = await this.$http.get("/client/api", {
           params: params
         });
-        this.eventInfo = res.listeventsresponse.event[0];
+        this.alertInfo = res.listalertsresponse.alert[0];
       } catch (error) {
         console.log(error.response.data);
         this.$message({
@@ -89,16 +79,45 @@ export default {
         });
       }
     },
-    async deleteEvent() {
+    async updateResource() {
+      let params = {
+        command: "updateResourceCount",
+        alert: this.alertInfo.name,
+        domainid: this.alertInfo.domainid,
+        response: "json"
+      };
+      try {
+        const res = await this.$http.get("/client/api", {
+          params: params
+        });
+        const modalContents = [];
+        res.updateresourcecountresponse.resourcecount.forEach(resource => {
+          if (this.resourcetypes[Number(resource.resourcetype)]) {
+            modalContents.push(
+              `<p>${this.resourcetypes[Number(resource.resourcetype)]}: ${
+                resource.resourcecount
+              }</p>`
+            );
+          }
+        });
+        this.$Modal.info({
+          title: "状态",
+          content: modalContents.join("")
+        });
+      } catch (error) {
+        this.handleError();
+      }
+    },
+    async deleteAlert() {
       await this.$safeGet({
-        command: "deleteEvents",
+        command: "deleteAlerts",
         ids: this.$route.query.id
       });
       this.$router.push({ name: "Events" });
     },
-    async archiveEvent() {
+    async archiveAlert() {
       await this.$safeGet({
-        command: "archiveEvents",
+        command: "archiveAlerts",
         ids: this.$route.query.id
       });
       this.$router.push({ name: "Events" });

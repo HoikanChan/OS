@@ -51,7 +51,10 @@ import AccountDetail from '../views/Accounts/AccountDetail.vue'
 //域 
 import Domains from '../views/Domains/Domains.vue'
 //事件
-import Vevents from '../views/Events/Events.vue'
+import EventsIndex from '../views/Events'
+import EventDetail from '../views/Events/EventDetail'
+import AlertDetail from '../views/Events/AlertDetail'
+import Events from '../views/Events/Events'
 
 //基础架构
 import SystemIndex from '../views/System/Index.vue'
@@ -292,9 +295,29 @@ const router = new Router({
         },
         {
           path: 'events',
-          name: 'events',
-          component: Vevents,
-          meta: { cnName: "事件", activeName: "events" }
+          name: '',
+          component: EventsIndex,
+          meta: { cnName: "事件", activeName: "events" },
+          children: [
+            {
+              path: '',
+              name: 'Events',
+              component: Events,
+              meta: { cnName: "", activeName: "events" },
+            },
+            {
+              path: 'eventDetail/',
+              name: 'EventDetail',
+              component: EventDetail,
+              meta: { cnName: "事件详情", activeName: "events" },
+            },
+            {
+              path: 'alertDetail/',
+              name: 'AlertDetail',
+              component: AlertDetail,
+              meta: { cnName: "警报详情", activeName: "events" },
+            },
+          ]
         },
         {
           path: 'system',
