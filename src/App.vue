@@ -133,6 +133,15 @@ ul {
     }
   }
 }
+h4 {
+  margin: 20px 0;
+  height: 37px;
+  line-height: 37px;
+  font-size: 16px;
+  padding-left: 13px;
+  border-left: 6px solid #51e299;
+  background-color: #f0f0f0;
+}
 //iview modal组件
 .ivu-modal {
   .ivu-modal-body {

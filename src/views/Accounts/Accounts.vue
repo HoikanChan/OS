@@ -62,7 +62,7 @@ export default {
         response: "json",
         listAll: "true",
         page: "1",
-        pagesize: "-1",
+        pagesize: "20",
       },
       searchValue: null,
       accountsTable: [],

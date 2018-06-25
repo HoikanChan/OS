@@ -1,9 +1,9 @@
 <template>
     <Row>
         <div class="wrapper">
-            <h4>
+            <h5>
                 <Icon type="heart"></Icon>&nbsp;save
-            </h4>
+            </h5>
         </div>
         <div class="wrapper">
             <div class="input-label">

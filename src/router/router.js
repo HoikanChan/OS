@@ -33,9 +33,13 @@ import InstancesDetails from '../views/Instances/InstancesDetails.vue'
 /*
     存储
 */
-import Vstorage from '../views/Storage/Storage.vue'
+import Storage from '../views/Storage/Storage'
+import StorageIndex from '../views/Storage/index'
+import VolumeDetail from '../views/Storage/VolumeDetail'
 //网络
-import Network from '../views/Network/Network.vue'
+import NetworkIndex from '../views/Network/index'
+import SecurityGroupDetail from '../views/Network/SecurityGroupDetail'
+import Network from '../views/Network/Networks'
 //模板
 import Vtemplate from '../views/Templates/Templates.vue'
 //角色
@@ -201,14 +205,42 @@ const router = new Router({
         {
           path: 'storage',
           name: 'storage',
-          component: Vstorage,
-          meta: { cnName: "存储", activeName: "storage" }
+          component: StorageIndex,
+          meta: { cnName: "存储", activeName: "storage" },
+          children: [
+            {
+              path: '',
+              name: 'storage',
+              component: Storage,
+              meta: { cnName: "", activeName: "storage" },
+            },
+            {
+              path: 'volumeDetail/',
+              name: 'volumeDetail',
+              component: VolumeDetail,
+              meta: { cnName: "卷详情", activeName: "storage" },
+            },
+          ]
         },
         {
           path: 'network',
-          name: 'network',
-          component: Network,
-          meta: { cnName: "网络", activeName: "network" }
+          name: 'Network',
+          component: NetworkIndex,
+          meta: { cnName: "网络", activeName: "network" },
+          children: [
+            {
+              path: '',
+              name: 'Network',
+              component: Network,
+              meta: { cnName: "", activeName: "network" },
+            },
+            {
+              path: 'securityGroupDetail/',
+              name: 'SecurityGroupDetail',
+              component: SecurityGroupDetail,
+              meta: { cnName: "安全组", activeName: "network" },
+            },
+          ]
         },
         {
           path: 'templates',
