@@ -41,7 +41,10 @@ import NetworkIndex from '../views/Network/index'
 import SecurityGroupDetail from '../views/Network/SecurityGroupDetail'
 import Network from '../views/Network/Networks'
 //模板
-import Vtemplate from '../views/Templates/Templates.vue'
+import Templates from '../views/Templates/Templates'
+import TemplatesIndex from '../views/Templates'
+import TemplateDetail from '../views/Templates/TemplateDetail'
+import IsoDetail from '../views/Templates/IsoDetail'
 //角色
 import Roles from '../views/Roles/Roles.vue'
 //账户
@@ -248,8 +251,28 @@ const router = new Router({
         {
           path: 'templates',
           name: 'templates',
-          component: Vtemplate,
-          meta: { cnName: "模板", activeName: "templates" }
+          component: TemplatesIndex,
+          meta: { cnName: "模板", activeName: "templates" },
+          children: [
+            {
+              path: '',
+              name: 'templates',
+              component: Templates,
+              meta: { cnName: "", activeName: "templates" },
+            },
+            {
+              path: 'templateDetail/',
+              name: 'templateDetail',
+              component: TemplateDetail,
+              meta: { cnName: "模板详情", activeName: "templates" },
+            },
+            {
+              path: 'isoDetail/',
+              name: 'isoDetail',
+              component: IsoDetail,
+              meta: { cnName: "模板详情", activeName: "templates" },
+            },
+          ]
         },
         {
           path: 'roles',

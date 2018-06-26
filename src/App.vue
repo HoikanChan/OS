@@ -74,9 +74,6 @@ ul {
     .right-operation-row {
       align-self: flex-end;
       padding-top: 32px;
-      .select-operation {
-        width: 150px;
-      }
       .search-operation {
         width: 440px;
         input {
