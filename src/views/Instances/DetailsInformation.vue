@@ -2,7 +2,7 @@
         <!-- 详情信息内容 -->
         <div class="details-info-content">
             <!--详情信息操作栏-->
-            <div class="operation-row">
+            <div class="operation-row dark">
                 <!---------------------------------运行中的时候-------------------------------------------------->
                 <ul class="clear" v-if="basicInfo.state=='Running'">
                     <li @click="stopVM">
