@@ -109,7 +109,7 @@
         if (val == "zones") {
           this.$router.push({ name: "zones" });
         } else if (val == "pods") {
-          this.$router.push({ name: "Pods" });
+          this.$router.push({ name: "pods" });
         } else if (val == "clusters") {
           this.$router.push({ name: "Clusters" });
         } else if (val == "hosts") {

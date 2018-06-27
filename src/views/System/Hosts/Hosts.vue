@@ -22,6 +22,7 @@
         </Col>
       </Row>
     </Row>
+    <v-breadcrumb/>
     <v-grid-list :data="hosts" :cols="cols" :hoverCols="hoverCols" @view="viewHost"></v-grid-list>
     <newhost-modal :isModalShow="isModalShow" @show="show"></newhost-modal>
   </div>
@@ -77,7 +78,10 @@ export default {
     viewHost(item) {
       this.$router.push({
         name: "HostDetail",
-        query: { id: item.id, zoneId: item.zoneid }
+        query: { id: item.id, zoneId: item.zoneid },
+        params:{
+          displayName:item.name
+        }
       });
     }
   },

@@ -22,6 +22,7 @@
         </Col>
       </Row>
     </Row>
+    <v-breadcrumb/>
     <v-grid-list :data="pods" :cols="cols" :hoverCols="hoverCols" @view="viewPod"></v-grid-list>
     <newpod-modal :isModalShow="isModalShow" @show="show"></newpod-modal>
   </div>
@@ -76,7 +77,10 @@ export default {
     viewPod(item) {
       this.$router.push({
         name: "PodDetail",
-        query: { id: item.id, zoneId: item.zoneid }
+        query: { id: item.id, zoneId: item.zoneid },
+        params: {
+          displayName: item.name
+        }
       });
     }
   },

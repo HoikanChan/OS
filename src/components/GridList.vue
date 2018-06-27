@@ -1,6 +1,10 @@
 <template>
   <div class="data-list-row">
-    <ul>
+    <Alert show-icon v-if="data.length===0 || data === undefined">
+        暂无数据
+        <template slot="desc">请刷新页面或检查数据 </template>
+    </Alert>
+    <ul v-else>
       <li v-for="(item,key) in data" :key="key" @mouseenter="showHoverInfo" @mouseleave="hideHoverInfo" @click="view(item)">
         <div class="default-show">
           <div class="item-icon"></div>

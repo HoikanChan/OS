@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <Tabs :animated="false" style="padding:24px 0">
       <TabPane class="tabs-content" label="二级存储">
         <Row class="operation-row dark">
@@ -52,6 +53,7 @@
         <v-grid-list :data="secondaryStagingStorages" :cols="stagingCols" :hoverCols="stagingHoverCols" @view="viewStagingSecondaryStorage"></v-grid-list>
       </TabPane>
     </Tabs>
+    
     <newSecondaryStorage-modal :isModalShow="isModalShow" @show="show"></newSecondaryStorage-modal>
     <newSecondaryStagingStorage-modal :isModalShow="isStagingModalShow" @show="stagingShow"></newSecondaryStagingStorage-modal>
   </div>
@@ -136,13 +138,16 @@ export default {
     viewSecondaryStorage(item) {
       this.$router.push({
         name: "SecondaryStorageDetail",
-        query: { id: item.id }
+        query: { id: item.id },
+        params: {
+          displayName: item.name
+        }
       });
     },
     viewStagingSecondaryStorage(item) {
       this.$router.push({
         name: "SecondaryStagingStorageDetail",
-        query: { id: item.id}
+        query: { id: item.id }
       });
     }
   },

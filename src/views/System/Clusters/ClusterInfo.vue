@@ -11,7 +11,7 @@
               <span>编辑</span>
             </li>
             <li v-if="!dedicatedClusters && clustersInfo.managedstate === 'Managed'" @click="showDedicateModal">
-              <div class="icon-dark" >
+              <div class="icon" >
                 <img src="@/assets/add_instances_icon.png" alt="">
               </div>
               <span>将群集专用</span>

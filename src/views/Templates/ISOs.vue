@@ -108,7 +108,10 @@ export default {
     viewVol(item) {
       this.$router.push({
         name: "isoDetail",
-        query: { id: item.id }
+        query: { id: item.id },
+        params: {
+          displayName: item.name
+        }
       });
     }
   },

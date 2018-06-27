@@ -106,19 +106,19 @@ export default {
     viewPortableIp() {
       this.$router.push({
         name: "portableIPRange",
-        params: { id: this.regionsInfo.id }
+        query: { id: this.regionsInfo.id }
       });
     },
     viewVPC() {
       this.$router.push({
         name: "vpc",
-        params: { id: this.regionsInfo.id }
+        query: { id: this.regionsInfo.id }
       });
     },
     viewGSLB() {
       this.$router.push({
         name: "gslb",
-        params: { id: this.regionsInfo.id }
+        query: { id: this.regionsInfo.id }
       });
     },
     toggleDeleteModal() {

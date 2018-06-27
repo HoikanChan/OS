@@ -125,6 +125,8 @@ import VPC from '../views/Regions/VPC.vue'
 import GSLB from '../views/Regions/GSLB.vue'
 //关联性组
 import AffinityGroups from "../views/AffinityGroups/AffinityGroups.vue";
+import AffinityGroupDetail from "../views/AffinityGroups/AffinityGroupDetail.vue";
+import AffinityGroupsIndex from "../views/AffinityGroups";
 
 import { setCookie, getCookie, delCookie } from '../common/js/cookie'
 //路由实例化
@@ -210,7 +212,7 @@ const router = new Router({
         },
         {
           path: 'storage',
-          name: 'storage',
+          name: '',
           component: StorageIndex,
           meta: { cnName: "存储", activeName: "storage" },
           children: [
@@ -230,7 +232,7 @@ const router = new Router({
         },
         {
           path: 'network',
-          name: 'Network',
+          name: '',
           component: NetworkIndex,
           meta: { cnName: "网络", activeName: "network" },
           children: [
@@ -250,7 +252,7 @@ const router = new Router({
         },
         {
           path: 'templates',
-          name: 'templates',
+          name: '',
           component: TemplatesIndex,
           meta: { cnName: "模板", activeName: "templates" },
           children: [
@@ -287,7 +289,7 @@ const router = new Router({
         },
         {
           path: 'accounts',
-          name: 'accounts',
+          name: '',
           component: AccountsIndex,
           meta: { cnName: "帐户管理", activeName: "accounts" },
           children: [
@@ -357,7 +359,7 @@ const router = new Router({
               path: '',
               name: 'system',
               component: System,
-              meta: { cnName: "基础架构", activeName: "system" },
+              meta: { cnName: "", activeName: "system" },
             },
             {
               path: 'zones',
@@ -386,14 +388,14 @@ const router = new Router({
               ]
             },
             {
-              path: 'Pods',
+              path: 'pods',
               name: '',
               component: PodsIndex,
               meta: { cnName: "机柜", activeName: "system" },
               children: [
                 {
                   path: '',
-                  name: 'Pods',
+                  name: 'pods',
                   component: Pods,
                   meta: { cnName: "", activeName: "system" },
                 },
@@ -406,7 +408,7 @@ const router = new Router({
               ]
             },
             {
-              path: 'Clusters',
+              path: 'clusters',
               name: '',
               component: ClustersIndex,
               meta: { cnName: "群集", activeName: "system" },
@@ -426,7 +428,7 @@ const router = new Router({
               ]
             },
             {
-              path: 'Hosts',
+              path: 'hosts',
               name: '',
               component: HostsIndex,
               meta: { cnName: "主机", activeName: "system" },
@@ -446,7 +448,7 @@ const router = new Router({
               ]
             },
             {
-              path: 'PrimaryStorages',
+              path: 'primaryStorages',
               name: '',
               component: PrimaryStoragesIndex,
               meta: { cnName: "主存储", activeName: "system" },
@@ -466,10 +468,10 @@ const router = new Router({
               ]
             },
             {
-              path: 'SecondaryStorages',
+              path: 'secondaryStorages',
               name: '',
               component: SecondaryStoragesIndex,
-              meta: { cnName: "主存储", activeName: "system" },
+              meta: { cnName: "二级存储", activeName: "system" },
               children: [
                 {
                   path: '',
@@ -553,7 +555,7 @@ const router = new Router({
         },
         {
           path: 'configuration',
-          name: 'configuration',
+          name: '',
           component: ConfigurationIndex,
           meta: { cnName: "服务方案", activeName: "configuration" },
           children: [
@@ -611,7 +613,7 @@ const router = new Router({
 
         {
           path: 'projects',
-          name: 'projects',
+          name: '',
           component: ProjectsIndex,
           meta: { cnName: "项目", activeName: "projects" },
           children: [{
@@ -623,7 +625,7 @@ const router = new Router({
             path: 'projectDetail/',
             name: 'projectDetail',
             component: ProjectDetail,
-            meta: { cnName: "", activeName: "projects" },
+            meta: { cnName: "项目详情", activeName: "projects" },
           }]
           // beforeEnter: (to, from, next) => {
           //     if (getCookie('role')==1||getCookie('role')==2) {
@@ -633,7 +635,7 @@ const router = new Router({
         },
         {
           path: 'regions',
-          name: 'regions',
+          name: '',
           component: RegionsIndex,
           meta: { cnName: "地理区域", activeName: "regions" },
           children: [
@@ -645,30 +647,30 @@ const router = new Router({
             },
             {
               path: '/regions/regionDetail',
-              name: 'regionDetail',
+              name: '',
               component: RegionsDetailIndex,
               meta: { cnName: "地理区域详情", activeName: "regions" },
               children: [
                 {
-                  path: '/regions/regionDetail/:id',
+                  path: '/regions/regionDetail',
                   name: 'regionDetail',
                   component: RegionsDetail,
                   meta: { cnName: "", activeName: "regions" },
                 },
                 {
-                  path: '/regions/regionDetail/portableIPRange/:id',
+                  path: '/regions/regionDetail/portableIPRange/',
                   name: 'portableIPRange',
                   component: PortableIPRange,
                   meta: { cnName: "可移植 IP 范围", activeName: "regions" },
                 },
                 {
-                  path: '/regions/regionDetail/gslb/:id',
+                  path: '/regions/regionDetail/gslb/',
                   name: 'gslb',
                   component: GSLB,
                   meta: { cnName: "GSLB", activeName: "regions" },
                 },
                 {
-                  path: '/regions/regionDetail/vpc/:id',
+                  path: '/regions/regionDetail/vpc/',
                   name: 'vpc',
                   component: VPC,
                   meta: { cnName: "VPC", activeName: "regions" },
@@ -679,9 +681,20 @@ const router = new Router({
         },
         {
           path: 'affinityGroups',
-          name: 'affinityGroups',
-          component: AffinityGroups,
-          meta: { cnName: "关联性组", activeName: "affinityGroups" }
+          name: '',
+          component: AffinityGroupsIndex,
+          meta: { cnName: "关联性组", activeName: "affinityGroups" },
+          children: [{
+            path: '',
+            name: 'affinityGroups',
+            component: AffinityGroups,
+            meta: { cnName: "", activeName: "affinityGroups" },
+          }, {
+            path: 'affinityGroupDetail/',
+            name: 'affinityGroupDetail',
+            component: AffinityGroupDetail,
+            meta: { cnName: "关联性组详情", activeName: "affinityGroups" },
+          }]
         }
       ],
 

@@ -170,7 +170,7 @@ export default {
     async fecthData() {
       let params = {
         command: "listPortableIpRanges",
-        regionid: this.$route.params.id,
+        regionid: this.$route.query.id,
         response: "json"
       };
       try {

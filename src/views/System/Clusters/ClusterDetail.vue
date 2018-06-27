@@ -1,10 +1,11 @@
 <template>
 	<div class="container">
+    <v-breadcrumb/>
 		<Tabs :animated="false" style="padding:24px 0">
       <TabPane class="tabs-content" label="详细信息">
 				<ClusterInfo margin-top:-24px/>
       </TabPane>
-      <TabPane class="tabs-content" label="IP分配">
+      <TabPane class="tabs-content" label="设置">
         <Searchbar class="projects-search" style="position: absolute;right: 20px;top: 84px;" @search="getCongfigList">
         </Searchbar>
         <Table :columns="columns" :data="listConfigs" border width="1200" style="margin-top:96px"></Table>

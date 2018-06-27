@@ -22,6 +22,7 @@
         </Col>
       </Row>
     </Row>
+    <v-breadcrumb/>
     <v-grid-list :data="PrimaryStorages" :cols="cols" :hoverCols="hoverCols" @view="viewPrimaryStorage"></v-grid-list>
     <newPrimaryStorage-modal :isModalShow="isModalShow" @show="show"></newPrimaryStorage-modal>
   </div>
@@ -77,7 +78,10 @@ export default {
     viewPrimaryStorage(item) {
       this.$router.push({
         name: "PrimaryStorageDetail",
-        query: { id: item.id, zoneId: item.zoneid }
+        query: { id: item.id, zoneId: item.zoneid },
+        params: {
+          displayName: item.name
+        }
       });
     }
   },

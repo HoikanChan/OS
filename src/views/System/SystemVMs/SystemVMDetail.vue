@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <SystemVMInfo/>
   </div>
 </template>

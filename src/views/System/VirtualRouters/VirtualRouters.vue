@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <Tabs :animated="false" style="padding:36px 0 12px" closable value="unGrouped" v-model="tabName">
       <TabPane class="tabs-content" name="unGrouped" label="未分组">
       </TabPane>
@@ -155,7 +156,11 @@ export default {
       if (queryParams) {
         return res.listroutersresponse;
       } else {
-        this.virtualRouters = res.listroutersresponse.router;
+        if (res.listroutersresponse.router) {
+          this.virtualRouters = res.listroutersresponse.router;
+        } else {
+          this.viewVirtualRouter = [];
+        }
       }
     },
     viewVirtualRouter(item) {
@@ -185,7 +190,10 @@ export default {
       }
       this.$router.push({
         name: "VirtualRouterDetail",
-        query: queryParams
+        query: queryParams,
+        params: {
+          displayName: item.name
+        }
       });
     },
     async getZones() {

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <Row class="operation-row dark">
       <Row class="operation-center-row">
         <Col class="right-operation-row" offset="15" span="11">
@@ -53,7 +54,9 @@ export default {
         params.keyword = this.searchValue;
       }
       const res = await this.$get(params);
-      this.systemVMs = res.listsystemvmsresponse.systemvm;
+      if (res.listsystemvmsresponse.systemvm) {
+        this.systemVMs = res.listsystemvmsresponse.systemvm;
+      }
       this.isReset = false;
       await this.getHosts();
       this.systemVMs.forEach(vm => {
@@ -82,7 +85,10 @@ export default {
     viewSystemVM(item) {
       this.$router.push({
         name: "SystemVMDetail",
-        query: { id: item.id, zoneId: item.zoneid }
+        query: { id: item.id, zoneId: item.zoneid },
+        params: {
+          displayName: item.name
+        }
       });
     }
   },

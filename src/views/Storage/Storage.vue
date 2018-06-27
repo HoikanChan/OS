@@ -102,7 +102,10 @@ export default {
     viewVol(item) {
       this.$router.push({
         name: "volumeDetail",
-        query: { id: item.id }
+        query: { id: item.id },
+        params: {
+          displayName: item.name
+        }
       });
     }
   },

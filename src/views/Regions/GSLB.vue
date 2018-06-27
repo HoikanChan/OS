@@ -67,7 +67,7 @@ export default {
           params: {
             command: "listGlobalLoadBalancerRules",
             response: "json",
-            id: this.$route.params.id
+            id: this.$route.query.id
           }
         });
         this.gslbList = res.listgloballoadbalancerrulesresponse;

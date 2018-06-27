@@ -16,6 +16,7 @@
   //引入该页面需要的组件
   import header from "../components/Header";
   import footer from "../components/Footer";
+  import Breadcrumb from '@/components/Breadcrumb';
   export default {
     name: "",
     data() {
@@ -24,7 +25,8 @@
     //注册组件
     components: {
       "v-header": header,
-      "v-footer": footer
+      "v-footer": footer,
+      'bread-dcrumb':Breadcrumb
     }
   };
 </script>

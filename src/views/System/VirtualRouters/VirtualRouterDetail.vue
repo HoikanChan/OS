@@ -1,6 +1,8 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <UngroupedVirtualRouterDetail v-if="classification === 'none'"/>
+    <h4>基本信息</h4>
     <div >
       <Row class="name-block">
         <Col span="8">

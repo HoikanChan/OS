@@ -147,7 +147,7 @@ export default {
       this.isModalShow = !this.isModalShow;
     },
     viewRegion(id) {
-      this.$router.push({ name: "regionDetail", params: { id: id } });
+      this.$router.push({ name: "regionDetail", query: { id: id } });
     },
     //鼠标移进显示隐藏的信息
     showHoverInfo(event) {

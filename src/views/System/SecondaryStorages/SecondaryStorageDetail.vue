@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <Tabs :animated="false" style="padding:24px 0">
       <TabPane class="tabs-content" label="详细信息">
         <Row class="operation-row" style="border:none;background:none;">

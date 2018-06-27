@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <v-grid-list :data="data" :cols="cols" ></v-grid-list>
   </div>
 </template>

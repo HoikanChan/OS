@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-breadcrumb/>
     <security-group-info/>
     <security-group-ingress :ingresses="secuGroupInfo?secuGroupInfo.ingressrule:[]" @reload="listSecuGroups" />
     <security-group-egress :egresses="secuGroupInfo?secuGroupInfo.egressrule:[]" @reload="listSecuGroups" />
@@ -44,6 +45,6 @@
 <style lang="scss" type="text/css" scoped>
   .container {
     width: 1200px;
-    margin: 0 auto 64px;
+    margin: 0 auto;
   }
 </style>
