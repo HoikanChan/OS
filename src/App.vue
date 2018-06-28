@@ -103,6 +103,9 @@ ul {
 .dark {
   background: #fff;
   border: none;
+  .icon {
+    background-color: #f6f6f6 !important;
+  }
 }
 .icon-dark {
   background-color: #f3f3f3;

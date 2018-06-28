@@ -3,7 +3,7 @@
     <v-breadcrumb/>
     <Tabs :animated="false" style="padding:24px 0">
       <TabPane class="tabs-content" label="详细信息">
-        <Row class="operation-row" style="border:none;background:none;">
+        <Row class="operation-row dark" style="border:none;background:none;">
           <Row class="operation-center-row">
             <Col class="left-operation-row" span="13">
               <ul>

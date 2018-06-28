@@ -1,6 +1,6 @@
 <template>
   <div class="templates">
-    <Row class="operation-row" style="border:none;background:none;">
+    <Row class="operation-row dark" style="border:none;background:none;">
       <Row class="operation-center-row">
         <Col class="left-operation-row" span="13">
         <ul>
@@ -39,6 +39,7 @@
         </Col>
       </Row>
     </Row>
+    <h4>基本信息</h4>
     <Row class="name-block">
       <Col span="8">
       <Row>

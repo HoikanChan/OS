@@ -27,6 +27,7 @@ export default {
     return {
       editingRow: null,
       updateVal: null,
+      updateVal:"",
       columns: [
         {
           title: "名称",
@@ -52,6 +53,9 @@ export default {
                     on: {
                       keyup: () => {
                         console.log("enter");
+                      },
+                      input: val => {
+                        this.updateVal = val;
                       }
                     }
                   })
@@ -96,7 +100,7 @@ export default {
                         click: async () => {
                           await this.updateConfig({
                             name: params.row.name,
-                            value: params.row.value
+                            value: this.updateVal
                           });
                           await this.getCongfigList();
                           this.editingRow = null;

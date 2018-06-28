@@ -27,7 +27,6 @@ export default {
   methods: {
     getBreadcrumbs() {
       this.breadcrumbs = [];
-      console.log(this.$route);
       this.$route.matched.forEach((route, index) => {
         if (index !== this.$route.matched.length - 1) {
           if (route.meta.cnName) {

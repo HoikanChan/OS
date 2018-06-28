@@ -39,11 +39,12 @@ import VolumeDetail from '../views/Storage/VolumeDetail'
 //网络
 import NetworkIndex from '../views/Network/index'
 import SecurityGroupDetail from '../views/Network/SecurityGroupDetail'
+import NetworkDetail from '../views/Network/NetworkDetail'
 import Network from '../views/Network/Networks'
 //模板
 import Templates from '../views/Templates/Templates'
 import TemplatesIndex from '../views/Templates'
-import TemplateDetail from '../views/Templates/TemplateDetail'
+import TemplateDetail from '../views/Templates/TemplateDetail/index'
 import IsoDetail from '../views/Templates/IsoDetail'
 //角色
 import Roles from '../views/Roles/Roles.vue'
@@ -246,7 +247,13 @@ const router = new Router({
               path: 'securityGroupDetail/',
               name: 'SecurityGroupDetail',
               component: SecurityGroupDetail,
-              meta: { cnName: "安全组", activeName: "network" },
+              meta: { cnName: "安全组详情", activeName: "network" },
+            },
+            {
+              path: 'networkDetail/',
+              name: 'NetworkDetail',
+              component: NetworkDetail,
+              meta: { cnName: "网络详情", activeName: "network" },
             },
           ]
         },

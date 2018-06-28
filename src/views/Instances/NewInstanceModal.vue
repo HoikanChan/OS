@@ -269,529 +269,541 @@
 </template>
 
 <script>
-  export default {
-    name: "v-newinstace-modal",
-    props: {
-      isModalShow: Boolean
-    },
-    data() {
-      return {
-        //添加虚拟机的步骤
-        step: 1,
-        //添加虚拟机步骤1 资源域
-        zonesList: [],
-        //添加虚拟机步骤1 iso和模板选择
-        isoOrTemplate: "select-template",
-        zonesList: [],
-        //添加实例
-        addInstances: {
-          zoneid: "",
-          templateid: "",
-          disksize: "",
-          serviceofferingid: "",
-          hypervisor: "None",
-          diskofferingid: "",
-          affinitygroupid: "",
-          securitygroupids: "",
-          sshkeypair: "",
-          name: "",
-          group:"",
-          keyboard: "",
-          //todo：经过编码？
-          userdata: ""
-        },
-        instanceDisplayTexts: {
-          zone: "",
-          template: "",
-          serviceoffering: "",
-          diskoffering: "",
-          affinitygroup: '',
-          securitygroup: "",
-          sshkeypair: ""
-        },
-        //step2
-        templTab: "feature",
-        hypervisors: [],
-        featureTemplates: [],
-        communityTemplates: [],
-        selfTemplates: [],
-        shareTemplates: [],
-        //step3
-        serviceOfferings: [],
-        //step4
-        diskofferings: [],
-        //step5
-        affinityGroups: [],
-        //step6
-        networks: [],
-        securityGroups: [],
-        //step7
-        sshkeyPairs: [],
-        //step8
-        keyboards: [
-          { id: "us", name: "标准(US)键盘" },
-          { id: "uk", name: "美式键盘" },
-          { id: "jp", name: "日式键盘" },
-          { id: "sc", name: "简式中文键盘" }
-        ]
-      };
-    },
-    computed: {
+export default {
+  name: "v-newinstace-modal",
+  props: {
+    isModalShow: Boolean
+  },
+  data() {
+    return {
+      //添加虚拟机的步骤
+      step: 1,
+      //添加虚拟机步骤1 资源域
+      zonesList: [],
+      //添加虚拟机步骤1 iso和模板选择
+      isoOrTemplate: "select-template",
+      zonesList: [],
+      //添加实例
+      addInstances: {
+        zoneid: "",
+        templateid: "",
+        disksize: "",
+        serviceofferingid: "",
+        hypervisor: "None",
+        diskofferingid: "",
+        affinitygroupid: "",
+        securitygroupids: "",
+        sshkeypair: "",
+        name: "",
+        group: "",
+        keyboard: "",
+        //todo：经过编码？
+        userdata: ""
+      },
+      instanceDisplayTexts: {
+        zone: "",
+        template: "",
+        serviceoffering: "",
+        diskoffering: "",
+        affinitygroup: "",
+        securitygroup: "",
+        sshkeypair: ""
+      },
       //step2
-      pickedTemplates: function () {
-        if (this.templTab === "feature") {
-          return this.featureTemplates;
-        } else if (this.templTab === "community") {
-          return this.communityTemplates;
-        } else if (this.templTab === "self") {
-          return this.selfTemplates;
-        } else if (this.templTab === "share") {
-          return this.shareTemplates;
-        } else {
-          return this.featureTemplates;
-        }
-      }
-    },
-    methods: {
-      //下一步
-      nextStep() {
-        if (this.step == 8) {
-          this.deployVm();
-        }
-        this.step++;
-        switch (this.step) {
-          case 2:
-            console.log("step2");
-            this.initStep2();
-            break;
-          case 3:
-            this.initStep3();
-            break;
-          case 4:
-            this.initStep4();
-            break;
-          case 5:
-            this.initStep5();
-            break;
-          case 6:
-            this.initStep6();
-            break;
-          case 7:
-            this.initStep7();
-            break;
-          case 8:
-            this.initStep8();
-            break;
-          default:
-            break;
-        }
-      },
-      //上一步
-      previousStep() {
-        if (this.step == 1) {
-          return false;
-        }
-        this.step--;
-      },
-      //初始化添加虚拟机模态框
-      initModal() {
-        //获取资源域
-        this.$http
-          .get("/client/api", {
-            params: {
-              command: "listZones",
-              available: true,
-              response: "json"
-            }
-          })
-          .then(
-            function (response) {
-              this.zonesList = response.listzonesresponse.zone;
-              this.addInstances.zoneid = this.zonesList[0].id;
-              //显示模态框
-              this.modalShow = true;
-            }.bind(this)
-          );
-      },
-      //Step2 init
-      async initStep2() {
-        this.hypervisors = (await this.$safeGet({
-          command: "listHypervisors",
-          zoneid: this.addInstances.zoneid
-        })).listhypervisorsresponse.hypervisor;
-
-        this.featureTemplates = (await this.$safeGet({
-          command: "listTemplates",
-          templatefilter: "featured",
-          zoneid: this.addInstances.zoneid
-        })).listtemplatesresponse.template;
-
-        this.communityTemplates = (await this.$safeGet({
-          command: "listTemplates",
-          templatefilter: "community",
-          zoneid: this.addInstances.zoneid
-        })).listtemplatesresponse.template;
-
-        this.selfTemplates = (await this.$safeGet({
-          command: "listTemplates",
-          templatefilter: "selfexecutable",
-          zoneid: this.addInstances.zoneid
-        })).listtemplatesresponse.template;
-
-        this.shareTemplates = (await this.$safeGet({
-          command: "listTemplates",
-          templatefilter: "sharedexecutable",
-          zoneid: this.addInstances.zoneid
-        })).listtemplatesresponse.template;
-      },
-      templatePicked(val) {
-        const templ = this.pickedTemplates.filter(item => item.id === val);
-        this.addInstances.hypervisor = templ[0].hypervisor;
-        this.instanceDisplayTexts.template = templ[0].name;
-      },
-      async initStep3() {
-        this.serviceOfferings = (await this.$safeGet({
-          command: "listServiceOfferings",
-          issystem: false
-        })).listserviceofferingsresponse.serviceoffering;
-      },
-      async initStep4() {
-        this.diskofferings = (await this.$safeGet({
-          command: "listDiskOfferings"
-        })).listdiskofferingsresponse.diskoffering;
-      },
-      async initStep5() {
-        const result = (await this.$safeGet({
-          command: "listAffinityGroups"
-        })).listaffinitygroupsresponse.affinitygroup;
-        if (result) { this.affinityGroups = result }
-      },
-      async initStep6() {
-        this.securityGroups = (await this.$safeGet({
-          command: "listSecurityGroups",
-          account: this.$store.getters.fetchDataFromStorage("account"),
-          domainid: this.$store.getters.fetchDataFromStorage("domainId")
-        })).listsecuritygroupsresponse.securitygroup;
-        this.networks = (await this.$safeGet({
-          command: "listNetworks",
-          trafficType: "Guest",
-          zoneId: this.addInstances.zoneid
-        })).listnetworksresponse.network;
-      },
-      async initStep7() {
-        const result = (await this.$safeGet({
-          command: "listSSHKeyPairs"
-        })).listsshkeypairsresponse.sshkeypair;
-        if (result) { this.sshkeyPairs = result }
-      },
-      initStep8() {
-        // 根据id找展示文本
-        //Todo：改下读取写法
-        const zone = this.zonesList.filter(
-          zone => zone.id === this.addInstances.zoneid
-        )[0];
-        if (zone) this.instanceDisplayTexts.zone = zone.name
-
-        const serviceoffering = this.serviceOfferings.filter(
-          item => item.id === this.addInstances.serviceofferingid
-        )[0];
-        if (serviceoffering) this.instanceDisplayTexts.serviceoffering = serviceoffering.name
-
-        const diskoffering = this.diskofferings.filter(
-          item => item.id === this.addInstances.diskofferingid
-        )[0];
-        if (diskoffering) this.instanceDisplayTexts.diskoffering = diskoffering.name
-
-        console.log(this.affinityGroups);
-        const affinity = this.affinityGroups.filter(
-          item => item.id === this.addInstances.affinitygroupid
-        )[0]
-        if (affinity) this.instanceDisplayTexts.affinitygroup = affinity.name;
-
-        const securitygroup = this.securityGroups.filter(
-          item => item.id === this.addInstances.securitygroupids
-        )[0];
-        if (securitygroup) this.instanceDisplayTexts.securitygroup = securitygroup.name
-
-        const sshkeypair = this.sshkeyPairs.filter(
-          item => item.id === this.addInstances.sshkeypair
-        )[0];
-        if (sshkeypair) this.instanceDisplayTexts.sshkeypair = sshkeypair.name
-      },
-      async deployVm() {
-        const params = Object.assign({
-          command: "deployVirtualMachine",
-        }, this.addInstances);
-        for (let key in params) {
-          if (
-            params.hasOwnProperty(key) &&
-            (params[key] == null || params[key] == undefined || params[key] == "")
-          ) {
-            delete params[key];
-          }
-        }
-        const { deployvirtualmachineresponse } = await this.$get(params);
-        await this.$queryJobResult(
-          deployvirtualmachineresponse.jobid,
-          "成功创建虚拟机"
-        );
-
-        this.$emit("complete");
-        for (let key in this.addInstances) {
-          addInstances[key] = ""
-        }
-      },
-      cancelAddStances() {
-        this.step = 1;
-        this.$emit("cancel");
-      }
-    },
-    mounted() {
-      this.initModal();
-    },
-    filters: {
-      checkNull: function (val) {
-        if (val === "" || val === undefined || val === null) {
-          return "无"
-        } else {
-          return val
-        }
+      templTab: "feature",
+      hypervisors: [],
+      featureTemplates: [],
+      communityTemplates: [],
+      selfTemplates: [],
+      shareTemplates: [],
+      //step3
+      serviceOfferings: [],
+      //step4
+      diskofferings: [],
+      //step5
+      affinityGroups: [],
+      //step6
+      networks: [],
+      securityGroups: [],
+      //step7
+      sshkeyPairs: [],
+      //step8
+      keyboards: [
+        { id: "us", name: "标准(US)键盘" },
+        { id: "uk", name: "美式键盘" },
+        { id: "jp", name: "日式键盘" },
+        { id: "sc", name: "简式中文键盘" }
+      ]
+    };
+  },
+  computed: {
+    //step2
+    pickedTemplates: function() {
+      if (this.templTab === "feature") {
+        return this.featureTemplates;
+      } else if (this.templTab === "community") {
+        return this.communityTemplates;
+      } else if (this.templTab === "self") {
+        return this.selfTemplates;
+      } else if (this.templTab === "share") {
+        return this.shareTemplates;
+      } else {
+        return this.featureTemplates;
       }
     }
-  };
+  },
+  methods: {
+    //下一步
+    nextStep() {
+      if (this.step == 8) {
+        this.deployVm();
+      }
+      this.step++;
+      switch (this.step) {
+        case 2:
+          console.log("step2");
+          this.initStep2();
+          break;
+        case 3:
+          this.initStep3();
+          break;
+        case 4:
+          this.initStep4();
+          break;
+        case 5:
+          this.initStep5();
+          break;
+        case 6:
+          this.initStep6();
+          break;
+        case 7:
+          this.initStep7();
+          break;
+        case 8:
+          this.initStep8();
+          break;
+        default:
+          break;
+      }
+    },
+    //上一步
+    previousStep() {
+      if (this.step == 1) {
+        return false;
+      }
+      this.step--;
+    },
+    //初始化添加虚拟机模态框
+    initModal() {
+      //获取资源域
+      this.$http
+        .get("/client/api", {
+          params: {
+            command: "listZones",
+            available: true,
+            response: "json"
+          }
+        })
+        .then(
+          function(response) {
+            this.zonesList = response.listzonesresponse.zone;
+            this.addInstances.zoneid = this.zonesList[0].id;
+            //显示模态框
+            this.modalShow = true;
+          }.bind(this)
+        );
+    },
+    //Step2 init
+    async initStep2() {
+      this.hypervisors = (await this.$safeGet({
+        command: "listHypervisors",
+        zoneid: this.addInstances.zoneid
+      })).listhypervisorsresponse.hypervisor;
+
+      this.featureTemplates = (await this.$safeGet({
+        command: "listTemplates",
+        templatefilter: "featured",
+        zoneid: this.addInstances.zoneid
+      })).listtemplatesresponse.template;
+
+      this.communityTemplates = (await this.$safeGet({
+        command: "listTemplates",
+        templatefilter: "community",
+        zoneid: this.addInstances.zoneid
+      })).listtemplatesresponse.template;
+
+      this.selfTemplates = (await this.$safeGet({
+        command: "listTemplates",
+        templatefilter: "selfexecutable",
+        zoneid: this.addInstances.zoneid
+      })).listtemplatesresponse.template;
+
+      this.shareTemplates = (await this.$safeGet({
+        command: "listTemplates",
+        templatefilter: "sharedexecutable",
+        zoneid: this.addInstances.zoneid
+      })).listtemplatesresponse.template;
+    },
+    templatePicked(val) {
+      const templ = this.pickedTemplates.filter(item => item.id === val);
+      this.addInstances.hypervisor = templ[0].hypervisor;
+      this.instanceDisplayTexts.template = templ[0].name;
+    },
+    async initStep3() {
+      this.serviceOfferings = (await this.$safeGet({
+        command: "listServiceOfferings",
+        issystem: false
+      })).listserviceofferingsresponse.serviceoffering;
+    },
+    async initStep4() {
+      this.diskofferings = (await this.$safeGet({
+        command: "listDiskOfferings"
+      })).listdiskofferingsresponse.diskoffering;
+    },
+    async initStep5() {
+      const result = (await this.$safeGet({
+        command: "listAffinityGroups"
+      })).listaffinitygroupsresponse.affinitygroup;
+      this.affinityGroups = result ? result : [];
+    },
+    async initStep6() {
+      this.securityGroups = (await this.$safeGet({
+        command: "listSecurityGroups",
+        account: this.$store.getters.fetchDataFromStorage("account"),
+        domainid: this.$store.getters.fetchDataFromStorage("domainId")
+      })).listsecuritygroupsresponse.securitygroup;
+      this.networks = (await this.$safeGet({
+        command: "listNetworks",
+        trafficType: "Guest",
+        zoneId: this.addInstances.zoneid
+      })).listnetworksresponse.network;
+    },
+    async initStep7() {
+      const result = (await this.$safeGet({
+        command: "listSSHKeyPairs"
+      })).listsshkeypairsresponse.sshkeypair;
+      this.sshkeyPairs = result ? result : [];
+    },
+    initStep8() {
+      // 根据id找展示文本
+      //Todo：改下读取写法
+      const zone = this.zonesList.filter(
+        zone => zone.id === this.addInstances.zoneid
+      )[0];
+      if (zone) this.instanceDisplayTexts.zone = zone.name;
+
+      const serviceoffering = this.serviceOfferings.filter(
+        item => item.id === this.addInstances.serviceofferingid
+      )[0];
+      if (serviceoffering)
+        this.instanceDisplayTexts.serviceoffering = serviceoffering.name;
+
+      const diskoffering = this.diskofferings.filter(
+        item => item.id === this.addInstances.diskofferingid
+      )[0];
+      if (diskoffering)
+        this.instanceDisplayTexts.diskoffering = diskoffering.name;
+
+      console.log(this.affinityGroups);
+      const affinity = this.affinityGroups.filter(
+        item => item.id === this.addInstances.affinitygroupid
+      )[0];
+      if (affinity) this.instanceDisplayTexts.affinitygroup = affinity.name;
+
+      const securitygroup = this.securityGroups.filter(
+        item => item.id === this.addInstances.securitygroupids
+      )[0];
+      if (securitygroup)
+        this.instanceDisplayTexts.securitygroup = securitygroup.name;
+
+      const sshkeypair = this.sshkeyPairs.filter(
+        item => item.id === this.addInstances.sshkeypair
+      )[0];
+      if (sshkeypair) this.instanceDisplayTexts.sshkeypair = sshkeypair.name;
+    },
+    async deployVm() {
+      const params = Object.assign(
+        {
+          command: "deployVirtualMachine"
+        },
+        this.addInstances
+      );
+      if (params.serviceofferingid === null) {
+        params.serviceofferingid = this.serviceOfferings[0].id;
+      }
+      for (let key in params) {
+        if (
+          params.hasOwnProperty(key) &&
+          (params[key] == null || params[key] == undefined || params[key] == "")
+        ) {
+          delete params[key];
+        }
+      }
+      const { deployvirtualmachineresponse } = await this.$get(params);
+      await this.$queryJobResult(
+        deployvirtualmachineresponse.jobid,
+        "成功创建虚拟机"
+      );
+
+      this.$emit("complete");
+      for (let key in this.addInstances) {
+        this.addInstances[key] = "";
+      }
+    },
+    cancelAddStances() {
+      this.step = 1;
+      this.$emit("cancel");
+    }
+  },
+  mounted() {
+    this.initModal();
+  },
+  filters: {
+    checkNull: function(val) {
+      if (val === "" || val === undefined || val === null) {
+        return "无";
+      } else {
+        return val;
+      }
+    }
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
-  .modal {
-    .modal-mask {
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: rgba(55, 55, 55, 0.6);
-      height: 100%;
-      z-index: 1000;
-    }
-    .modal-warp {
-      position: fixed;
-      overflow: auto;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 1000;
-      -webkit-overflow-scrolling: touch;
+.modal {
+  .modal-mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(55, 55, 55, 0.6);
+    height: 100%;
+    z-index: 1000;
+  }
+  .modal-warp {
+    position: fixed;
+    overflow: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    .modal-container {
+      margin: 0 auto;
+      position: relative;
       outline: 0;
-      .modal-container {
-        margin: 0 auto;
-        position: relative;
-        outline: 0;
-        padding: 30px 30px 24px;
-        width: 840px;
-        height: 504px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #fff;
+      padding: 30px 30px 24px;
+      width: 840px;
+      height: 504px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #fff;
+      border-radius: 3px;
+      .modal-title {
+        padding-left: 27px;
+        width: 94px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        color: #333;
+        border: 1px solid #333333;
         border-radius: 3px;
-        .modal-title {
-          padding-left: 27px;
-          width: 94px;
-          height: 30px;
-          line-height: 30px;
-          font-size: 14px;
-          color: #333;
-          border: 1px solid #333333;
-          border-radius: 3px;
-          background: url("../../assets/add_instances_title_icon.png") no-repeat 8px center;
-          user-select: none;
-        }
-        .modal-step {
-          padding: 20px 0 30px;
-          ul {
-            height: 20px;
-            li {
-              float: left;
-              padding-left: 12px;
-              padding-right: 20px;
-              line-height: 20px;
-              font-size: 16px;
-              font-weight: bold;
-              color: #999999;
-              background: url("../../assets/add_instances_right_arrow.png") no-repeat right center;
-              list-style: none;
-              user-select: none;
-              &:first-child {
-                padding-left: 0;
-              }
-              &:last-child {
-                padding-right: 0;
-                background: none;
-              }
+        background: url("../../assets/add_instances_title_icon.png") no-repeat
+          8px center;
+        user-select: none;
+      }
+      .modal-step {
+        padding: 20px 0 30px;
+        ul {
+          height: 20px;
+          li {
+            float: left;
+            padding-left: 12px;
+            padding-right: 20px;
+            line-height: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #999999;
+            background: url("../../assets/add_instances_right_arrow.png")
+              no-repeat right center;
+            list-style: none;
+            user-select: none;
+            &:first-child {
+              padding-left: 0;
             }
-            .current-step {
-              color: #51e299;
-              background-image: url("../../assets/add_instances_right_arrow_active.png");
+            &:last-child {
+              padding-right: 0;
+              background: none;
             }
           }
+          .current-step {
+            color: #51e299;
+            background-image: url("../../assets/add_instances_right_arrow_active.png");
+          }
         }
-        .modal-content {
-          height: 68%;
-          margin-bottom: 24px;
-          .step-list {
+      }
+      .modal-content {
+        height: 68%;
+        margin-bottom: 24px;
+        .step-list {
+          height: 100%;
+          .step {
+            width: 417px;
             height: 100%;
-            .step {
-              width: 417px;
-              height: 100%;
-              display: flex;
-              flex-direction: column;
-              margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+          }
+          .step1 {
+            h6 {
+              padding-left: 12px;
+              height: 26px;
+              line-height: 26px;
+              font-weight: normal;
+              color: #333333;
+              background-color: #f0f0f0;
             }
-            .step1 {
-              h6 {
-                padding-left: 12px;
-                height: 26px;
-                line-height: 26px;
-                font-weight: normal;
-                color: #333333;
-                background-color: #f0f0f0;
+            .choice-resrouce {
+              padding-bottom: 28px;
+              p {
+                line-height: 16px;
+                padding-top: 5px;
+                padding-bottom: 9px;
+                color: #999999;
               }
-              .choice-resrouce {
-                padding-bottom: 28px;
-                p {
-                  line-height: 16px;
-                  padding-top: 5px;
-                  padding-bottom: 9px;
-                  color: #999999;
-                }
-              }
-              .choice-iso-template {
-                .choice-list {
-                  .choice-item {
-                    display: block;
-                    margin-top: 13px;
-                    padding: 0 10px;
-                    height: 53px;
-                    line-height: 53px;
-                    border: 1px solid #bdbdbd;
-                    border-radius: 3px;
-                    cursor: pointer;
-                    .choice-item-left {
-                      position: relative;
-                      float: left;
-                      padding-left: 29px;
-                      input {
-                        position: absolute;
-                        opacity: 0;
-                      }
-                      background: url("../../assets/add_instances_radio.png") no-repeat 0 center;
+            }
+            .choice-iso-template {
+              .choice-list {
+                .choice-item {
+                  display: block;
+                  margin-top: 13px;
+                  padding: 0 10px;
+                  height: 53px;
+                  line-height: 53px;
+                  border: 1px solid #bdbdbd;
+                  border-radius: 3px;
+                  cursor: pointer;
+                  .choice-item-left {
+                    position: relative;
+                    float: left;
+                    padding-left: 29px;
+                    input {
+                      position: absolute;
+                      opacity: 0;
                     }
-                    .choice-item-right {
-                      float: right;
-                    }
-                    .choice-item-checked {
-                      background-image: url("../../assets/add_instances_radio_checked.png");
-                    }
+                    background: url("../../assets/add_instances_radio.png")
+                      no-repeat 0 center;
+                  }
+                  .choice-item-right {
+                    float: right;
+                  }
+                  .choice-item-checked {
+                    background-image: url("../../assets/add_instances_radio_checked.png");
                   }
                 }
               }
             }
-            .radio-block {
-              border: 1px solid #dddee1;
-              padding: 8px;
-              overflow-y: auto;
-              flex: 1 1 auto;
-              border-radius: 0 4px 4px 4px;
-            }
-            #step2-radio-box {
-              height: 180px;
-            }
-            #step3-radio-box {
-              height: 230px;
-            }
-            #step5-alert {
-              height: 48px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
+          }
+          .radio-block {
+            border: 1px solid #dddee1;
+            padding: 8px;
+            overflow-y: auto;
+            flex: 1 1 auto;
+            border-radius: 0 4px 4px 4px;
+          }
+          #step2-radio-box {
+            height: 180px;
+          }
+          #step3-radio-box {
+            height: 230px;
+          }
+          #step5-alert {
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         }
-        .modal-footer {
-          height: 30px;
-          .modal-footer-left {
+      }
+      .modal-footer {
+        height: 30px;
+        .modal-footer-left {
+          float: left;
+          .previous-step-btn {
+            background-color: #51e299;
+            color: #fff;
+          }
+        }
+        .modal-footer-right {
+          float: right;
+          .cancel-btn {
             float: left;
-            .previous-step-btn {
-              background-color: #51e299;
-              color: #fff;
-            }
+            margin-right: 23px;
+            color: #333;
+            border: 1px solid #414141;
           }
-          .modal-footer-right {
-            float: right;
-            .cancel-btn {
-              float: left;
-              margin-right: 23px;
-              color: #333;
-              border: 1px solid #414141;
-            }
-            .next-step-btn {
-              float: left;
-              background-color: #51e299;
-              color: #fff;
-            }
-          }
-          .btn {
-            width: 93px;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 3px;
+          .next-step-btn {
+            float: left;
+            background-color: #51e299;
+            color: #fff;
           }
         }
-      }
-    }
-    .modal-content /deep/ .ivu-tabs-bar {
-      margin-bottom: 0;
-      .ivu-tabs-nav-wrap {
-        display: flex;
-        justify-content: flex-start;
-        .ivu-tabs-ink-bar {
-          height: 0;
-        }
-        .ivu-tabs-tab {
-          width: auto;
-          color: #495060;
+        .btn {
+          width: 93px;
+          height: 30px;
+          line-height: 30px;
           text-align: center;
-          font-size: 16px;
-          margin-right: 2px;
-        }
-        .ivu-tabs-tab-focused {
-          color: #57a3f3;
+          cursor: pointer;
+          border-radius: 3px;
         }
       }
-    }
-    .modal-content /deep/ .ivu-radio-group {
-      width: 100%;
-      .ivu-radio-wrapper {
-        height: auto;
-        line-height: normal;
-        padding: 8px 0;
-      }
-      .ivu-radio-group-item {
-        display: flex;
-        align-items: center;
-        .ivu-radio {
-          margin: 0 24px;
-        }
-      }
-    }
-    .modal-content /deep/ .ivu-form-item {
-      margin-bottom: 0;
-    }
-    .step8 /deep/ .ivu-col {
-      margin: 8px 0;
     }
   }
+  .modal-content /deep/ .ivu-tabs-bar {
+    margin-bottom: 0;
+    .ivu-tabs-nav-wrap {
+      display: flex;
+      justify-content: flex-start;
+      .ivu-tabs-ink-bar {
+        height: 0;
+      }
+      .ivu-tabs-tab {
+        width: auto;
+        color: #495060;
+        text-align: center;
+        font-size: 16px;
+        margin-right: 2px;
+      }
+      .ivu-tabs-tab-focused {
+        color: #57a3f3;
+      }
+    }
+  }
+  .modal-content /deep/ .ivu-radio-group {
+    width: 100%;
+    .ivu-radio-wrapper {
+      height: auto;
+      line-height: normal;
+      padding: 8px 0;
+    }
+    .ivu-radio-group-item {
+      display: flex;
+      align-items: center;
+      .ivu-radio {
+        margin: 0 24px;
+      }
+    }
+  }
+  .modal-content /deep/ .ivu-form-item {
+    margin-bottom: 0;
+  }
+  .step8 /deep/ .ivu-col {
+    margin: 8px 0;
+  }
+}
 </style>

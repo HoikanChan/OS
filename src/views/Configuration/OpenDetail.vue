@@ -5,7 +5,7 @@
                     <v-breadcrumb></v-breadcrumb>
                 </div>
                 <div class="detail-tool">
-                    <Col class="toolBar" span="13">
+                    <Col class="toolBar dark" span="13">
                         <ul>
                             <li v-show="myType=='cal' || myType=='sys' || myType=='disk' || myType=='vpc' || myType=='it'" @click="startEdit()">
                                 <div class="icon">

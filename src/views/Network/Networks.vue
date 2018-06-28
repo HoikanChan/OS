@@ -2,6 +2,7 @@
   <div class="network">
     <Tabs :animated="false" style="padding:24px 0">
       <TabPane label="来宾网络">
+        <guest-networks/>
       </TabPane>
       <TabPane label="安全组">
         <Row class="operation-row dark">
@@ -56,8 +57,12 @@
 </template>
 
 <script>
+import GuestNetworks from "./GuestNetworks";
 export default {
   name: "v-network",
+  components: {
+    GuestNetworks
+  },
   data() {
     return {
       listzonesAdvanceParam: {
