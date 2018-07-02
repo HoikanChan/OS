@@ -11,7 +11,7 @@
             </div>
             <span>运行指标</span>
           </li>
-          <li @click="initModal">
+          <li @click="modalShow=true">
             <div class="icon">
               <img src="../../../assets/add_instances_icon.png" alt="">
             </div>
@@ -47,14 +47,17 @@
       </ul>
     </div>
     <!--新增资源域模态框-->
-    <NewZoneModal :isModalShow="modalShow"/>
+    <NewZoneModal :isModalShow="modalShow" @show="show"/>
   </div>
 </template>
 
 <script>
-import NewZoneModal from "./NewZoneModal";
+import NewZoneModal from "./NewZoneModal/index";
 export default {
   name: "v-zones",
+  components: {
+    NewZoneModal
+  },
   data() {
     return {
       listData: [],
@@ -113,7 +116,12 @@ export default {
       //  this.$router.push({path:'instances/instancesdetails',query:{id:id},params:{displayName:name}})
       //  this.$router.push({path:'/',query:{id:id},params:{displayName:name}})
     },
-
+    show(isShow, isReload) {
+      this.modalShow = isShow;
+      if (isReload) {
+        this.fetchZonesData();
+      }
+    },
     //鼠标移进显示隐藏的信息
     showHoverInfo(event) {
       let currentTarget = event.currentTarget;

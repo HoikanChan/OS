@@ -174,7 +174,7 @@ h3 {
 .stpe1Block {
   margin: 24px 0;
   .ivu-col {
-    margin: 12px 0;
+    margin: 8px 0;
   }
 }
 .checkInfo {

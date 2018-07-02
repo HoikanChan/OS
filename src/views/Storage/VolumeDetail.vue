@@ -369,6 +369,6 @@ export default {
   padding: 12px 0;
 }
 .ivu-col {
-  padding: 12px 0;
+  padding: 8px 0;
 }
 </style>

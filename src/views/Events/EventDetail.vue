@@ -116,7 +116,7 @@ export default {
   width: 1200px;
   margin: 0 auto;
   .ivu-col {
-    padding: 12px 0;
+    padding: 8px 0;
   }
   .operation-row {
     height: 93px;

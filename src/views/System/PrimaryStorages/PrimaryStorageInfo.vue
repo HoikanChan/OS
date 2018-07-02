@@ -266,6 +266,6 @@ export default {
   border-bottom: solid 1px #f1f1f1;
 }
 .ivu-col {
-  padding: 12px 0;
+  padding: 8px 0;
 }
 </style>

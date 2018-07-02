@@ -287,7 +287,7 @@ export default {
   padding: 12px 0;
 }
 .ivu-col {
-  margin: 12px 0;
+  margin: 8px 0;
 }
 .ivu-input-wrapper,
 .ivu-select {

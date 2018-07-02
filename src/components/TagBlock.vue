@@ -97,6 +97,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
 .ivu-col {
-  padding: 12px 0;
+  padding: 8px 0;
 }
 </style>

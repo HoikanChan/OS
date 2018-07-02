@@ -182,6 +182,6 @@ export default {
   margin: 0 auto;
 }
 .ivu-col {
-  margin: 12px 0;
+  margin: 8px 0;
 }
 </style>
