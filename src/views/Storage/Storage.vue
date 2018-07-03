@@ -6,23 +6,25 @@
           <Row class="operation-center-row">
             <Col class="left-operation-row" span="13">
               <ul>
+                <li @click="viewMetrics">
+                  <div class="icon">
+                    <img src="@/assets/add_instances_icon.png" alt="">
+                  </div>
+                  <span>运行指标</span>
+                </li>
                 <li @click="isNewVolumeModalShow = !isNewVolumeModalShow">
                   <div class="icon">
                     <img src="@/assets/add_instances_icon.png" alt="">
                   </div>
                   <span>添加</span>
                 </li>
-              </ul>
               <!-- todo:完成本地上传及上载 -->
-              <ul>
                 <li>
                   <div class="icon">
                     <img src="@/assets/add_instances_icon.png" alt="">
                   </div>
                   <span>本地上传</span>
                 </li>
-              </ul>
-              <ul>
                 <li>
                   <div class="icon">
                     <img src="@/assets/add_instances_icon.png" alt="">
@@ -44,8 +46,10 @@
         <v-grid-list :data="volumes" :cols="cols" :hoverCols="hoverCols" @view="viewVol"></v-grid-list>
       </TabPane>
       <TabPane label="快照">
+        <Snapshots/>
       </TabPane>
       <TabPane label="VM快照">
+        <VmSnapshots/>
       </TabPane>
     </Tabs>
     <newvolume-modal :isModalShow="isNewVolumeModalShow" @show="show"></newvolume-modal>
@@ -54,11 +58,14 @@
 
 <script>
 import NewVolumeModal from "./NewVolumeModal";
-
+import Snapshots from "./Snapshots";
+import VmSnapshots from "./VmSnapshots";
 export default {
   name: "v-storage",
   components: {
-    "newvolume-modal": NewVolumeModal
+    "newvolume-modal": NewVolumeModal,
+    Snapshots: Snapshots,
+    VmSnapshots: VmSnapshots
   },
   data() {
     return {
@@ -106,6 +113,11 @@ export default {
         params: {
           displayName: item.name
         }
+      });
+    },
+    viewMetrics() {
+      this.$router.push({
+        name: "storageMetrics"
       });
     }
   },

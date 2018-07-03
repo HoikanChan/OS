@@ -35,7 +35,10 @@ import InstancesDetails from '../views/Instances/InstancesDetails.vue'
 */
 import Storage from '../views/Storage/Storage'
 import StorageIndex from '../views/Storage/index'
+import StorageMetrics from '../views/Storage/StorageMetrics'
 import VolumeDetail from '../views/Storage/VolumeDetail'
+import SnapshotDetail from '../views/Storage/SnapshotDetail'
+import VmSnapshotDetail from '../views/Storage/VmSnapshotDetail'
 //网络
 import NetworkIndex from '../views/Network/index'
 import SecurityGroupDetail from '../views/Network/SecurityGroupDetail'
@@ -224,10 +227,28 @@ const router = new Router({
               meta: { cnName: "", activeName: "storage" },
             },
             {
+              path: 'storageMetrics',
+              name: 'storageMetrics',
+              component: StorageMetrics,
+              meta: { cnName: "运行指标", activeName: "storage" },
+            },
+            {
               path: 'volumeDetail/',
               name: 'volumeDetail',
               component: VolumeDetail,
               meta: { cnName: "卷详情", activeName: "storage" },
+            },
+            {
+              path: 'snapshotDetail/',
+              name: 'snapshotDetail',
+              component: SnapshotDetail,
+              meta: { cnName: "快照详情", activeName: "storage" },
+            },
+            {
+              path: 'vmSnapshotDetail/',
+              name: 'vmSnapshotDetail',
+              component: VmSnapshotDetail,
+              meta: { cnName: "VM快照详情", activeName: "storage" },
             },
           ]
         },
