@@ -44,6 +44,7 @@
         </Col>
       </Row>
     </Row>
+    <h4>基本信息</h4>
     <Row class="name-block">
           <Col span="8"><Row><Col span="8">名称</Col><Col span="16">{{podInfo.name}}</Col></Row></Col>
         </Row>

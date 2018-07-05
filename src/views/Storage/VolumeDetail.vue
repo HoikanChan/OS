@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <v-breadcrumb/>
-    <Row class="operation-row" style="border:none;background:none;">
+    <Row class="operation-row dark" style="border:none;background:none;">
       <Row class="operation-center-row">
         <Col class="left-operation-row" span="13">
           <ul>

@@ -144,8 +144,10 @@ export default {
         params.page = page;
       }
       const res = await this.$safeGet(params);
-      this.alertsTable = res.listalertsresponse.alert;
-      this.alertCount = res.listalertsresponse.count;
+      if(res){
+        this.alertsTable = res.listalertsresponse.alert;
+        this.alertCount = res.listalertsresponse.count;
+      }
     },
     async archiveAlert() {
       try {

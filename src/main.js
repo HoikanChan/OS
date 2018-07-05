@@ -327,7 +327,7 @@ Vue.filter('convertByType', (value, alertCode = 0) => {
         case 1:
             return converters.convertHz(value);
         case 2:
-            return converters.convertBytes(value);
+            return converters.convertKB(value);
         case 3:
             return converters.convertBytes(value);
         case 6:

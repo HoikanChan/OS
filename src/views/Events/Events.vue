@@ -54,7 +54,7 @@
     <!-- 新增事件窗口 -->
     <Modal
       v-model="isArchiveModalShow"
-      title="新增账户"
+      title="存档事件"
     > 
       <Form :model="archiveEventForm"  ref="archiveEventForm"   :label-width="120">
         <Row>

@@ -288,37 +288,8 @@
         <Button type="ghost" @click="isEditing = false">取消</Button>
         </Col>
       </Row>
-      <h4>标签</h4>
-      <Row :gutter="8" type="flex" align="middle">
-        <Col span="8">
-        <Row type="flex" align="middle">
-          <Col span="4">密钥</Col>
-          <Col span="10">
-          <Input v-model="tagForm.key" />
-          </Col>
-        </Row>
-        </Col>
-        <Col span="8">
-        <Row type="flex" align="middle">
-          <Col span="4">值</Col>
-          <Col span="10">
-          <Input v-model="tagForm.value" />
-          </Col>
-        </Row>
-        </Col>
-        <Col span="8">
-        <Button type="success" @click="createTag">添加</Button>
-        </Col>
-      </Row>
-      <br/>
-      <Row :gutter="16" type="flex" align="middle">
-        <Col v-for="tag in detailsInfo.tags" :key="tag.key">
-        <Alert closable @on-close="deleteTag(tag)">
-          <strong>{{tag.key}}</strong> = {{tag.value}}
-        </Alert>
-        </Col>
-      </Row>
-    </div>
+      <v-tag-block :datas="tagsData" :type="'UserVm'" :callback="fetchDetailsInfoData"></v-tag-block>
+      </div>
     <!-- 存储 -->
     <div class="storage-content content-table">
       <h4>存储</h4>
@@ -665,11 +636,6 @@ export default {
           width: 839
         }
       ],
-      //密钥
-      tagForm: {
-        key: "",
-        value: ""
-      },
       //请求操作系统列表
       osTypesLIst: [],
       //是否强制停止虚拟机
@@ -803,7 +769,10 @@ export default {
     AssignFormModal
   },
   computed: {
-    ...mapState(["host"])
+    ...mapState(["host"]),
+    tagsData:function(){
+      return this.detailsInfo.tags
+    }
   },
   methods: {
     fetchDetailsInfoData() {
@@ -1045,44 +1014,6 @@ export default {
         listAll: true
       })).listsshkeypairsresponse.sshkeypair;
       this.sshkeypairList = result ? result : [];
-    },
-    //创建密钥
-    async createTag() {
-      const params = {
-        command: "createTags",
-        resourceIds: this.$route.query.id,
-        resourceType: "UserVm"
-      };
-      const keyname = "tags[0].key";
-      params[keyname] = this.tagForm.key;
-      const valuename = "tags[0].value";
-      params[valuename] = this.tagForm.value;
-      const { createtagsresponse } = await this.$get(params);
-      await this.$queryJobResult(
-        createtagsresponse.jobid,
-        "成功创建标签",
-        this.fetchDetailsInfoData
-      );
-      this.tagForm.key = "";
-      this.tagForm.value = "";
-    },
-    //删除密钥
-    async deleteTag(tag) {
-      const params = {
-        command: "deleteTags",
-        resourceIds: this.$route.query.id,
-        resourceType: "UserVm"
-      };
-      const keyname = "tags[0].key";
-      params[keyname] = tag.key;
-      const valuename = "tags[0].value";
-      params[valuename] = tag.value;
-      const { deletetagsresponse } = await this.$get(params);
-      await this.$queryJobResult(
-        deletetagsresponse.jobid,
-        "成功删除标签",
-        this.fetchDetailsInfoData
-      );
     },
     //编辑
     startEdit() {

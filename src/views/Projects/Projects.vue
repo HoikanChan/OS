@@ -1,9 +1,7 @@
 <template>
   <div class="projects">
     <div class="projects-content">
-      <div>
-        <v-breadcrumb></v-breadcrumb>
-      </div>
+     <br/>   
       <Tabs :animated="false" value="project" v-model="tabNow">
         <div class="projects-search" slot="extra" style="position: absolute;right: 20px;top: 52px;">
           <div class="btn" @click="openDialog">+添加方案</div>

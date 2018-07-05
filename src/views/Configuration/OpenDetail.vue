@@ -589,7 +589,6 @@ export default {
 <style lang="scss" type="text/css">
 .detail{
     width: 100%;
-    height: 748px;
 
     .detail-content{
         width: 1200px;

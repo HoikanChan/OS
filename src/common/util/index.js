@@ -12,6 +12,19 @@ let converters = {
       return (bytes / 1024 / 1024 / 1024 / 1024).toFixed(2) + " TB";
     }
   },
+  convertKB: (kbs) => {
+    if (kbs == undefined)
+      return '';
+    if (kbs < 1024) {
+      return (kbs).toFixed(2) + " KB";
+    } else if (kbs < 1024 * 1024) {
+      return (kbs / 1024).toFixed(2) + " MB";
+    } else if (kbs < 1024 * 1024 * 1024) {
+      return (kbs / 1024 / 1024).toFixed(2) + " GB";
+    } else {
+      return (kbs / 1024 / 1024 / 1024).toFixed(2) + " TB";
+    }
+  },
   toBytes: (str) => {
     if (str === undefined) {
       return "0";

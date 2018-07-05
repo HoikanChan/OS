@@ -69,7 +69,6 @@ export default {
 <style lang="scss" type="text/css">
 .configuration{
     width: 100%;
-    height: 748px;
 
     .configuration-content{
         width: 1200px;

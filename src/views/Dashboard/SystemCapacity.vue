@@ -122,7 +122,6 @@ export default {
 #system-capacity{
     padding-top: 30px;
     width: 100%;
-    height: 748px;
     background: url('../../assets/index_bg.png') no-repeat 0 0;
     background-size: cover;
     .system-capacity-content{
