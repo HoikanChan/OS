@@ -7,7 +7,7 @@ const store = new Vuex.Store({
     // 定义状态
     state: {
 
-     host: 'http://10.0.96.18:8080', //东莞IDC
+        host: 'http://10.0.96.18:8080', //东莞IDC
     //   host:'http://124.200.40.0:18080/', //外网
  //    host:'http://192.168.15.62:9080/',
         isLogin:0,  //表示用户未登陆

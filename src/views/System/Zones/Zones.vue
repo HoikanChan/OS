@@ -47,7 +47,7 @@
       </ul>
     </div>
     <!--新增资源域模态框-->
-    <NewZoneModal :isModalShow="modalShow" @show="show"/>
+    <NewZoneModal :isModalShow="modalShow" @show="show" @modalToggle="modalToggle"/>
   </div>
 </template>
 
@@ -150,6 +150,9 @@ export default {
     //运行指数
     ZoneIndicators() {
       this.$router.push({ name: "zoneindicators" });
+    },
+    modalToggle(isShow) {
+      this.modalShow = isShow;
     }
   },
 

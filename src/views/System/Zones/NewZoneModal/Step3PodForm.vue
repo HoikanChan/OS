@@ -1,4 +1,6 @@
 <template>
+<div>
+  <p>提供点来宾流量每个资源域中必须包含一个或多个提供点，现在我们将添加第一个提供点。提供点中包含主机和主存储服务器，您将在随后的某个步骤中添加这些主机和服务器。首先，请为 CloudStack 的内部管理流量配置一个预留 IP 地址范围。预留的 IP 范围对云中的每个资源域来说必须唯一。</p>
   <div class="container">
    <Form :model="addPodForm"  ref="addPodForm"  :rules="rules" :label-width="80">
       <Row>
@@ -27,12 +29,22 @@
         </FormItem>
       </Row>
     </Form>
+  </div>
+  <div class="modal-footer">
+      <div class="modal-footer-left">
+        <div class="btn previous-step-btn" @click="previousStep">上一步</div>
+      </div>
+      <div class="modal-footer-right">
+        <div class="btn cancel-btn" @click="cancel">取消</div>
+        <div class="btn next-step-btn" @click="nextStep">下一步</div>
+      </div>
+    </div>
 </div>
 </template>
 
 <script>
 export default {
-  name: "step3-sub2-form",
+  name: "step3-pod-form",
   data() {
     return {
       addPodForm: {
@@ -61,16 +73,34 @@ export default {
         startIp: [{ required: true, message: "请输入密码", trigger: "blur" }]
       }
     };
+  },
+  methods: {
+    previousStep() {
+      this.$emit("previous");
+    },
+    cancel() {
+      this.$emit("cancel");
+    },
+    nextStep() {
+      this.$refs["addPodForm"].validate(
+        async function(valid) {
+          if (valid) {
+            this.$emit("next");
+            this.$emit("emitForm", "podForm", this.addPodForm);
+          }
+        }.bind(this)
+      );
+    }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
+@import "./style.scss";
 .container {
   border: solid 1px #999999;
   border-radius: 5px;
-  height: 250px;
   padding: 12px;
   overflow-y: auto;
 }
@@ -84,6 +114,6 @@ export default {
 }
 .container /deep/ .ivu-form-item-content {
   width: 50%;
-  margin: 8px 0;
+  margin: 12px 0;
 }
 </style>

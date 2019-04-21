@@ -1,0 +1,36 @@
+.modal-footer {
+  height: 30px;
+  position: absolute;
+  right: 36px;
+  left: 36px;
+  bottom: 16px;
+  .modal-footer-left {
+    float: left;
+    .previous-step-btn {
+      background-color: #51e299;
+      color: #fff;
+    }
+  }
+  .modal-footer-right {
+    float: right;
+    .cancel-btn {
+      float: left;
+      margin-right: 23px;
+      color: #333;
+      border: 1px solid #414141;
+    }
+    .next-step-btn {
+      float: left;
+      background-color: #51e299;
+      color: #fff;
+    }
+  }
+  .btn {
+    width: 93px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+}
